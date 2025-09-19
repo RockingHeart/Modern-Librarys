@@ -1,0 +1,24 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\cstring",
+        "ProvidedModule": "",
+        "Includes": [
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\yvals_core.h",
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\vcruntime.h",
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\sal.h",
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\concurrencysal.h",
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\vadefs.h",
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\xkeycheck.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\string.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt_memory.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt_memcpy_s.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\errno.h",
+            "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\vcruntime_string.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt_wstring.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

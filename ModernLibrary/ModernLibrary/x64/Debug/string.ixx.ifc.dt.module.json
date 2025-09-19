@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\string.obj",
+            "outputs": [
+                "x64\\Debug\\string.ixx.ifc.dt.module.json",
+                "x64\\Debug\\string.ixx.ifc.dt.d.json",
+                "x64\\Debug\\string.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "string",
+                    "source-path": "a:\\modernlibrary\\modernlibrary\\src\\string.ixx",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "cstring",
+                    "source-path": "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\cstring",
+                    "lookup-method": "include-angle",
+                    "unique-on-source-path": true
+                },
+                {
+                    "logical-name": "type_traits",
+                    "source-path": "a:\\ide\\visual studio\\vc\\tools\\msvc\\14.44.35207\\include\\type_traits",
+                    "lookup-method": "include-angle",
+                    "unique-on-source-path": true
+                }
+            ]
+        }
+    ]
+}

@@ -18,7 +18,7 @@ struct string_trait {
 	using const_pointer_t = const CharType*;
 };
 
-template <class basic_string, class StringTrait>
+template <class StringTrait>
 struct string_box {
 	using char_t = StringTrait::char_t;
 	using pointer_t = StringTrait::pointer_t;
@@ -43,7 +43,7 @@ struct string_box {
 
 template <class BasicString, class StringTrait>
 class string_core :
-	              string_box<BasicString, StringTrait> {
+	              string_box<StringTrait> {
 public:
 	using string_trait = StringTrait;
 
@@ -118,7 +118,7 @@ public:
 public:
 
 	constexpr ~string_core() noexcept {
-		basic_string* self = static_cast<BasicString*>(this);
+		basic_string* self = static_cast<basic_string*>(this);
 		if (self->is_big_mod()) {
 			delete[] self->value.pointer;
 		}
