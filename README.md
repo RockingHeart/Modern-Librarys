@@ -3,6 +3,6 @@
 ## 正在实现String
 
 * 快速了解这个项目
-    - 项目文档：[ClassInterface](https://github.com/RockingHeart/Modern-Librarys/blob/main/ClassInterface.md) 
-    - 项目协议：[License](https://github.com/RockingHeart/Modern-Librarys/blob/main/License.md)
-    - 项目更新：[UpdateLog](https://github.com/RockingHeart/Modern-Librarys/blob/main/UpdateLog.md)
+    - 项目文档：[ClassInterface](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md) 
+    - 项目协议：[License](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md)
+    - 项目更新：[UpdateLog](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md)
