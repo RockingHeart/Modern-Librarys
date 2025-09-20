@@ -6,3 +6,5 @@
     - 项目文档：[ClassInterface](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md) 
     - 项目协议：[License](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md)
     - 项目更新：[UpdateLog](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md)
+
+该项目目前使用：中文支持MD文件
