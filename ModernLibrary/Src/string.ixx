@@ -25,6 +25,7 @@ struct string_box {
 
 	struct value_t {
 		pointer_t pointer;
+		pointer_t before;
 		size_t    alloc_size;
 	};
 
@@ -43,7 +44,7 @@ struct string_box {
 
 template <class BasicString, class StringTrait>
 class string_core :
-	              string_box<StringTrait> {
+	    protected string_box<StringTrait> {
 public:
 	using string_trait = StringTrait;
 
@@ -53,14 +54,15 @@ public:
 	using const_pointer_t = string_trait::const_pointer_t;
 
 protected:
-	using box_t = string_box<BasicString, StringTrait>;
+	using box_t = string_box<StringTrait>;
 
 private:
 	using basic_string = BasicString;
 
 protected:
 	using box_t::buffer_size;
-	using box_t::value, box_t::buffer; using box_t::count;
+	using box_t::value, box_t::buffer;
+	using box_t::count;
 
 private:
 
@@ -89,11 +91,11 @@ public:
 	}
 
 	constexpr size_t max_size(this basic_string& self) {
-		if (self.is_big_mod()) {
+		if (!self.is_big_mod()) {
 			return self.buffer_size;
 		}
 		else {
-			return self.value.alloc_size;
+			return self.value.alloc_size / sizeof(char_t);
 		}
 	};
 
@@ -113,6 +115,12 @@ public:
 			return self.buffer;
 		}
 		return self.value.pointer;
+	}
+
+public:
+
+	constexpr bool resize(this basic_string& self, size_t size) noexcept {
+		return self.resize_string(size);
 	}
 
 public:
@@ -160,5 +168,39 @@ private:
 
 	constexpr bool is_big_mod() const noexcept {
 		return core_t::count > core_t::buffer_size;
+	}
+
+private:
+
+	constexpr bool resize_string(size_t size) noexcept {
+		if (size < core_t::buffer_size) {
+			if (is_big_mod()) {
+				pointer_t clone = new char_t[size];
+				std::memcpy(clone, core_t::value.pointer, size);
+				core_t::value.before = core_t::value.pointer;
+				std::memcpy(core_t::buffer, clone, size);
+			}
+			else {
+				core_t::buffer[size] = char_t();
+			}
+		}
+		else {
+			if (is_big_mod()) {
+				core_t::value.before = core_t::value.pointer;
+				core_t::value.pointer = new char_t[size];
+				core_t::value.alloc_size = size;
+				std::memcpy(core_t::value.pointer, core_t::value.before, core_t::count);
+				delete[] core_t::value.before;
+			}
+			else {
+				pointer_t clone = new char_t[core_t::count];
+				std::memcpy(clone, core_t::buffer, core_t::count);
+				core_t::value.pointer = new char_t[size];
+				core_t::value.alloc_size = size;
+				std::memcpy(core_t::value.pointer, clone, core_t::count);
+			}
+		}
+		core_t::count = size;
+		return true;
 	}
 };
