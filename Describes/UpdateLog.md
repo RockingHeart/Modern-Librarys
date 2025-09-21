@@ -26,10 +26,11 @@
             - 返回增量为字符串大小的成员缓存指针
         - 若是大模式
             - 返回增量为字符串大小的成员堆指针
-    - 更新非静态成员运算符重载函数operator[]： reference operator[](size_t position)
-        - 若是缓存模式
-            - 返回增量为参数position的成员缓存指针的解引用
-        - 若是大模式
-            - 返回增量为参数position的成员堆指针的解引用
+    - 更新非静态成员运算符重载函数operator[]
+        - reference operator[](size_t position)
+            - 若是缓存模式
+                - 返回增量为参数position的成员缓存指针的解引用
+            - 若是大模式
+                - 返回增量为参数position的成员堆指针的解引用
 
 ## Describes更新不记录于此日志中
