@@ -2,12 +2,20 @@
 
 - String
     - 作用：动态存储字符串
+        - 对构造函数额外描述：当使用basic_string进行构造时，实际调用string_core构造函数。先构造核心，再构造框架
         - 接口
-            - 返回值类型：string_core 非静态成员函数名：string_core 参数列表：(const_pointer_t str, size_t size)
+            - 返回值类型：string_core 构造函数名：string_core 参数列表：(const_pointer_t str)
+            - construct(const_pointer_t str)
+                - 用于构造动态字符串
+                    ### 参数str用于传入需存储的字符串，自动获取其字符串大小
+            - 返回值类型：string_core 构造函数名：string_core 参数列表：(const_pointer_t str, size_t size)
             - construct(const_pointer_t str, size_t size)
                 - 用于构造动态字符串
                     ### 参数str用于传入需存储的字符串<br>参数size用于告知构造函数需存储的字符串大小
-                    额外描述：当使用basic_string进行构造时，实际调用string_core构造函数。先构造核心，再构造框架
+            - 模板：template<size_type SizeType> 返回值类型：string_core 构造函数名：string_core 参数列表：(SizeType size, char_t char_value)
+            - template<size_type SizeType> construct(SizeType size, char_t char_value)
+                - 用于构造多个单个字符的动态字符串
+                    ### 参数size用于传入此方法构造需要的长度
 
             - 返回值类型：pointer_t 非静态成员函数名：begin 参数列表：(void) 与 返回值类型：pointer_t 非静态成员函数名：end 参数列表：（void）
             - pointer_t begin(void) 与 pointer_t end(void)

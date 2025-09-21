@@ -3,13 +3,16 @@ export module string;
 import <cstring>;
 import <type_traits>;
 
-template <class Type>
+template <class type>
 constexpr bool is_character_type = std::_Is_any_of_v<
-	Type, char, wchar_t, char8_t, char16_t, char32_t
+	type, char, wchar_t, char8_t, char16_t, char32_t
 >;
 
 template <class type>
 concept character_type = is_character_type<type>;
+
+template <typename type>
+concept size_type = std::is_integral_v<type>;
 
 export template <character_type CharType>
 struct string_trait {
@@ -39,7 +42,7 @@ struct string_box {
 
 	size_t count;
 
-	constexpr string_box(size_t size) noexcept : count(size) {};
+	constexpr string_box(size_t size = 0) noexcept : count(size) {};
 	constexpr ~string_box() noexcept = default;
 };
 
@@ -75,10 +78,27 @@ private:
 
 public:
 
+	constexpr string_core(const_pointer_t str)
+		noexcept : box_t(std::strlen(str))
+	{
+		static_cast<basic_string*>(this)->construct(str);
+	}
+
 	constexpr string_core(const_pointer_t str, size_t size)
 		noexcept : box_t(size)
 	{
-		static_cast<BasicString*>(this)->construct(str);
+		static_cast<basic_string*>(this)->construct(str);
+	}
+
+	template <class... ArgsType>
+	constexpr string_core(ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        static_cast<basic_string*>(this)->construct(args...);
+	        }
+		)
+	{
+		static_cast<basic_string*>(this)->construct(args...);
 	}
 
 public:
@@ -189,6 +209,19 @@ private:
 		core_t::value.pointer = new char_t[alloc_size];
 		core_t::value.alloc_size = alloc_size;
 		std::memcpy(core_t::value.pointer, str, core_t::count);
+	}
+
+	template <size_type SizeType>
+	constexpr void construct(SizeType size, char_t char_value) noexcept {
+		if (size < core_t::buffer_size) {
+			std::memset(core_t::buffer, static_cast<int>(char_value), size);
+		}
+		else {
+			core_t::value.pointer = new char_t[size];
+			core_t::value.alloc_size = size;
+			std::memset(core_t::value.pointer, static_cast<int>(char_value), size);
+		}
+		core_t::count = size;
 	}
 
 private:
