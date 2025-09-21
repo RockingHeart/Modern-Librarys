@@ -1,6 +1,6 @@
 # 此为更新日志，记录每次更新内容
-- String
-    - 更新resize函数：resize(size_t size)
+- String（自resize更新起）
+    - 更新非静态成员函数resize：bool resize(size_t size)
         - 若参数size小于缓冲区阈值
             - 若是大模式
                 - 将缓冲区内容拷贝至新开辟的局部堆指针
@@ -16,5 +16,20 @@
                 - 将缓冲区内容拷贝至新开辟的局部堆指针
                 - 开辟为size大小的成员堆指针，设置堆指针与堆大小
                 - 将局部堆指针内容拷贝至堆
+    - 更新非静态成员函数begin：pointer_t begin(void)
+        - 若是缓存模式
+            - 返回成员缓存指针
+        - 若是大模式
+            - 返回成员堆指针
+    - 更新非静态成员函数end：pointer_t end(void)
+        - 若是缓存模式
+            - 返回增量为字符串大小的成员缓存指针
+        - 若是大模式
+            - 返回增量为字符串大小的成员堆指针
+    - 更新非静态成员运算符重载函数operator[]： reference operator[](size_t position)
+        - 若是缓存模式
+            - 返回增量为参数position的成员缓存指针的解引用
+        - 若是大模式
+            - 返回增量为参数position的成员堆指针的解引用
 
 ## Describes更新不记录于此日志中

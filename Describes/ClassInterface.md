@@ -74,7 +74,7 @@
                     ```
                     #### 以上代码str1输出： 0（缓存模式）<br>以上代码str2输出：1（大模式）
                     函数返回值类型描述：mode_status是枚举类型，内部有cache与big两种值，对应缓存模式与大模式。
-            - 返回值类型：reference 运算符重载函数名：operator[] 参数列表：(size_t position)
+            - 返回值类型：reference 非静态成员运算符重载函数名：operator[] 参数列表：(size_t position)
             - reference operator[](size_t position)
                 - 用于获取指定位置的字符，而非字符串
                     ``` C++
