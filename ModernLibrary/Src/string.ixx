@@ -14,6 +14,7 @@ concept character_type = is_character_type<type>;
 export template <character_type CharType>
 struct string_trait {
 	using char_t          = CharType;
+	using reference       = CharType&;
 	using pointer_t       = CharType*;
 	using const_pointer_t = const CharType*;
 };
@@ -50,6 +51,7 @@ public:
 
 public:
 	using char_t          = string_trait::char_t;
+	using reference       = string_trait::reference;
 	using pointer_t       = string_trait::pointer_t;
 	using const_pointer_t = string_trait::const_pointer_t;
 
@@ -82,7 +84,7 @@ public:
 public:
 
 	constexpr size_t size(this basic_string& self) {
-		if (self.is_big_mod()) {
+		if (self.is_big_mode()) {
 			return buffer_size - self.count;
 		}
 		else {
@@ -91,7 +93,7 @@ public:
 	}
 
 	constexpr size_t max_size(this basic_string& self) {
-		if (!self.is_big_mod()) {
+		if (self.is_ceche_mode()) {
 			return self.buffer_size;
 		}
 		else {
@@ -102,7 +104,7 @@ public:
 public:
 
 	constexpr mode_status mode_state(this basic_string& self) {
-		if (!self.is_big_mod()) {
+		if (self.is_ceche_mode()) {
 			return mode_status::cache;
 		}
 		return mode_status::big;
@@ -111,10 +113,26 @@ public:
 public:
 
 	constexpr const_pointer_t const_string(this basic_string& self) {
-		if (!self.is_big_mod()) {
+		if (self.is_ceche_mode()) {
 			return self.buffer;
 		}
 		return self.value.pointer;
+	}
+
+public:
+
+	constexpr pointer_t begin(this basic_string& self) noexcept {
+		if (self.is_ceche_mode()) {
+			return self.buffer;
+		}
+		return self.value.pointer;
+	}
+
+	constexpr pointer_t end(this basic_string& self) noexcept {
+		if (self.is_ceche_mode()) {
+			return self.buffer + self.count;
+		}
+		return self.value.pointer + self.count;
 	}
 
 public:
@@ -125,9 +143,18 @@ public:
 
 public:
 
+	constexpr reference operator[](this basic_string& self, size_t position) noexcept {
+		if (self.is_ceche_mode()) {
+			return self.buffer[position];
+		}
+		return self.value.pointer[position];
+	}
+
+public:
+
 	constexpr ~string_core() noexcept {
 		basic_string* self = static_cast<basic_string*>(this);
-		if (self->is_big_mod()) {
+		if (self->is_big_mode()) {
 			delete[] self->value.pointer;
 		}
 	}
@@ -166,15 +193,19 @@ private:
 
 private:
 
-	constexpr bool is_big_mod() const noexcept {
+	constexpr bool is_big_mode() const noexcept {
 		return core_t::count > core_t::buffer_size;
+	}
+
+	constexpr bool is_ceche_mode() const noexcept {
+		return core_t::count < core_t::buffer_size;
 	}
 
 private:
 
 	constexpr bool resize_string(size_t size) noexcept {
 		if (size < core_t::buffer_size) {
-			if (is_big_mod()) {
+			if (is_big_mode()) {
 				pointer_t clone = new char_t[size];
 				std::memcpy(clone, core_t::value.pointer, size);
 				core_t::value.before = core_t::value.pointer;
@@ -185,7 +216,7 @@ private:
 			}
 		}
 		else {
-			if (is_big_mod()) {
+			if (is_big_mode()) {
 				core_t::value.before = core_t::value.pointer;
 				core_t::value.pointer = new char_t[size];
 				core_t::value.alloc_size = size;
