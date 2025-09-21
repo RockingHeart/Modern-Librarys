@@ -3,10 +3,11 @@
 - String
     - 作用：动态存储字符串
         - 接口
-            - 返回值类型basic_string 函数名：construct 参数列表：(const_pointer_t str, size_t size)
+            - 返回值类型：string_core 函数名：string_core 参数列表：(const_pointer_t str, size_t size)
             - construct(const_pointer_t str, size_t size)
                 - 用于构造动态字符串
                     ### 参数str用于传入需存储的字符串<br>参数size用于告知构造函数需存储的字符串大小
+                    额外描述：当使用basic_string进行构造时，实际调用string_core构造函数。先构造核心，再构造框架
 
             - 返回值类型const_pointer_t 函数名：const_string 参数列表：(void)
             - const_pointer_t const_string(void)
