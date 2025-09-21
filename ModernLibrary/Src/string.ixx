@@ -24,7 +24,7 @@ struct string_trait {
 
 template <class StringTrait>
 struct string_box {
-	using char_t = StringTrait::char_t;
+	using char_t   = StringTrait::char_t;
 	using pointer_t = StringTrait::pointer_t;
 
 	struct value_t {
