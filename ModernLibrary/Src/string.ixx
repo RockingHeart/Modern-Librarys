@@ -161,10 +161,7 @@ public:
 public:
 
 	constexpr const_pointer_t const_string(this basic_string& self) {
-		if (self.is_ceche_mode()) {
-			return self.buffer;
-		}
-		return self.value.pointer;
+		return self.pointer();
 	}
 
 public:
@@ -323,6 +320,15 @@ private:
 
 private:
 
+	constexpr pointer_t pointer() noexcept {
+		if (is_ceche_mode()) {
+			return core_t::buffer;
+		}
+		return core_t::value.pointer;
+	}
+
+private:
+
 	[[nodiscard]]
 	constexpr bool within_range(size_t begin, size_t end) const noexcept {
 		if (begin > core_t::count) {
@@ -349,10 +355,7 @@ private:
 		if (!within_range(point, end)) {
 			return nullptr;
 		}
-		if (is_ceche_mode()) {
-			return core_t::buffer;
-		}
-		return core_t::value.pointer;
+		return pointer();
 	}
 
 	constexpr bool replace_string(
