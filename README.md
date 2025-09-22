@@ -8,10 +8,10 @@
     - 项目更新：[UpdateLog](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md)
     - 项目源码：[Source](https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src)
 
-| 项目实现 | 实现时间 |
-| :---: | :---: |
-| string | 实现时间不定 |
-| small_vector | 待String实现完毕 |
-| vector | 待small_vector实现完毕 |
+| 项目实现 | 实现状态 | 实现时间 |
+| :---: | :---: | :---: |
+| string | 正在实现 | 实现基础有效时间为2025年11月份之前 |
+| small_vector | 待实现 | 待String实现完毕 |
+| vector | 待实现 | 待small_vector实现完毕 |
 
 该项目当前使用：中文，支持MD文件
