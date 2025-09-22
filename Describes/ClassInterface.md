@@ -1,5 +1,4 @@
 # 此为介绍类与其接口的文档
-
 - String
     - 作用：动态存储字符串
         - 类型描述：若string_trait的模板参数为char，则值类型为char，引用类型为char&，指针类型为char*，以此类推
@@ -9,16 +8,16 @@
             - 返回值类型：string_core 构造函数名：string_core
                 - 参数列表：(const_pointer_t str)
                 - string_core(const_pointer_t str)
-                    - 用于构造动态字符串
-                        ### 参数str用于传入需存储的字符串，自动获取其字符串大小
+                    - 用于构造动态字符串<br>
+                        **参数str用于传入需存储的字符串，自动获取其字符串大小**
                 - 参数列表：(const_pointer_t str, size_t size)
                 - string_core(const_pointer_t str, size_t size)
-                    - 用于构造动态字符串
-                        ### 参数str用于传入需存储的字符串<br>参数size用于告知构造函数需存储的字符串大小
+                    - 用于构造动态字符串<br>
+                        **参数str用于传入需存储的字符串 <br> 参数size用于告知构造函数需存储的字符串大小**
             - 模板：template<size_type SizeType> 返回值类型：string_core 构造函数名：string_core 参数列表：(SizeType size, char_t char_value)
             - template<size_type SizeType> string_core(SizeType size, char_t char_value)
-                - 用于构造多个单个字符的动态字符串
-                    ### 参数size用于传入此方法构造需要的长度
+                - 用于构造多个单个字符的动态字符串<br>
+                    **参数size用于传入此方法构造需要的长度**
             
             ## begin and end
             - 返回值类型：pointer_t 非静态成员函数名：begin 参数列表：(void) 与 返回值类型：pointer_t 非静态成员函数名：end 参数列表：（void）
@@ -148,8 +147,8 @@
             - 返回值类型：bool 非静态成员函数名：replace
             - 用于重置指定位置的动态字符串
                 - 参数列表：(const_pointer_t str, size_t point, size_t end)
-                - bool replace(const_pointer_t str, size_t point, size_t end)
-                    ### 参数str为待替换的字符串 <br> 参数point为指定位置的起始位置 <br> 参数end为指定位置的终止位置
+                - bool replace(const_pointer_t str, size_t point, size_t end)<br>
+                    **参数str为待替换的字符串 <br> 参数point为指定位置的起始位置 <br> 参数end为指定位置的终止位置**
                     ``` C++
                     import string;
                     import std;
@@ -165,8 +164,8 @@
                     函数返回值描述：此函数返回bool值，指告用户replace成功与否
 
                 - 参数列表：(reference char_value, size_t point, size_t end)
-                - bool replace(reference char_value, size_t point, size_t end)
-                    ### 参数char_value为待替换的单个字符 <br> 参数point为指定位置的起始位置 <br> 参数end为指定位置的终止位置
+                - bool replace(reference char_value, size_t point, size_t end)<br>
+                    **参数char_value为待替换的单个字符 <br> 参数point为指定位置的起始位置 <br> 参数end为指定位置的终止位置**
                     ``` C++
                     import string;
                     import std;
@@ -207,8 +206,8 @@
             ## resize
             - 返回值类型：bool 非静态成员函数名：resize 参数列表：(size_t size)
             - bool resize(size_t size)
-                - 用于重置与更新动态字符串
-                    ### 参数size用于控制重置的大小
+                - 用于重置与更新动态字符串<br>
+                    **参数size用于控制重置的大小**
                     ``` C++
                     import string;
                     import std;
