@@ -3,7 +3,7 @@
     - 作用：动态存储字符串
         - 类型描述：若string_trait的模板参数为char，则值类型为char，引用类型为char&，指针类型为char*，以此类推
         - 对构造函数额外描述：当使用basic_string进行构造时，实际调用string_core构造函数。先构造核心，再构造框架
-        - 接口
+        - 以下为接口：
             ## string_core
             - 返回值类型：string_core 构造函数名：string_core
                 - 参数列表：(const_pointer_t str)
