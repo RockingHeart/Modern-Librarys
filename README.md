@@ -8,10 +8,18 @@
     - 项目更新：[UpdateLog](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md)
     - 项目源码：[Source](https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src)
 
+## 规划表
+
 | 项目实现 | 实现状态 | 实现时间 |
 | :---: | :---: | :---: |
 | string | 正在实现 | 实现基础有效时间为2025年11月份之前 |
 | small_vector | 待实现 | 待String实现完毕 |
 | vector | 待实现 | 待small_vector实现完毕 |
+
+## CMake使用教程
+*下载*此项目至本地
+! 使用CMake，若你使用GCC，请使用GCC 15及之上版本
+**若未安装CMake，请安装[CMake](https://cmake.org/)，可在控制台输入CMake -V查看版本，侧面知晓CMake是否安装**
+**在项目当前目录下使用控制台输入指令：CMake -B "/ML"，此指令用于指定生成目录，而-B命令参数之后的值是指定的目录，值类型为字符串**
 
 该项目当前使用：中文，支持MD文件
