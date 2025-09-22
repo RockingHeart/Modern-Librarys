@@ -32,5 +32,30 @@
                 - 返回增量为参数position的成员缓存指针的解引用
             - 若是大模式
                 - 返回增量为参数position的成员堆指针的解引用
+    - 更新非静态成员函数replace：bool replace(const_pointer_t str, size_t point, size_t end)
+        - 调用此函数且满足以下条件则调用失败
+            - 参数str的长度大于参数end
+            - 参数point与参数end不是正确的范围
+        - 若调用成功，该函数会将调用此函数的对象内部的动态字符串point至end位置的值更改为str
+    - 更新basic_string值的特性
+        - 分为remain与no_residue
+            - 若是remain
+                - 则保留更新前的指针
+            - 若是no_residue
+                - 则不保留更新前的指针
+        - 由于需要成员记录保留的数据，所以比较于no_residue特性的remain所实例化的basic_str而言，basic_string所占用的空间比较大
+            - 虽然其空间占用较大，但是也给相较于no_residue特性实例化的basic_string而言，缓冲区比较大
+    - 更新非静态成员函数clear_residue：bool clear_residue(void)
+        - 调用此函数且满足以下条件则调用失败
+            - 不是大模式
+            - 未存保留数据
+        - 若调用成功，该函数会清除保留的数据
+    - 更新非静态成员函数leave_residue：bool leave_residue(void)
+        - 该函数满足以下条件则返回false，若不满足则返回true
+            - 不是大模式
+            - 未存保留数据
+        - 该函数用于检测是否存有保留数据
+    - 更新非静态成员函数residue：const residue_info residue(void)
+        - 用于获取保留数据
 
 ## Describes更新不记录于此日志中

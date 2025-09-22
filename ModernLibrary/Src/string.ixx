@@ -15,29 +15,53 @@ template <typename type>
 concept size_type = std::is_integral_v<type>;
 
 export template <character_type CharType>
-struct string_trait {
+struct string_traits {
 	using char_t          = CharType;
 	using reference       = CharType&;
 	using pointer_t       = CharType*;
 	using const_pointer_t = const CharType*;
 };
 
-template <class StringTrait>
-struct string_box {
-	using char_t   = StringTrait::char_t;
-	using pointer_t = StringTrait::pointer_t;
+export enum class value_traits {
+	no_residue,
+	remain
+};
 
-	struct value_t {
+template <class StringTraits, value_traits ValueTrait>
+struct string_box {
+	using char_t    = StringTraits::char_t;
+	using pointer_t = StringTraits::pointer_t;
+
+	template <value_traits>
+	struct value_t;
+
+	template <>
+	struct value_t<value_traits::no_residue> {
 		pointer_t pointer;
-		pointer_t before;
 		size_t    alloc_size;
 	};
 
-	constexpr static size_t buffer_size = sizeof(value_t) / sizeof(char_t);
+	template <>
+	struct value_t<value_traits::remain> {
+		pointer_t pointer;
+		size_t    alloc_size;
+		pointer_t before;
+		size_t    before_size;
+		size_t    before_alloc_size;
+		struct residue_info {
+			pointer_t address;
+			size_t size;
+			size_t alloc_size;
+		};
+	};
+
+	using value_type = value_t<ValueTrait>;
+
+	constexpr static size_t buffer_size = sizeof(value_type) / sizeof(char_t);
 
 	union {
-		value_t value;
-		char_t  buffer[buffer_size]{};
+		value_type value;
+		char_t     buffer[buffer_size]{};
 	};
 
 	size_t count;
@@ -46,20 +70,24 @@ struct string_box {
 	constexpr ~string_box() noexcept = default;
 };
 
-template <class BasicString, class StringTrait>
-class string_core :
-	    protected string_box<StringTrait> {
-public:
-	using string_trait = StringTrait;
 
+template <class BasicString, class StringTraits, value_traits ValueTrait>
+class string_core :
+	    protected string_box<StringTraits, ValueTrait> {
 public:
-	using char_t          = string_trait::char_t;
-	using reference       = string_trait::reference;
-	using pointer_t       = string_trait::pointer_t;
-	using const_pointer_t = string_trait::const_pointer_t;
+	using string_traits = StringTraits;
 
 protected:
-	using box_t = string_box<StringTrait>;
+	using box_t = string_box<StringTraits, ValueTrait>;
+
+public:
+	using residue_info = typename box_t::value_type::residue_info;
+
+public:
+	using char_t          = typename string_traits::char_t;
+	using reference       = typename string_traits::reference;
+	using pointer_t       = typename string_traits::pointer_t;
+	using const_pointer_t = typename string_traits::const_pointer_t;
 
 private:
 	using basic_string = BasicString;
@@ -157,8 +185,64 @@ public:
 
 public:
 
+	[[nodiscard]]
 	constexpr bool resize(this basic_string& self, size_t size) noexcept {
 		return self.resize_string(size);
+	}
+
+	template <class... ArgsType>
+	[[nodiscard]] constexpr bool replace (
+		this basic_string& self, ArgsType... args
+	)
+        noexcept requires (
+		    requires {
+		        self.replace_string(args...);
+	        }
+	    )
+	{
+		return self.replace_string(args...);
+	}
+
+public:
+
+	constexpr const residue_info residue(this basic_string& self) {
+		return {
+			self.value.before,
+			self.value.before_size,
+			self.value.before_alloc_size
+		};
+	}
+
+	[[nodiscard]]
+	constexpr bool leave_residue(this basic_string& self)
+		noexcept requires (
+		    requires {
+		        self.value.before;
+	        }
+		)
+	{
+		if (self.is_ceche_mode()) {
+			return false;
+		}
+		if (!self.value.before) {
+			return false;
+		}
+		return true;
+	}
+
+	[[nodiscard]]
+	constexpr bool clear_residue(this basic_string& self)
+		noexcept requires (
+		    requires {
+		        self.value.before;
+	        }
+		)
+	{
+		if (!self.leave_residue()) {
+			return false;
+		}
+		delete[] self.value.before;
+		return true;
 	}
 
 public:
@@ -180,20 +264,21 @@ public:
 	}
 };
 
-export template <class StringTrait>
+export template <class StringTraits, value_traits ValueTrait = value_traits::remain>
 class basic_string :
-	        public string_core<basic_string<StringTrait>, StringTrait> {
+	        public string_core<basic_string<StringTraits, ValueTrait>, StringTraits, ValueTrait> {
 private:
-	friend class   string_core<basic_string<StringTrait>, StringTrait>;
-	using core_t = string_core<basic_string<StringTrait>, StringTrait>;
+	friend class   string_core<basic_string<StringTraits, ValueTrait>, StringTraits, ValueTrait>;
+	using core_t = string_core<basic_string<StringTraits, ValueTrait>, StringTraits, ValueTrait>;
 
 public:
-	using string_trait = StringTrait;
+	using string_traits = StringTraits;
 
 public:
-	using char_t          = string_trait::char_t;
-	using pointer_t       = string_trait::pointer_t;
-	using const_pointer_t = string_trait::const_pointer_t;
+	using char_t          = typename string_traits::char_t;
+	using reference       = typename string_traits::reference;
+	using pointer_t       = typename string_traits::pointer_t;
+	using const_pointer_t = typename string_traits::const_pointer_t;
 
 public:
 	using core_t::core_t;
@@ -226,22 +311,105 @@ private:
 
 private:
 
+	[[nodiscard]]
 	constexpr bool is_big_mode() const noexcept {
 		return core_t::count > core_t::buffer_size;
 	}
 
+	[[nodiscard]]
 	constexpr bool is_ceche_mode() const noexcept {
 		return core_t::count < core_t::buffer_size;
 	}
 
 private:
 
+	[[nodiscard]]
+	constexpr bool within_range(size_t begin, size_t end) const noexcept {
+		if (begin > core_t::count) {
+			return false;
+		}
+		return (end - begin) <= core_t::count && end <= core_t::count;
+	}
+
+	[[nodiscard]]
+	constexpr bool in_range(size_t begin, size_t end) const noexcept {
+		if (begin > end) {
+			size_t old = begin;
+			begin = end;
+			end = old;
+		}
+		return within_range(begin, end);
+	}
+
+private:
+
+	constexpr pointer_t replace_impl (
+		size_t point, size_t end
+	) noexcept {
+		if (!within_range(point, end)) {
+			return nullptr;
+		}
+		if (is_ceche_mode()) {
+			return core_t::buffer;
+		}
+		return core_t::value.pointer;
+	}
+
+	constexpr bool replace_string(
+		const_pointer_t str, size_t point, size_t end
+	) noexcept {
+		if (std::strlen(str) > end) {
+			return false;
+		}
+		pointer_t data = replace_impl(point, end);
+		if (data == nullptr) {
+			return false;
+		}
+		size_t index = 0;
+		for (; point < end; point++) {
+			data[point] = str[index++];
+		}
+		return true;
+	}
+
+	constexpr bool replace_string(
+		reference char_value, size_t point, size_t end
+	) noexcept {
+		pointer_t data = replace_impl(point, end);
+		if (data == nullptr) {
+			return false;
+		}
+		for (; point < end; point++) {
+			data[point] = char_value;
+		}
+		return true;
+	}
+
+private:
+
+	constexpr void reisze_impl(size_t size) noexcept {
+		if constexpr (ValueTrait == value_traits::remain) {
+			core_t::value.before = core_t::value.pointer;
+			core_t::value.before_size = core_t::count;
+			core_t::value.before_alloc_size = core_t::value.alloc_size;
+			core_t::value.pointer = new char_t[size];
+			core_t::value.alloc_size = size;
+			std::memcpy(core_t::value.pointer, core_t::value.before, core_t::count);
+		}
+		else {
+			const_pointer_t old_pointer = core_t::value.pointer;
+			core_t::value.pointer = new char_t[size];
+			core_t::value.alloc_size = size;
+			std::memcpy(core_t::value.pointer, old_pointer, core_t::count);
+		}
+	}
+
 	constexpr bool resize_string(size_t size) noexcept {
 		if (size < core_t::buffer_size) {
 			if (is_big_mode()) {
 				pointer_t clone = new char_t[size];
 				std::memcpy(clone, core_t::value.pointer, size);
-				core_t::value.before = core_t::value.pointer;
+				delete[] core_t::value.pointer;
 				std::memcpy(core_t::buffer, clone, size);
 			}
 			else {
@@ -250,11 +418,7 @@ private:
 		}
 		else {
 			if (is_big_mode()) {
-				core_t::value.before = core_t::value.pointer;
-				core_t::value.pointer = new char_t[size];
-				core_t::value.alloc_size = size;
-				std::memcpy(core_t::value.pointer, core_t::value.before, core_t::count);
-				delete[] core_t::value.before;
+				reisze_impl(size);
 			}
 			else {
 				pointer_t clone = new char_t[core_t::count];

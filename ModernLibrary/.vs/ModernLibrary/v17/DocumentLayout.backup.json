@@ -1,0 +1,62 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "A:\\ModernLibrary\\ModernLibrary\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B4A24B-D9E8-48AC-BCEC-C5F215490A1D}|ModernLibrary\\ModernLibrary.vcxproj|A:\\ModernLibrary\\ModernLibrary\\ModernLibrary\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2B4A24B-D9E8-48AC-BCEC-C5F215490A1D}|ModernLibrary\\ModernLibrary.vcxproj|solutionrelative:ModernLibrary\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2B4A24B-D9E8-48AC-BCEC-C5F215490A1D}|ModernLibrary\\ModernLibrary.vcxproj|A:\\ModernLibrary\\ModernLibrary\\Src\\string.ixx||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2B4A24B-D9E8-48AC-BCEC-C5F215490A1D}|ModernLibrary\\ModernLibrary.vcxproj|solutionrelative:Src\\string.ixx||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "A:\\ModernLibrary\\ModernLibrary\\ModernLibrary\\main.cpp",
+              "RelativeDocumentMoniker": "ModernLibrary\\main.cpp",
+              "ToolTip": "A:\\ModernLibrary\\ModernLibrary\\ModernLibrary\\main.cpp",
+              "RelativeToolTip": "ModernLibrary\\main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-22T05:36:01.446Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "string.ixx",
+              "DocumentMoniker": "A:\\ModernLibrary\\ModernLibrary\\Src\\string.ixx",
+              "RelativeDocumentMoniker": "Src\\string.ixx",
+              "ToolTip": "A:\\ModernLibrary\\ModernLibrary\\Src\\string.ixx",
+              "RelativeToolTip": "Src\\string.ixx",
+              "ViewState": "AgIAACMAAAAAAAAAAAAIwDQAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001913|",
+              "WhenOpened": "2025-09-22T05:07:24.086Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
