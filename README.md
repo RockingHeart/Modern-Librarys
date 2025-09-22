@@ -9,7 +9,7 @@
     - 项目源码：[Source](https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src)
 
 | 项目实现 | 实现时间 |
-| :--- | :--- |
+| :---: | :---: |
 | string | 实现时间不定 |
 | small_vector | 待String实现完毕 |
 | vector | 待small_vector实现完毕 |
