@@ -12,12 +12,8 @@ elseif(GCC)
     add_compile_options(-fmodules)
 endif()
 
-file( GLOB
-    ModuleFile "ModernLibrary/Src/*.ixx"
-)
+file(GLOB ModuleFile "ModernLibrary/Src/*.ixx")
 
-add_executable( ModernLibrary
-    ${ModuleFile}
-)
+add_executable(ModernLibrary ${ModuleFile} Execute/string_demo.cpp)
 
 source_group("String" FILES ${ModuleFile})

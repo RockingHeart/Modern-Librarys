@@ -132,7 +132,7 @@ public:
 public:
 
 	constexpr size_t size(this basic_string& self) {
-		if (self.is_big_mode()) {
+		if (self.is_ceche_mode()) {
 			return buffer_size - self.count;
 		}
 		else {
@@ -188,9 +188,7 @@ public:
 	}
 
 	template <class... ArgsType>
-	[[nodiscard]] constexpr bool replace (
-		this basic_string& self, ArgsType... args
-	)
+	[[nodiscard]] constexpr bool replace(this basic_string& self, ArgsType... args)
         noexcept requires (
 		    requires {
 		        self.replace_string(args...);
@@ -239,6 +237,7 @@ public:
 			return false;
 		}
 		delete[] self.value.before;
+		self.value.before = nullptr;
 		return true;
 	}
 
@@ -310,7 +309,7 @@ private:
 
 	[[nodiscard]]
 	constexpr bool is_big_mode() const noexcept {
-		return core_t::count > core_t::buffer_size;
+		return core_t::count > (core_t::buffer_size - 1);
 	}
 
 	[[nodiscard]]
@@ -358,7 +357,7 @@ private:
 		return pointer();
 	}
 
-	constexpr bool replace_string(
+	constexpr bool replace_string (
 		const_pointer_t str, size_t point, size_t end
 	) noexcept {
 		if (std::strlen(str) > end) {
@@ -375,7 +374,7 @@ private:
 		return true;
 	}
 
-	constexpr bool replace_string(
+	constexpr bool replace_string (
 		reference char_value, size_t point, size_t end
 	) noexcept {
 		pointer_t data = replace_impl(point, end);
@@ -407,13 +406,32 @@ private:
 		}
 	}
 
+	template <bool respace_heap>
+	constexpr void respace(size_t size) noexcept {
+		if constexpr (respace_heap) {
+			pointer_t clone = new char_t[core_t::count];
+			std::memcpy(clone, core_t::buffer, core_t::count);
+			core_t::value.pointer = new char_t[size];
+			core_t::value.alloc_size = size;
+			std::memcpy(core_t::value.pointer, clone, core_t::count);
+			if constexpr (ValueTrait == value_traits::remain) {
+				if (core_t::value.before) {
+					core_t::value.before = nullptr;
+				}
+			}
+		}
+		else {
+			pointer_t clone = new char_t[size];
+			std::memcpy(clone, core_t::value.pointer, size);
+			delete[] core_t::value.pointer;
+			std::memcpy(core_t::buffer, clone, size);
+		}
+	}
+
 	constexpr bool resize_string(size_t size) noexcept {
 		if (size < core_t::buffer_size) {
 			if (is_big_mode()) {
-				pointer_t clone = new char_t[size];
-				std::memcpy(clone, core_t::value.pointer, size);
-				delete[] core_t::value.pointer;
-				std::memcpy(core_t::buffer, clone, size);
+				respace<false>(size);
 			}
 			else {
 				core_t::buffer[size] = char_t();
@@ -424,11 +442,7 @@ private:
 				reisze_impl(size);
 			}
 			else {
-				pointer_t clone = new char_t[core_t::count];
-				std::memcpy(clone, core_t::buffer, core_t::count);
-				core_t::value.pointer = new char_t[size];
-				core_t::value.alloc_size = size;
-				std::memcpy(core_t::value.pointer, clone, core_t::count);
+				respace<true>(size);
 			}
 		}
 		core_t::count = size;
