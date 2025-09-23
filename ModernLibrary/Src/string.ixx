@@ -334,7 +334,7 @@ private:
 		if (begin > core_t::count) {
 			return false;
 		}
-		return (end - begin) <= core_t::count && end <= core_t::count;
+		return (end - begin) <= core_t::count;
 	}
 
 	[[nodiscard]]
