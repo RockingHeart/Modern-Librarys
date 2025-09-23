@@ -17,3 +17,4 @@ file(GLOB ModuleFile "ModernLibrary/Src/*.ixx")
 add_executable(ModernLibrary ${ModuleFile} ModernLibrary/Execute/main.cpp)
 
 source_group("String" FILES ${ModuleFile})
+source_group("Execute" ModernLibrary/Execute/main.cpp)
