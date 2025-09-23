@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"A:/ModernLibrarys/ML/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

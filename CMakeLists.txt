@@ -14,6 +14,6 @@ endif()
 
 file(GLOB ModuleFile "ModernLibrary/Src/*.ixx")
 
-add_executable(ModernLibrary ${ModuleFile} ModernLibrary/Execute/string_demo.cpp)
+add_executable(ModernLibrary ${ModuleFile} ModernLibrary/Execute/main.cpp)
 
 source_group("String" FILES ${ModuleFile})
