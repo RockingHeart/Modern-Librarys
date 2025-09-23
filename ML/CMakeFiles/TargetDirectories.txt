@@ -1,3 +1,0 @@
-A:/ModernLibrarys/ML/CMakeFiles/ModernLibrary.dir
-A:/ModernLibrarys/ML/CMakeFiles/ALL_BUILD.dir
-A:/ModernLibrarys/ML/CMakeFiles/ZERO_CHECK.dir
