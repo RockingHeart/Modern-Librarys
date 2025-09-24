@@ -39,7 +39,7 @@
                 - begin与end用于支持范围for
                 ``` C++
                 int main() {
-                    string<string_trait<char>> str = { "Hello", 5 };
+                    basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                     for (auto& c : str) {
                         std::cout << c << ' ';
                     } std::cout << '\n';
@@ -92,7 +92,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         std::cout << str.const_string() << '\n'
                         return 0;
                     }
@@ -111,7 +111,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         std::cout << str.cont('l', 0, str.size()) << '\n'
                         return 0;
                     }
@@ -130,7 +130,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         std::cout << str.disconnect(1, 4).const_string() << '\n'
                         return 0;
                     }
@@ -148,10 +148,10 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str1 = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
                         std::cout << str.max_size() << '\n'
 
-                        string<string_trait<char>> str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
+                        basic_string<string_traits<char, value_traits::remain>> str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
                         std::cout << str.max_size() << '\n'
                         return 0;
                     }
@@ -168,10 +168,10 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str1 = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
                         std::cout << str.mode_state() << '\n'
 
-                        string<string_trait<char>> str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
+                        basic_string<string_traits<char, value_traits::remain>> str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
                         std::cout << str.mode_state() << '\n'
                         return 0;
                     }
@@ -189,7 +189,7 @@
                         import std;
 
                         int main() {
-                            string<string_trait<char>> str = { "Hello", 5 };
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                             std::cout << str[0] << '\n'
                             return 0;
                         }
@@ -208,7 +208,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         str.replace("World", 0, 5);
                         std::cout << str.const_string() << '\n'
                         return 0;
@@ -225,7 +225,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         str.replace('A', 0, 5);
                         std::cout << str.const_string() << '\n'
                         return 0;
@@ -267,7 +267,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str1 = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
 
                         auto print_str = [&]() {
                             std::cout << str.const_string() << ' '
@@ -295,7 +295,7 @@
                     import std;
 
                     int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         std::cout << str.size() << '\n'
                         return 0;
                     }
