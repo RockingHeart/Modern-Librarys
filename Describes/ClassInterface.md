@@ -1,10 +1,16 @@
 # 此为介绍类与其接口的文档
-> String是模板类
->    - 它需要填入string_traits
 
-> string_trait是模板类
->    - 它需要填入char_t与value_traits
 - String
+    > basic_string是模板类
+    >    - 它需要填入string_traits
+
+    > string_trait是模板类
+    >    - 它需要填入char_t与value_traits
+
+    > value_traits是类枚举
+    >    - no_residue
+    >    - remain
+
     - 作用：动态存储字符串
         - 类型描述：若string_trait的模板参数为char，则char_t为char，reference为char&，pointer_t为char*，const_pointer_t为const char*，以此类推
         - 对构造函数额外描述：当使用basic_string进行构造时，实际调用string_core构造函数。先构造核心，再构造框架
