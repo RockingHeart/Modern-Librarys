@@ -61,9 +61,10 @@
 5. disconnect(...)（已实现一个重载）
 6. max_size(void)（已实现）
 7. size(void)（已实现）
-8. at(size_t)（未实现）
-9. index(size_t)（未实现）
-10. template<class Type> Type to(void)（未实现）<br>
+8. resize(size)（已实现）
+9. at(size_t)（未实现）
+10. index(size_t)（未实现）
+11. template<class Type> Type to(void)（未实现）<br>
     已实现数量：7
 
 该项目当前使用语言：中文，支持MD文件
