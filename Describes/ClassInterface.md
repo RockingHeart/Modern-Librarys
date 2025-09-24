@@ -6,15 +6,18 @@
         - 以下为接口：
             ## string_core
             - 返回值类型：string_core 构造函数名：string_core
-                - 参数列表：(const_pointer_t str)
+                - 参数列表：(void)
+                - string_core(void)
+                    - 用于构造动态字符串<br>
+                - 参数列表：(const_pointer_t)
                 - string_core(const_pointer_t str)
                     - 用于构造动态字符串<br>
                         **参数str用于传入需存储的字符串，自动获取其字符串大小**
-                - 参数列表：(const_pointer_t str, size_t size)
+                - 参数列表：(const_pointer_t, size_t)
                 - string_core(const_pointer_t str, size_t size)
                     - 用于构造动态字符串<br>
                         **参数str用于传入需存储的字符串 <br> 参数size用于告知构造函数需存储的字符串大小**
-            - 模板：template<size_type SizeType> 返回值类型：string_core 构造函数名：string_core 参数列表：(SizeType size, char_t char_value)
+            - 模板：template<size_type SizeType> 返回值类型：string_core 构造函数名：string_core 参数列表：(SizeType, char_t)
             - template<size_type SizeType> string_core(SizeType size, char_t char_value)
                 - 用于构造多个单个字符的动态字符串<br>
                     **参数size用于传入此方法构造需要的长度**
@@ -85,6 +88,45 @@
                     ```
                     #### 以上代码输出："Hello"
                     函数返回描述：无
+
+            ## cont
+            - 返回值类型：size_t 非静态成员函数名：cont
+                - 参数列表: (char_t, size_t, size_t)
+                - size_t cont(char_t char_value, size_t point, size_t end)
+                    - 用于计数字符串内的char_value <br>
+                    **参数char_value为查找的目标 <br> 参数point为查找的起始位置 <br> 参数end为查找的终止位置**
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        string<string_trait<char>> str = { "Hello", 5 };
+                        std::cout << str.cont('l', 0, str.size()) << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：2
+                    函数返回值描述：返回查找的计数结果
+
+            ## disconnect
+            - 返回值类型：basic_string 非静态成员函数名：disconnect
+                - 参数列表：(size_t, size_t)
+                - basic_string disconnect(size_t point, size_t end)
+                    - 用于截取字符串区间的字符串 <br>
+                    **参数point为截取的起始位置 <br> 参数end为截取的终止位置**
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        string<string_trait<char>> str = { "Hello", 5 };
+                        std::cout << str.disconnect(1, 4).const_string() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出："ell"
+                    函数返回值描述：返回截取后的字符串
+
             
             ## max_size
             - 返回值类型：size_t 非静态成员函数名：max_size 参数列表：(void)
@@ -127,27 +169,28 @@
                     函数返回值类型描述：mode_status是枚举类型，内部有cache与big两种值，对应缓存模式与大模式。
             
             ## operator[]
-            - 返回值类型：reference 非静态成员运算符重载函数名：operator[] 参数列表：(size_t position)
-            - reference operator[](size_t position)
-                - 用于获取指定位置的字符，而非字符串
-                    ``` C++
-                    import string;
-                    import std;
+            - 返回值类型：reference 非静态成员运算符重载函数名：operator[]
+                - 参数列表：(size_t)
+                - reference operator[](size_t position)
+                    - 用于获取指定位置的字符，而非字符串
+                        ``` C++
+                        import string;
+                        import std;
 
-                    int main() {
-                        string<string_trait<char>> str = { "Hello", 5 };
-                        std::cout << str[0] << '\n'
-                        return 0;
-                    }
-                    ```
-                    #### 以上代码输出：'H'
-                    函数返回描述：无
+                        int main() {
+                            string<string_trait<char>> str = { "Hello", 5 };
+                            std::cout << str[0] << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：'H'
+                        函数返回描述：无
 
             ## replace
             - 返回值类型：bool 非静态成员函数名：replace
             - 用于重置指定位置的动态字符串
-                - 参数列表：(const_pointer_t str, size_t point, size_t end)
-                - bool replace(const_pointer_t str, size_t point, size_t end)<br>
+                - 参数列表：(const_pointer_t, size_t, size_t)
+                - bool replace(const_pointer_t str, size_t point, size_t end) <br>
                     **参数str为待替换的字符串 <br> 参数point为指定位置的起始位置 <br> 参数end为指定位置的终止位置**
                     ``` C++
                     import string;
@@ -163,7 +206,7 @@
                     #### 以上代码输出："World"
                     函数返回值描述：此函数返回bool值，指告用户replace成功与否
 
-                - 参数列表：(reference char_value, size_t point, size_t end)
+                - 参数列表：(reference, size_t, size_t)
                 - bool replace(reference char_value, size_t point, size_t end)<br>
                     **参数char_value为待替换的单个字符 <br> 参数point为指定位置的起始位置 <br> 参数end为指定位置的终止位置**
                     ``` C++
@@ -204,7 +247,7 @@
                 函数返回值描述：此函数返回bool值，指告用户replace成功与否
 
             ## resize
-            - 返回值类型：bool 非静态成员函数名：resize 参数列表：(size_t size)
+            - 返回值类型：bool 非静态成员函数名：resize 参数列表：(size_t)
             - bool resize(size_t size)
                 - 用于重置与更新动态字符串<br>
                     **参数size用于控制重置的大小**

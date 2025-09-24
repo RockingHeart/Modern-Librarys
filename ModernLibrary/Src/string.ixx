@@ -14,23 +14,27 @@ concept character_type = is_character_type<type>;
 template <typename type>
 concept size_type = std::is_integral_v<type>;
 
-export template <character_type CharType>
-struct string_traits {
-	using char_t          = CharType;
-	using reference       = CharType&;
-	using pointer_t       = CharType*;
-	using const_pointer_t = const CharType*;
-};
-
 export enum class value_traits {
 	no_residue,
 	remain
 };
 
-template <class StringTraits, value_traits ValueTrait>
+export template <character_type CharType, value_traits ValueTrait>
+struct string_traits {
+	using char_t          = CharType;
+	using reference       = CharType&;
+	using pointer_t       = CharType*;
+	using const_pointer_t = const CharType*;
+
+	static constexpr value_traits value_trait = ValueTrait;
+};
+
+template <class StringTraits>
 struct string_box {
-	using char_t    = StringTraits::char_t;
-	using pointer_t = StringTraits::pointer_t;
+	using string_traits = StringTraits;
+
+	using char_t    = string_traits::char_t;
+	using pointer_t = string_traits::pointer_t;
 
 	template <value_traits>
 	struct value_t;
@@ -55,7 +59,7 @@ struct string_box {
 		};
 	};
 
-	using value_type = value_t<ValueTrait>;
+	using value_type = value_t<string_traits::value_trait>;
 
 	constexpr static size_t buffer_size = sizeof(value_type) / sizeof(char_t);
 
@@ -71,17 +75,14 @@ struct string_box {
 };
 
 
-template <class BasicString, class StringTraits, value_traits ValueTrait>
+template <class BasicString, class StringTraits>
 class string_core :
-	    protected string_box<StringTraits, ValueTrait> {
+	    protected string_box<StringTraits> {
 public:
 	using string_traits = StringTraits;
 
 protected:
-	using box_t = string_box<StringTraits, ValueTrait>;
-
-public:
-	using residue_info = typename box_t::value_type::residue_info;
+	using box_t = string_box<StringTraits>;
 
 public:
 	using char_t          = typename string_traits::char_t;
@@ -105,6 +106,8 @@ private:
 	};
 
 public:
+
+	constexpr string_core() noexcept = default;
 
 	constexpr string_core(const_pointer_t str)
 		noexcept : box_t(std::strlen(str))
@@ -188,7 +191,7 @@ public:
 	}
 
 	template <class... ArgsType>
-	[[nodiscard]] constexpr bool replace(this basic_string& self, ArgsType... args)
+	[[nodiscard]] constexpr bool replace(this basic_string& self, ArgsType&&... args)
         noexcept requires (
 		    requires {
 		        self.replace_string(args...);
@@ -200,8 +203,40 @@ public:
 
 public:
 
-	constexpr const residue_info residue(this basic_string& self) {
-		return {
+	template <class... ArgsType>
+	constexpr size_t cont(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.count_string(args...);
+	        }
+		)
+	{
+		return self.count_string(args...);
+	}
+
+public:
+
+	template <class... ArgsType>
+	constexpr basic_string disconnect(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.disconnect_string(args...);
+	        }
+		)
+	{
+		return self.disconnect_string(args...);
+	}
+
+public:
+
+	constexpr const auto residue(this basic_string& self)
+		noexcept requires (
+		    requires {
+		        self.value.before;
+	        }
+		)
+	{
+		return typename box_t::value_type::residue_info {
 			self.value.before,
 			self.value.before_size,
 			self.value.before_alloc_size
@@ -260,12 +295,12 @@ public:
 	}
 };
 
-export template <class StringTraits, value_traits ValueTrait = value_traits::remain>
+export template <class StringTraits>
 class basic_string :
-	        public string_core<basic_string<StringTraits, ValueTrait>, StringTraits, ValueTrait> {
+	        public string_core<basic_string<StringTraits>, StringTraits> {
 private:
-	friend class   string_core<basic_string<StringTraits, ValueTrait>, StringTraits, ValueTrait>;
-	using core_t = string_core<basic_string<StringTraits, ValueTrait>, StringTraits, ValueTrait>;
+	friend class   string_core<basic_string<StringTraits>, StringTraits>;
+	using core_t = string_core<basic_string<StringTraits>, StringTraits>;
 
 public:
 	using string_traits = StringTraits;
@@ -348,6 +383,33 @@ private:
 
 private:
 
+	constexpr size_t count_string (
+		char_t char_value, size_t point, size_t end
+	) noexcept {
+		if (!within_range(point, end)) {
+			return 0;
+		}
+		size_t cont = 0;
+		const_pointer_t data = pointer();
+		for (; point != end; point++) {
+			if (data[point] == char_value) {
+				++cont;
+			}
+		}
+		return cont;
+	}
+
+private:
+
+	constexpr basic_string disconnect_string(size_t point, size_t end) noexcept {
+		if (!within_range(point, end)) {
+			return {};
+		}
+		return { pointer() + point, end };
+	}
+
+private:
+
 	constexpr pointer_t replace_impl (
 		size_t point, size_t end
 	) noexcept {
@@ -390,7 +452,7 @@ private:
 private:
 
 	constexpr void reisze_impl(size_t size) noexcept {
-		if constexpr (ValueTrait == value_traits::remain) {
+		if constexpr (string_traits::value_trait == value_traits::remain) {
 			core_t::value.before = core_t::value.pointer;
 			core_t::value.before_size = core_t::count;
 			core_t::value.before_alloc_size = core_t::value.alloc_size;
@@ -414,7 +476,7 @@ private:
 			core_t::value.pointer = new char_t[size];
 			core_t::value.alloc_size = size;
 			std::memcpy(core_t::value.pointer, clone, core_t::count);
-			if constexpr (ValueTrait == value_traits::remain) {
+			if constexpr (string_traits::value_trait == value_traits::remain) {
 				if (core_t::value.before) {
 					core_t::value.before = nullptr;
 				}

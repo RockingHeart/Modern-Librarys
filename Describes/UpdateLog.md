@@ -57,5 +57,10 @@
         - 该函数用于检测是否存有保留数据
     - 更新非静态成员函数residue：const residue_info residue(void)
         - 用于获取保留数据
+    - 更新空参构造函数
+    - 更新非静态成员函数cont：size_t cont(char_t value, size_t point, size_t end)
+        - 用于计数动态字符串内的value，从point开始至end结束，会判断范围是否有效
+    - 更新非静态成员函数disconnect：basic_string disconnect(size_t point, size_t end)
+        - 用于截取动态字符串区间的字符串，从point开始至end结束，会判断范围是否有效
 
 ## Describes更新不记录于此日志中
