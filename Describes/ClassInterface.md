@@ -13,7 +13,7 @@
 
     - 作用：动态存储字符串
         - 类型描述：若string_trait的模板参数为char，则char_t为char，reference为char&，pointer_t为char*，const_pointer_t为const char*，以此类推
-        - 对构造函数额外描述：当使用basic_string进行构造时，实际调用string_core构造函数。先构造核心，再构造框架
+        - 对basic_string的代码哲学描述：当使用basic_string进行构造时，实际调用string_core构造函数：先构造核心，再构造框架。核心由实现构建
         - 以下为接口：
             ## string_core
             - 返回值类型：string_core 构造函数名：string_core
@@ -58,7 +58,7 @@
                     - 检查存有保留数据并清除保留数据之后返回true
                 ``` C++
                 int main() {
-                    basic_string<string_traits<char>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                    basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                     str.resize(60);
                     std::cout << str.clear_residue() << '\n';
                     return 0;
@@ -75,7 +75,7 @@
                         - 记录保留数据的成员数据非空
                 ``` C++
                 int main() {
-                    basic_string<string_traits<char>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                    basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                     str.resize(60);
                     std::cout << str.leave_residue() << '\n';
                     return 0;
@@ -246,7 +246,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                        basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                         str.resize(60);
                         if (str.leave_residue()) {
 	                        std::cout << str.residue().size << '\n';
