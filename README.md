@@ -9,7 +9,7 @@
     - 项目源码：[Source](https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src)
 
 ## 规划表
-*实现状态随时更新*
+> *实现状态随时更新*
 
 | 项目实现 | 实现状态 | 实现时间 |
 | :---: | :---: | :---: |
@@ -24,47 +24,46 @@
 **在项目当前目录下使用控制台输入指令：CMake -B "./ML"，此指令用于指定生成目录，而-B命令参数之后的值是指定的目录，值类型为字符串** <br>
 
 ## 对实现基础basic_string的要求
-*实现状态随时更新*
+> *实现状态随时更新*
 
--若是多个参数的重载，则其参数为(...) <br>
--模板实现在其名前添加template与其参数 <br>
--重载实现若有模板重载实现，并不会于其实现表内的名前添加template <br>
--实现数量有重载实现累加而计
+    -若是多个参数的重载，则其参数为(...) <br>
+    -模板实现在其名前添加template与其参数 <br>
+    -重载实现若有模板重载实现，并不会于其实现表内的名前添加template <br>
+    -实现数量有重载实现累加而计
 
 ### 构造函数的实现
-    1. 空构造函数（已实现）
-    2. 参数为(char_t, size_t)的构造函数（已实现）
-    3. 参数为(const_pointer_t)的构造函数（已实现）
-    4. 参数为(const_pointer_t, size_t)的构造函数（已实现）
-    5. 参数为(const basic_string&)的构造函数（未实现）
-    6. 参数为(basic_string&&)的构造函数（未实现）
+1. 空构造函数（已实现）
+2. 参数为(char_t, size_t)的构造函数
+3. 参数为(const_pointer_t)的构造函数（已实现）
+4. 参数为(const_pointer_t, size_t)的构造函数（已实现）
+5. 参数为(const basic_string&)的构造函数（未实现）
+6. 参数为(basic_string&&)的构造函数（未实现）<br>
     已实现数量：3
 ### 运算符重载函数的实现
-    1. 参数
-        1-1. (const_pointer_t)
-        1-2. (const basic_string&)
-        1-3. (basic_string&&)
-    2. 以下实现均要求实现其参数为1-3的函数
-        2-1. operator =（未实现）
-        2-2. operator ==（未实现）
-        2-3. operator +（未实现）
-        2-4. operator +=（未实现）
-    3. operator[] (size_t)（已实现）
-    4. operator& (void)（未实现）
-    5. operator| (...)（未实现一个重载）
+1. 参数
+    1. (const_pointer_t)
+    2. (const basic_string&)
+    3. (basic_string&&)
+2. 以下实现均要求实现其参数为1-3的函数
+    1. operator =（未实现）
+    2. operator ==（未实现）
+    3. operator +（未实现）
+    4. operator +=（未实现）
+3. operator[] (size_t)（已实现）
+4. operator& (void)（未实现）
+5. operator| (...)（未实现一个重载）<br>
     已实现数量：1
 ### 非静态成员函数的实现
-    1. begin(void)（已实现）
-    2. end(void)（已实现）
-    3. const_string(void)（已实现）
-    4. cont(...)（已实现一个重载）
-    5. disconnect(...)（已实现一个重载）
-    6. max_size(void)（已实现）
-    7. size(void)（已实现）
-    8. at(size_t)（未实现）
-    9. index(size_t)（未实现）
-    10. template<class Type> Type to(void)（未实现）
+1. begin(void)（已实现）
+2. end(void)（已实现）
+3. const_string(void)（已实现）
+4. cont(...)（已实现一个重载）
+5. disconnect(...)（已实现一个重载）
+6. max_size(void)（已实现）
+7. size(void)（已实现）
+8. at(size_t)（未实现）
+9. index(size_t)（未实现）
+10. template<class Type> Type to(void)（未实现）<br>
     已实现数量：7
-        
 
 该项目当前使用语言：中文，支持MD文件
