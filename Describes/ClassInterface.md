@@ -12,8 +12,8 @@
     >    - remain
 
     - 作用：动态存储字符串
+        - basic_string描述：当使用basic_string进行构造时，实际调用string_core构造函数：先构造核心，再构造框架。核心由实现构建
         - 类型描述：若string_trait的模板参数为char，则char_t为char，reference为char&，pointer_t为char*，const_pointer_t为const char*，以此类推
-        - 对basic_string的代码哲学描述：当使用basic_string进行构造时，实际调用string_core构造函数：先构造核心，再构造框架。核心由实现构建
         - 以下为接口：
             ## string_core
             - 返回值类型：string_core 构造函数名：string_core
