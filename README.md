@@ -63,7 +63,7 @@
 1. begin(void)（已实现）
 2. end(void)（已实现）
 3. const_string(void)（已实现）
-4. cont(...)（已实现一个重载）
+4. tick(...)（已实现一个重载）
 5. disconnect(...)（已实现一个重载）
 6. max_size(void)（已实现）
 7. size(void)（已实现）

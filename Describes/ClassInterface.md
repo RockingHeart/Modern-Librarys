@@ -100,25 +100,6 @@
                     #### 以上代码输出："Hello"
                     函数返回描述：无
 
-            ## cont
-            - 返回值类型：size_t 非静态成员函数名：cont
-                - 参数列表: (char_t, size_t, size_t)
-                - size_t cont(char_t char_value, size_t point, size_t end)
-                    - 用于计数字符串内的char_value <br>
-                    **参数char_value为查找的目标 <br> 参数point为查找的起始位置 <br> 参数end为查找的终止位置**
-                    ``` C++
-                    import string;
-                    import std;
-
-                    int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                        std::cout << str.cont('l', 0, str.size()) << '\n'
-                        return 0;
-                    }
-                    ```
-                    #### 以上代码输出：2
-                    函数返回值描述：返回查找的计数结果
-
             ## disconnect
             - 返回值类型：basic_string 非静态成员函数名：disconnect
                 - 参数列表：(size_t, size_t)
@@ -178,9 +159,28 @@
                     ```
                     #### 以上代码str1输出： 0（缓存模式）<br>以上代码str2输出：1（大模式）
                     函数返回值类型描述：mode_status是枚举类型，内部有cache与big两种值，对应缓存模式与大模式。
+
+            ## oeprator+=
+            - 返回值类型：basic_string& 非静态成员运算符重载函数符号：+=
+                - 参数列表：(char_t)
+                - basic_string& operator+=(char_t char_value)
+                    - 用于扩展动态字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str += 'A';
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："HelloA"
+                        函数返回值描述：返回调用operator+=的对象
             
             ## operator[]
-            - 返回值类型：reference 非静态成员运算符重载函数名：operator[]
+            - 返回值类型：reference 非静态成员运算符重载函数符号：[]
                 - 参数列表：(size_t)
                 - reference operator[](size_t position)
                     - 用于获取指定位置的字符，而非字符串
@@ -302,3 +302,22 @@
                     ```
                     #### 以上代码str输出： 5
                     函数返回描述：无
+
+            ## tick
+            - 返回值类型：size_t 非静态成员函数名：tick
+                - 参数列表: (char_t, size_t, size_t)
+                - size_t tick(char_t char_value, size_t point, size_t end)
+                    - 用于计数字符串内的char_value <br>
+                    **参数char_value为查找的目标 <br> 参数point为查找的起始位置 <br> 参数end为查找的终止位置**
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.tick('l', 0, str.size()) << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：2
+                    函数返回值描述：返回查找的计数结果

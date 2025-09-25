@@ -1,6 +1,7 @@
 export module string;
 
 import <cstring>;
+import <cstdlib>;
 import <type_traits>;
 
 template <class type>
@@ -204,7 +205,7 @@ public:
 public:
 
 	template <class... ArgsType>
-	constexpr size_t cont(this basic_string& self, ArgsType&&... args)
+	constexpr size_t tick(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.count_string(args...);
@@ -287,11 +288,21 @@ public:
 
 public:
 
+	template <class... ArgsType>
+	constexpr basic_string& operator+=(this basic_string& self, ArgsType... args)
+		noexcept requires (
+		    requires {
+		        self.append(args...);
+	        }
+		)
+	{
+		return self.append(args...);
+	}
+
+public:
+
 	constexpr ~string_core() noexcept {
-		basic_string* self = static_cast<basic_string*>(this);
-		if (self->is_big_mode()) {
-			delete[] self->value.pointer;
-		}
+		static_cast<basic_string*>(this)->destruct();
 	}
 };
 
@@ -319,23 +330,35 @@ private:
 	constexpr void construct(const_pointer_t str) noexcept {
 		if (core_t::count < core_t::buffer_size) {
 			std::memcpy(core_t::buffer, str, core_t::count);
+			core_t::buffer[core_t::count] = char_t();
 			return;
 		}
+		auto& value = core_t::value;
 		size_t alloc_size = core_t::count * 2;
-		core_t::value.pointer = new char_t[alloc_size];
-		core_t::value.alloc_size = alloc_size;
-		std::memcpy(core_t::value.pointer, str, core_t::count);
+		value.pointer = new char_t[alloc_size];
+		value.alloc_size = alloc_size;
+		std::memcpy(value.pointer, str, core_t::count);
+		value.pointer[core_t::count] = char_t();
 	}
 
 	template <size_type SizeType>
 	constexpr void construct(SizeType size, char_t char_value) noexcept {
 		if (size < core_t::buffer_size) {
-			std::memset(core_t::buffer, static_cast<int>(char_value), size);
+			std::memset (
+				core_t::buffer,
+				static_cast<int>(char_value),
+				size
+			);
 		}
 		else {
-			core_t::value.pointer = new char_t[size];
-			core_t::value.alloc_size = size;
-			std::memset(core_t::value.pointer, static_cast<int>(char_value), size);
+			auto& value = core_t::value;
+			value.pointer = new char_t[size];
+			value.alloc_size = size;
+			std::memset (
+				value.pointer,
+				static_cast<int>(char_value),
+				size
+			);
 		}
 		core_t::count = size;
 	}
@@ -452,40 +475,42 @@ private:
 private:
 
 	constexpr void reisze_impl(size_t size) noexcept {
+		auto& value = core_t::value;
 		if constexpr (string_traits::value_trait == value_traits::remain) {
-			core_t::value.before = core_t::value.pointer;
-			core_t::value.before_size = core_t::count;
-			core_t::value.before_alloc_size = core_t::value.alloc_size;
-			core_t::value.pointer = new char_t[size];
-			core_t::value.alloc_size = size;
-			std::memcpy(core_t::value.pointer, core_t::value.before, core_t::count);
+			value.before = value.pointer;
+			value.before_size = core_t::count;
+			value.before_alloc_size = value.alloc_size;
+			value.alloc_size = size;
 		}
 		else {
-			const_pointer_t old_pointer = core_t::value.pointer;
-			core_t::value.pointer = new char_t[size];
-			core_t::value.alloc_size = size;
-			std::memcpy(core_t::value.pointer, old_pointer, core_t::count);
+			const_pointer_t old_pointer = value.pointer;
+			value.pointer = new char_t[size];
+			value.alloc_size = size;
+			std::memcpy(value.pointer, old_pointer, core_t::count);
 		}
 	}
 
 	template <bool respace_heap>
 	constexpr void respace(size_t size) noexcept {
+		auto& value = core_t::value;
 		if constexpr (respace_heap) {
 			pointer_t clone = new char_t[core_t::count];
 			std::memcpy(clone, core_t::buffer, core_t::count);
-			core_t::value.pointer = new char_t[size];
-			core_t::value.alloc_size = size;
-			std::memcpy(core_t::value.pointer, clone, core_t::count);
+			value.pointer = new char_t[size];
+			value.alloc_size = size;
+			std::memcpy(value.pointer, clone, core_t::count);
 			if constexpr (string_traits::value_trait == value_traits::remain) {
-				if (core_t::value.before) {
-					core_t::value.before = nullptr;
+				if (value.before) {
+					value.before = nullptr;
+					value.before_size = 0;
+					value.before_alloc_size = 0;
 				}
 			}
 		}
 		else {
 			pointer_t clone = new char_t[size];
-			std::memcpy(clone, core_t::value.pointer, size);
-			delete[] core_t::value.pointer;
+			std::memcpy(clone, value.pointer, size);
+			delete[] value.pointer;
 			std::memcpy(core_t::buffer, clone, size);
 		}
 	}
@@ -502,12 +527,62 @@ private:
 		else {
 			if (is_big_mode()) {
 				reisze_impl(size);
+				return true;
 			}
 			else {
 				respace<true>(size);
+				std::memset (
+					core_t::value.pointer + core_t::count,
+					0,
+					size - core_t::count
+				);
 			}
 		}
 		core_t::count = size;
 		return true;
+	}
+
+private:
+
+	constexpr void write(char_t char_value) noexcept {
+		auto& value = core_t::value;
+		size_t& count = core_t::count;
+		if (value.before == value.pointer) {
+			value.pointer = new char_t[value.alloc_size];
+			std::memcpy(value.pointer, value.before, count);
+		}
+		value.pointer[count] = char_value;
+		value.pointer[count + 1] = char_t();
+	}
+
+	constexpr basic_string& append(char_t char_value) noexcept {
+		size_t next_size = core_t::count + 1;
+		if (next_size < core_t::buffer_size) {
+			core_t::buffer[core_t::count] = char_value;
+		}
+		else {
+			if (is_big_mode()) {
+				write(char_value);
+			}
+			else {
+				respace<true>(next_size * 1.2);
+			}
+		}
+		core_t::count += 1;
+		return *this;
+	}
+
+private:
+
+	constexpr void destruct() noexcept {
+		if (is_big_mode()) {
+			auto& value = core_t::value;
+			if constexpr (string_traits::value_trait == value_traits::remain) {
+				if (value.before != value.pointer) {
+					delete[] value.before;
+				}
+			}
+			delete[] value.pointer;
+		}
 	}
 };

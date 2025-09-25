@@ -63,5 +63,10 @@
     - 更新非静态成员函数disconnect：basic_string disconnect(size_t point, size_t end)
         - 用于截取动态字符串区间的字符串，从point开始至end结束，会判断范围是否有效
     - 更改了析构逻辑
+    - 将成员函数：cont的名字更改为tick
+    - 更新非静态运算符重载函数operator+=：basic_string& operator+=(char_t char_value)
+        - 用于对动态字符串进行扩展
+        - 若满足写时更新条件
+            - 则动态字符串内部更新（你可能在外部看不到此更新，但是通过某些非静态成员函数，你可以看得到内部更新）
 
 ## Describes更新不记录于此日志中
