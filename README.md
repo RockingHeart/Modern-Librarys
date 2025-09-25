@@ -17,6 +17,10 @@
 | small_vector | 待实现 | 待String实现完毕 |
 | vector | 待实现 | 待small_vector实现完毕 |
 
+关于string在remain值特性下的写入特性
+: 如是成功保留
+- [ ] 当数据未变更时使用原数据，当数据变更时使用新数据
+
 ## CMake使用教程
 *下载*此项目至本地 <br>
 ! 使用CMake，若你使用GCC，请使用GCC 15及之上版本 <br>
