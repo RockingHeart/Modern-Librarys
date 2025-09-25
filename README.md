@@ -73,4 +73,5 @@
 11. template<class Type> Type to(void)（未实现）<br>
     已实现数量：7
 
-该项目当前使用语言：中文，支持MD文件
+该项目当前使用语言：中文，支持MD文件 <br>
+This project is currently using Chinese to support MD files.
