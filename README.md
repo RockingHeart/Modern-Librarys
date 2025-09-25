@@ -17,8 +17,11 @@
 | small_vector | 待实现 | 待String实现完毕 |
 | vector | 待实现 | 待small_vector实现完毕 |
 
-关于string在remain值特性下的写入特性
-: 如是成功保留
+<dl>
+    <dt>关于string在remain值特性下的写入特性</dt>
+    <dd>如是成功保留</dd>
+</dl>
+
 - [ ] 当数据未变更时使用原数据，当数据变更时使用新数据
 
 ## CMake使用教程
