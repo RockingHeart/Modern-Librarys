@@ -19,7 +19,7 @@
 | vector | 待实现 | 待small_vector实现完毕 |
 
 > [!TIP]
-> 若不知晓接口如何使用，请阅读：[ClassInterface]**
+> 若不知晓接口如何使用，请阅读：[ClassInterface]
 
 
 <dl>
