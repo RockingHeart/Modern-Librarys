@@ -19,8 +19,8 @@
 | vector | 待实现 | 待small_vector实现完毕 |
 
 > [!TIP]
-> 接口调用采用C++26的显示This与模板可变参数 <br>
-> 若不知晓接口如何使用，请阅读：[ClassInterface]
+    > 接口调用采用C++26的显示This与模板可变参数
+    > 若不知晓接口如何使用，请阅读：[ClassInterface]
 
 
 <dl>
