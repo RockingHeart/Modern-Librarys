@@ -12,9 +12,16 @@ elseif(GCC)
     add_compile_options(-fmodules)
 endif()
 
-file(GLOB ModuleFile "ModernLibrary/Src/*.ixx")
+file(GLOB StringPath "ModernLibrary/Src/String/*.ixx")
+file(GLOB UtilityPath "ModernLibrary/Src/Utility/*.ixx")
 
-add_executable(ModernLibrary ${ModuleFile} ModernLibrary/Execute/main.cpp)
+add_executable(ModernLibrary
+    ${StringPath}
+    ${UtilityPath}
+    ModernLibrary/Execute/main.cpp
+)
 
-source_group("String" FILES ${ModuleFile})
+source_group("String" FILES ${StringPath})
+source_group("Utility" FILES ${UtilityPath})
+
 source_group("Execute" ModernLibrary/Execute/main.cpp)

@@ -27,7 +27,7 @@
 *下载*此项目至本地 <br>
 ! 使用CMake，若你使用GCC，请使用GCC 15及之上版本 <br>
 **若未安装CMake，请安装[CMake](https://cmake.org/)，可在控制台输入CMake -V查看版本，侧面知晓CMake是否安装** <br>
-**在项目当前目录下使用控制台输入指令：CMake -B "./ML"，此指令用于指定生成目录，而-B命令参数之后的值是指定的目录，值类型为字符串** <br>
+**在项目当前目录下使用控制台输入指令：CMake -B "/ML"，此指令用于指定生成目录，而-B命令参数之后的值是指定的目录，值类型为字符串** <br>
 
 ## 对实现基础basic_string的要求
 > *实现状态随时更新*
@@ -60,18 +60,18 @@
 5. operator| (...)（未实现一个重载）<br>
     已实现数量：1
 ### 非静态成员函数的实现
-1. begin(void)（已实现）
-2. end(void)（已实现）
-3. const_string(void)（已实现）
-4. tick(...)（已实现一个重载）
-5. disconnect(...)（已实现一个重载）
-6. max_size(void)（已实现）
-7. size(void)（已实现）
-8. resize(size)（已实现）
-9. at(size_t)（未实现）
+ 1. begin(void)（已实现）
+ 2. end(void)（已实现）
+ 3. const_string(void)（已实现）
+ 4. tick(...)（已实现一个重载）
+ 5. disconnect(...)（已实现一个重载）
+ 6. max_size(void)（已实现）
+ 7. size(void)（已实现）
+ 8. resize(size)（已实现）
+ 9. at(size_t)（未实现）
 10. index(size_t)（未实现）
-11. template<class Type> Type to(void)（未实现）<br>
-    已实现数量：7
+11. template<class Type> Type to(...)（已实现一个重载）<br>
+    已实现数量：8
 
 该项目当前使用语言：中文，支持MD文件 <br>
 This project is currently using Chinese to support MD files.

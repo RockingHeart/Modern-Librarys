@@ -12,7 +12,6 @@
     >    - remain
 
     - 作用：动态存储字符串
-        - basic_string描述：当使用basic_string进行构造时，实际调用string_core构造函数：先构造核心，再构造框架。核心由实现构建
         - 类型描述：若string_trait的模板参数为char，则char_t为char，reference为char&，pointer_t为char*，const_pointer_t为const char*，以此类推
         - 以下为接口：
             ## string_core
@@ -48,6 +47,27 @@
                 ```
                 #### 以上代码输出："H e l l o"
                 函数返回描述：无
+
+            ## index
+            - 返回值类型：match<size_t> 非静态成员函数名：index
+                - 参数列表：(char_t, size_t, size_t)
+                - match<size_t> index(char_t target, size_t point, size_t end)
+                    - 用于查找指定目标的索引
+                        - 当参数point大于end时，反向查找
+                        - 当参数point小于end时，正向查找
+                    ``` C++
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.index('e', 0, str.size()) << '\n';
+                        std::cout << str.index('l', str.size(), 0) << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码第一次输出：1
+                    #### 以上代码第二次输出：3
+                    函数返回值描述：其返回值类型为模板结构体：template <ResultType> match，有成员为bool类型的found与Result类型的result，found存储查询成功结果，result存储查询结果。
+
+                    
             
             ## clear_residue
             - 返回值类型：bool 非静态成员函数名：clear_residue 参数列表：(void)
@@ -300,8 +320,25 @@
                         return 0;
                     }
                     ```
-                    #### 以上代码str输出： 5
+                    #### 以上代码输出： 5
                     函数返回描述：无
+
+            ## subscript
+            - 返回值类型：size_t 非静态成员函数名：bool 参数列表：(size_t)
+            - size_t subscript(size_t position)
+                - 用于判断position处于合法下标范围
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.subscript(4) << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： true
+                    函数返回值描述：合法则返回true，否则返回false
 
             ## tick
             - 返回值类型：size_t 非静态成员函数名：tick
@@ -321,3 +358,23 @@
                     ```
                     #### 以上代码输出：2
                     函数返回值描述：返回查找的计数结果
+
+            ## to
+            - 模板参数：<CastType> 返回值类型：CastType 非静态模板成员函数名：to
+                - 参数列表: (void)
+                - CastType to(void)
+                    - 用于将动态字符串对象转换为CastType类型对象
+                    - 你需要填入模板参数
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::string std_str = str.to<std::string>();
+                        std::cout << std_str << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： "Hello"
+                    函数返回值描述：它由CastType所构造

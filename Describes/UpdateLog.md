@@ -68,5 +68,15 @@
         - 用于对动态字符串进行扩展
         - 若满足写时更新条件
             - 则动态字符串内部更新（你可能在外部看不到此更新，但是通过某些非静态成员函数，你可以看得到内部更新）
+    - 更新非静态成员函数index：match<size_t> index(char_t char_value, size_t point, size_t end)
+        - 用于查找匹配，成功之后返回查找到的结果的下标
+        - 若point大于end
+            - 则从动态字符串末尾开始查询，直至动态字符串起始位置
+        - 若end大于point
+            - 则从动态字符串开始开始查询，直至动态字符串末尾位置
+    - 更新模板非静态成员函数to：template <typename CastType> to(void)
+        - 用于将动态字符串转为目标类型的对象，由目标类型自己构造
+    - 更新非静态成员函数：subscript(size_t)
+        - 用于判断下标是否合法
 
 ## Describes更新不记录于此日志中

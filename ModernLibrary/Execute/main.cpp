@@ -18,5 +18,12 @@ int main() {
 	std::cout << str.tick('B', 0, str.size()) << '\n';
 	auto str2 = str.disconnect(0, 2);
 	std::cout << str2.const_string() << '\n';
+	str[4] = 'T';
+	std::cout << str.index('T', 0, str.size()).result << '\n';
+	str[38] = 'D';
+	std::cout << str.index('D', str.size(), 0).result << '\n';
+	std::string std_str = str.to<std::string>();
+	std::cout << std_str << '\n';
+	std::cout << str.subscript(40) << '\n';
 	return 0;
 }

@@ -1,5 +1,7 @@
 export module string;
 
+import utility.match;
+
 import <cstring>;
 import <cstdlib>;
 import <type_traits>;
@@ -74,7 +76,6 @@ struct string_box {
 	constexpr string_box(size_t size = 0) noexcept : count(size) {};
 	constexpr ~string_box() noexcept = default;
 };
-
 
 template <class BasicString, class StringTraits>
 class string_core :
@@ -200,6 +201,43 @@ public:
 	    )
 	{
 		return self.replace_string(args...);
+	}
+
+public:
+
+	template <class... ArgsType>
+	[[nodiscard]] constexpr match<size_t> index(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.index_string(args...);
+	        }
+		)
+	{
+		return self.index_string(args...);
+	}
+
+	[[nodiscard]]
+	constexpr bool subscript(this basic_string& self, size_t position) noexcept {
+		return position < self.count;
+	}
+
+public:
+
+	template <typename CastType>
+	constexpr CastType to(this basic_string& self)
+	{
+		return self.template to_cast<CastType>();
+	}
+
+	template <typename CastType, class... ArgsType>
+	constexpr CastType to(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.template to_cast<CastType>(args...);
+	        }
+		)
+	{
+		return self.template to_cast<CastType>(args...);
 	}
 
 public:
@@ -540,6 +578,52 @@ private:
 		}
 		core_t::count = size;
 		return true;
+	}
+
+private:
+
+	constexpr match<size_t> front_index (
+		char_t target, size_t point, size_t end
+	) noexcept {
+		for (const_pointer_t data = pointer(); point > 0; point--) {
+			if (data[point] == target) {
+				return { true, point };
+			}
+		}
+		return { false, 0 };
+	};
+
+	constexpr match<size_t> last_index (
+		char_t target, size_t point, size_t end
+	) noexcept {
+		for (const_pointer_t data = pointer(); point < end; point++) {
+			if (data[point] == target) {
+				return { true, point };
+			}
+		}
+		return { false, 0 };
+	}
+
+	constexpr match<size_t> index_string (
+		char_t target, size_t point, size_t end
+	) noexcept {
+		if (point > end) {
+			return front_index(target, point, end);
+		}
+		return last_index(target, point, end);
+	}
+
+private:
+
+	template <typename CastType>
+	constexpr CastType to_cast()
+		noexcept requires (
+		    requires {
+		        CastType{ pointer_t(), size_t() };
+	        }
+		)
+	{
+		return { pointer(), core_t::count };
 	}
 
 private:
