@@ -18,9 +18,9 @@
 | small_vector | 待实现 | 待String实现完毕 |
 | vector | 待实现 | 待small_vector实现完毕 |
 
-::: tip
-    若不知晓接口如何使用，请阅读：[ClassInterface]**
-:::
+> [!TIP]
+> 若不知晓接口如何使用，请阅读：[ClassInterface]**
+
 
 <dl>
     <dt>关于string在remain值特性下的写入特性</dt>
