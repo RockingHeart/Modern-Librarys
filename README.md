@@ -3,11 +3,11 @@
 ## 正在实现String
 
 * 快速了解这个项目
-    - 项目接文：[ClassInterface](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md) 
-    - 项目协议：[License](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md)
-    - 项目更新：[UpdateLog](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md)
-    - 项目源码：[Source](https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src)
-    - 项目文介：[ImplationFile](https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ImplationFile.md)
+    - 项目接文：[ClassInterface]
+    - 项目协议：[License]
+    - 项目更新：[UpdateLog]
+    - 项目源码：[Source]
+    - 项目文介：[ImplationFile]
 
 ## 规划表
 > *实现状态随时更新*
@@ -17,6 +17,10 @@
 | string | 正在实现 | 实现基础有效时间为2025年11月份之前 |
 | small_vector | 待实现 | 待String实现完毕 |
 | vector | 待实现 | 待small_vector实现完毕 |
+
+::: tip
+    若不知晓接口如何使用，请阅读：[ClassInterface]**
+:::
 
 <dl>
     <dt>关于string在remain值特性下的写入特性</dt>
@@ -46,6 +50,7 @@
 5. 参数为(const basic_string&)的构造函数（未实现）
 6. 参数为(basic_string&&)的构造函数（未实现）<br>
     已实现数量：3
+
 ### 运算符重载函数的实现
 1. 参数
     1. (const_pointer_t)
@@ -60,6 +65,7 @@
 4. operator& (void)（未实现）
 5. operator| (...)（未实现一个重载）<br>
     已实现数量：1
+
 ### 非静态成员函数的实现
  1. begin(void)（已实现）
  2. end(void)（已实现）
@@ -76,3 +82,9 @@
 
 该项目当前使用语言：中文，支持MD文件 <br>
 This project is currently using Chinese to support MD files.
+
+[ClassInterface]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md
+[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
+[UpdateLog]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md
+[Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
+[ImplationFile]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ImplationFile.md
