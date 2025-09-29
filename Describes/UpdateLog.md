@@ -79,5 +79,7 @@
     - 更新非静态成员函数：subscript(size_t)
         - 用于判断下标是否合法
     - 更改非静态成员函数名：subscript为sub
+    - 更改构造函数construct(SizeType, char_t)参数顺序为(char_t, SizeType)
+    - 添加string_traits约束
 
 ## Describes更新不记录于此日志中

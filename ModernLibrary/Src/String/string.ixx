@@ -344,7 +344,17 @@ public:
 	}
 };
 
-export template <class StringTraits>
+template <class Traits>
+concept string_traits_type = requires {
+	typename Traits::char_t;
+	typename Traits::reference;
+	typename Traits::pointer_t;
+	typename Traits::const_pointer_t;
+
+	Traits::value_trait;
+};
+
+export template <string_traits_type StringTraits>
 class basic_string :
 	        public string_core<basic_string<StringTraits>, StringTraits> {
 private:
@@ -380,7 +390,7 @@ private:
 	}
 
 	template <size_type SizeType>
-	constexpr void construct(SizeType size, char_t char_value) noexcept {
+	constexpr void construct(char_t char_value, SizeType size) noexcept {
 		if (size < core_t::buffer_size) {
 			std::memset (
 				core_t::buffer,

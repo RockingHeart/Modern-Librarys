@@ -3,6 +3,7 @@
 - String
     > basic_string是模板类
     >    - 它需要填入string_traits
+    >        - string_traits需要满足string_traits_type约束
 
     > string_trait是模板类
     >    - 它需要填入char_t与value_traits
@@ -28,7 +29,7 @@
                     - 用于构造动态字符串<br>
                         **参数str用于传入需存储的字符串 <br> 参数size用于告知构造函数需存储的字符串大小**
             - 模板：template<size_type SizeType> 返回值类型：string_core 构造函数名：string_core 参数列表：(SizeType, char_t)
-            - template<size_type SizeType> string_core(SizeType size, char_t char_value)
+            - template<size_type SizeType> string_core(char_t char_value, SizeType size)
                 - 用于构造多个单个字符的动态字符串<br>
                     **参数size用于传入此方法构造需要的长度**
             
