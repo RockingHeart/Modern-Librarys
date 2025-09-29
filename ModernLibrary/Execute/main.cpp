@@ -1,6 +1,8 @@
 import std;
 import string;
 
+import <windows.h>;
+
 int main() {
 	basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	str.replace('B', 0, 40);

@@ -323,9 +323,9 @@
                     #### 以上代码输出： 5
                     函数返回描述：无
 
-            ## subscript
+            ## sub
             - 返回值类型：size_t 非静态成员函数名：bool 参数列表：(size_t)
-            - size_t subscript(size_t position)
+            - size_t sub(size_t position)
                 - 用于判断position处于合法下标范围
                     ``` C++
                     import string;
@@ -333,7 +333,7 @@
 
                     int main() {
                         basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                        std::cout << str.subscript(4) << '\n'
+                        std::cout << str.sub(4) << '\n'
                         return 0;
                     }
                     ```

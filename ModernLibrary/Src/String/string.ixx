@@ -7,7 +7,7 @@ import <cstdlib>;
 import <type_traits>;
 
 template <class type>
-constexpr bool is_character_type = std::_Is_any_of_v<
+constexpr bool is_character_type = std::_Is_any_of_v <
 	type, char, wchar_t, char8_t, char16_t, char32_t
 >;
 
@@ -217,7 +217,7 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr bool subscript(this basic_string& self, size_t position) noexcept {
+	constexpr bool sub(this basic_string& self, size_t position) noexcept {
 		return position < self.count;
 	}
 
@@ -515,16 +515,20 @@ private:
 	constexpr void reisze_impl(size_t size) noexcept {
 		auto& value = core_t::value;
 		if constexpr (string_traits::value_trait == value_traits::remain) {
-			value.before = value.pointer;
-			value.before_size = core_t::count;
-			value.before_alloc_size = value.alloc_size;
-			value.alloc_size = size;
+			if (value.before != value.pointer) {
+				if (value.before)
+					delete[] value.before;
+				value.before = value.pointer;
+				value.before_size = core_t::count;
+				value.before_alloc_size = value.alloc_size;
+				value.alloc_size = size;
+			}
 		}
 		else {
-			const_pointer_t old_pointer = value.pointer;
-			value.pointer = new char_t[size];
+			value.pointer = reinterpret_cast<char*>(
+				std::realloc(value.pointer, size)
+			);
 			value.alloc_size = size;
-			std::memcpy(value.pointer, old_pointer, core_t::count);
 		}
 	}
 
@@ -537,11 +541,10 @@ private:
 			value.pointer = new char_t[size];
 			value.alloc_size = size;
 			std::memcpy(value.pointer, clone, core_t::count);
+			delete[] clone;
 			if constexpr (string_traits::value_trait == value_traits::remain) {
 				if (value.before) {
 					value.before = nullptr;
-					value.before_size = 0;
-					value.before_alloc_size = 0;
 				}
 			}
 		}
@@ -549,7 +552,9 @@ private:
 			pointer_t clone = new char_t[size];
 			std::memcpy(clone, value.pointer, size);
 			delete[] value.pointer;
+			delete[] value.before;
 			std::memcpy(core_t::buffer, clone, size);
+			delete[] clone;
 		}
 	}
 
