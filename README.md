@@ -4,7 +4,6 @@
 
 * 快速了解这个项目
     - 项目接文：[ClassInterface]
-    - 项目协议：[License]
     - 项目更新：[UpdateLog]
     - 项目源码：[Source]
     - 项目文介：[ImplationFile]
@@ -92,7 +91,6 @@
 This project is currently using Chinese to support MD files.
 
 [ClassInterface]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md
-[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
 [UpdateLog]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
 [ImplationFile]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ImplationFile.md
