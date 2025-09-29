@@ -23,9 +23,15 @@
 >
 > 若不知晓接口如何使用，请阅读：[ClassInterface]
 
+<dl>
+    <dt>关于string在no_residue值特性下的特性</dt>
+</dl>
+
+- [x] 占用字节为24字节（MSVC）
+
 
 <dl>
-    <dt>关于string在remain值特性下的写入特性</dt>
+    <dt>关于string在remain值特性下的特性</dt>
 </dl>
 
 - [x] 当数据未变更时使用原数据，当数据变更时使用新数据
@@ -82,7 +88,7 @@
 11. template<class Type> Type to(...)（已实现一个重载）<br>
     已实现数量：8
 
-该项目当前使用语言：中文，支持MD文件 <br>
+该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
 
 [ClassInterface]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md
