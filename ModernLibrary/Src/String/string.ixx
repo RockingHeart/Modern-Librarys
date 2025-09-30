@@ -1,33 +1,33 @@
 export module string;
 
-import utility.match;
+import utility;
 
 import <cstring>;
 import <cstdlib>;
-import <type_traits>;
-
-template <class type>
-constexpr bool is_character_type = std::_Is_any_of_v <
-	type, char, wchar_t, char8_t, char16_t, char32_t
->;
-
-template <class type>
-concept character_type = is_character_type<type>;
-
-template <typename type>
-concept size_type = std::is_integral_v<type>;
 
 export enum class value_traits {
 	no_residue,
 	remain
 };
 
-export template <character_type CharType, value_traits ValueTrait>
+template <class Utility>
+concept string_utility_type = requires(Utility util) {
+	typename Utility::alloc_t;
+
+	util.strcopy;
+	util.strlenof;
+};
+
+export template <
+	character_type CharType, value_traits ValueTrait, string_utility_type StringUtility
+>
 struct string_traits {
 	using char_t          = CharType;
 	using reference       = CharType&;
 	using pointer_t       = CharType*;
 	using const_pointer_t = const CharType*;
+
+	using strutil = StringUtility;
 
 	static constexpr value_traits value_trait = ValueTrait;
 };
@@ -93,12 +93,16 @@ public:
 	using const_pointer_t = typename string_traits::const_pointer_t;
 
 private:
-	using basic_string = BasicString;
+	using basic_string =          BasicString;
+	using strutil      = typename string_traits::strutil;
+	using alloc_t      = typename strutil::alloc_t;
 
 protected:
 	using box_t::buffer_size;
 	using box_t::value, box_t::buffer;
 	using box_t::count;
+
+	alloc_t allocator;
 
 private:
 
@@ -363,6 +367,7 @@ private:
 
 public:
 	using string_traits = StringTraits;
+	using strutil       = typename string_traits::strutil;
 
 public:
 	using char_t          = typename string_traits::char_t;
@@ -377,15 +382,15 @@ private:
 
 	constexpr void construct(const_pointer_t str) noexcept {
 		if (core_t::count < core_t::buffer_size) {
-			std::memcpy(core_t::buffer, str, core_t::count);
+			strutil::strcopy(core_t::buffer, str, core_t::count);
 			core_t::buffer[core_t::count] = char_t();
 			return;
 		}
 		auto& value = core_t::value;
 		size_t alloc_size = core_t::count * 2;
-		value.pointer = new char_t[alloc_size];
+		value.pointer = core_t::allocator.allocate(alloc_size);
 		value.alloc_size = alloc_size;
-		std::memcpy(value.pointer, str, core_t::count);
+		strutil::strcopy(value.pointer, str, core_t::count);
 		value.pointer[core_t::count] = char_t();
 	}
 
@@ -400,7 +405,7 @@ private:
 		}
 		else {
 			auto& value = core_t::value;
-			value.pointer = new char_t[size];
+			value.pointer = core_t::allocator.allocate(size);
 			value.alloc_size = size;
 			std::memset (
 				value.pointer,
@@ -544,13 +549,14 @@ private:
 
 	template <bool respace_heap>
 	constexpr void respace(size_t size) noexcept {
-		auto& value = core_t::value;
+		auto& value     = core_t::value;
+		auto& allocator = core_t::allocator;
 		if constexpr (respace_heap) {
-			pointer_t clone = new char_t[core_t::count];
-			std::memcpy(clone, core_t::buffer, core_t::count);
-			value.pointer = new char_t[size];
+			pointer_t clone = allocator.allocate(core_t::count);
+			strutil::strcopy(clone, core_t::buffer, core_t::count);
+			value.pointer = allocator.allocate(size);
 			value.alloc_size = size;
-			std::memcpy(value.pointer, clone, core_t::count);
+			strutil::strcopy(value.pointer, clone, core_t::count);
 			delete[] clone;
 			if constexpr (string_traits::value_trait == value_traits::remain) {
 				if (value.before) {
@@ -559,11 +565,11 @@ private:
 			}
 		}
 		else {
-			pointer_t clone = new char_t[size];
-			std::memcpy(clone, value.pointer, size);
+			pointer_t clone = allocator.allocate(size);
+			strutil::strcopy(clone, value.pointer, size);
 			delete[] value.pointer;
 			delete[] value.before;
-			std::memcpy(core_t::buffer, clone, size);
+			strutil::strcopy(core_t::buffer, clone, size);
 			delete[] clone;
 		}
 	}
@@ -647,8 +653,8 @@ private:
 		auto& value = core_t::value;
 		size_t& count = core_t::count;
 		if (value.before == value.pointer) {
-			value.pointer = new char_t[value.alloc_size];
-			std::memcpy(value.pointer, value.before, count);
+			value.pointer = core_t::allocator.allocate(value.alloc_size);
+			strutil::strcopy(value.pointer, value.before, count);
 		}
 		value.pointer[count] = char_value;
 		value.pointer[count + 1] = char_t();

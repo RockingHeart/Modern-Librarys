@@ -81,5 +81,7 @@
     - 更改非静态成员函数名：subscript为sub
     - 更改构造函数construct(SizeType, char_t)参数顺序为(char_t, SizeType)
     - 添加string_traits约束
+    - 为提供字符判断与约束，添加了type_restion文件
+    - 为string_traits添加utility类型
 
 ## Describes更新不记录于此日志中

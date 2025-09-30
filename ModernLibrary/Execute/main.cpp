@@ -1,10 +1,10 @@
 import std;
 import string;
-
+import utility;
 import <windows.h>;
 
 int main() {
-	basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	basic_string<string_traits<char, value_traits::remain, strutil<char, std::allocator<char>>>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	str.replace('B', 0, 40);
 	str.resize(50);
 	if (str.leave_residue()) {
@@ -26,6 +26,6 @@ int main() {
 	std::cout << str.index('D', str.size(), 0).result << '\n';
 	std::string std_str = str.to<std::string>();
 	std::cout << std_str << '\n';
-	std::cout << str.subscript(40) << '\n';
+	std::cout << str.sub(40) << '\n';
 	return 0;
 }
