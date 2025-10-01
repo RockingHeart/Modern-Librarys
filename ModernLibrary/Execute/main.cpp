@@ -2,7 +2,6 @@ import std;
 import string;
 import utility;
 import <windows.h>;
-
 int main() {
 	basic_string<string_traits<char, value_traits::remain, strutil<char, std::allocator<char>>>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	str.replace('B', 0, 40);

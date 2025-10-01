@@ -83,5 +83,7 @@
     - 添加string_traits约束
     - 为提供字符判断与约束，添加了type_restion文件
     - 为string_traits添加utility类型
+    - 针对字符串工具的strcopy，为其编写当size小于13时进行常量展开优化
+    - 针对字符串工具的strset，为其编写当size满足条件时（size % 16 == 0）循环展开优化
 
 ## Describes更新不记录于此日志中

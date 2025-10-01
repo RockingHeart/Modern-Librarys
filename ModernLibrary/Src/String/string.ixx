@@ -397,9 +397,9 @@ private:
 	template <size_type SizeType>
 	constexpr void construct(char_t char_value, SizeType size) noexcept {
 		if (size < core_t::buffer_size) {
-			std::memset (
+			strutil::strset (
 				core_t::buffer,
-				static_cast<int>(char_value),
+				char_value,
 				size
 			);
 		}
@@ -407,9 +407,9 @@ private:
 			auto& value = core_t::value;
 			value.pointer = core_t::allocator.allocate(size);
 			value.alloc_size = size;
-			std::memset (
+			strutil::strset (
 				value.pointer,
-				static_cast<int>(char_value),
+				char_value,
 				size
 			);
 		}
@@ -540,7 +540,7 @@ private:
 			}
 		}
 		else {
-			value.pointer = reinterpret_cast<char*>(
+			value.pointer = reinterpret_cast<char*> (
 				std::realloc(value.pointer, size)
 			);
 			value.alloc_size = size;
@@ -590,9 +590,9 @@ private:
 			}
 			else {
 				respace<true>(size);
-				std::memset (
+				strutil::strset (
 					core_t::value.pointer + core_t::count,
-					0,
+					char_t(),
 					size - core_t::count
 				);
 			}
@@ -691,3 +691,6 @@ private:
 		}
 	}
 };
+
+//export template <character_type CharType>
+//using string = basic_string<string_traits<CharType, value_traits::remain, strutil<CharType, std::allocator<CharType>>>>;
