@@ -46,13 +46,16 @@ public:
 	constexpr static CharType* strcopy (
 		CharType* dest, const CharType* src, size_t size
 	) noexcept {
-		if (size < 13) {
-			dest[11] = src[11]; dest[10] = src[10];
-			dest[9]  = src[9];  dest[8]  = src[8];
-			dest[7]  = src[7];  dest[6]  = src[6];
-			dest[5]  = src[5];  dest[4]  = src[4];
-			dest[3]  = src[3];  dest[2]  = src[2];
-			dest[1]  = src[1];  dest[0]  = src[0];
+		if (size < 7) {
+			switch (size) {
+				case 6: dest[5] = src[5];
+				case 5: dest[4] = src[4];
+				case 4: dest[3] = src[3];
+				case 3: dest[2] = src[2];
+				case 2: dest[1] = src[1];
+				case 1: dest[0] = src[0];
+					break;
+			}
 			return dest;
 		}
 		else {
@@ -65,7 +68,7 @@ public:
 		CharType* dest, CharType value, size_t size
 	) noexcept {
 		if (size % 16 == 0) {
-			for (size_t i = 0; i < size; i += 16) {
+			for (size_t i = 16; i < size; i += 16) {
 				dest[i]      = value; dest[i + 1]  = value;
 				dest[i + 2]  = value; dest[i + 3]  = value;
 				dest[i + 4]  = value; dest[i + 5]  = value;

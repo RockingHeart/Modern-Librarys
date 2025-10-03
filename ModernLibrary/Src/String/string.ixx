@@ -2,8 +2,7 @@ export module string;
 
 import utility;
 
-import <cstring>;
-import <cstdlib>;
+import <xmemory>;
 
 export enum class value_traits {
 	no_residue,
@@ -28,6 +27,7 @@ struct string_traits {
 	using const_pointer_t = const CharType*;
 
 	using strutil = StringUtility;
+	using alloc_t = typename strutil::alloc_t;
 
 	static constexpr value_traits value_trait = ValueTrait;
 };
@@ -79,6 +79,7 @@ struct string_box {
 
 template <class BasicString, class StringTraits>
 class string_core :
+	    private   StringTraits::alloc_t,
 	    protected string_box<StringTraits> {
 public:
 	using string_traits = StringTraits;
@@ -95,14 +96,12 @@ public:
 private:
 	using basic_string =          BasicString;
 	using strutil      = typename string_traits::strutil;
-	using alloc_t      = typename strutil::alloc_t;
+	using alloc_t      = typename string_traits::alloc_t;
 
 protected:
 	using box_t::buffer_size;
 	using box_t::value, box_t::buffer;
 	using box_t::count;
-
-	alloc_t allocator;
 
 private:
 
@@ -116,7 +115,7 @@ public:
 	constexpr string_core() noexcept = default;
 
 	constexpr string_core(const_pointer_t str)
-		noexcept : box_t(std::strlen(str))
+		noexcept : box_t(::strlen(str))
 	{
 		static_cast<basic_string*>(this)->construct(str);
 	}
@@ -227,12 +226,6 @@ public:
 
 public:
 
-	template <typename CastType>
-	constexpr CastType to(this basic_string& self)
-	{
-		return self.template to_cast<CastType>();
-	}
-
 	template <typename CastType, class... ArgsType>
 	constexpr CastType to(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
@@ -314,8 +307,9 @@ public:
 		if (!self.leave_residue()) {
 			return false;
 		}
-		delete[] self.value.before;
-		self.value.before = nullptr;
+		auto& value = self.value;
+		self.allocator().deallocate(value.before, value.before_alloc_size);
+		value.before = nullptr;
 		return true;
 	}
 
@@ -368,6 +362,7 @@ private:
 public:
 	using string_traits = StringTraits;
 	using strutil       = typename string_traits::strutil;
+	using alloc_t       = typename string_traits::alloc_t;
 
 public:
 	using char_t          = typename string_traits::char_t;
@@ -388,7 +383,7 @@ private:
 		}
 		auto& value = core_t::value;
 		size_t alloc_size = core_t::count * 2;
-		value.pointer = core_t::allocator.allocate(alloc_size);
+		value.pointer = allocator().allocate(alloc_size);
 		value.alloc_size = alloc_size;
 		strutil::strcopy(value.pointer, str, core_t::count);
 		value.pointer[core_t::count] = char_t();
@@ -405,7 +400,7 @@ private:
 		}
 		else {
 			auto& value = core_t::value;
-			value.pointer = core_t::allocator.allocate(size);
+			value.pointer = allocator().allocate(size);
 			value.alloc_size = size;
 			strutil::strset (
 				value.pointer,
@@ -414,6 +409,12 @@ private:
 			);
 		}
 		core_t::count = size;
+	}
+
+private:
+
+	constexpr alloc_t& allocator() noexcept {
+		return *reinterpret_cast<alloc_t*>(this);
 	}
 
 private:
@@ -532,7 +533,7 @@ private:
 		if constexpr (string_traits::value_trait == value_traits::remain) {
 			if (value.before != value.pointer) {
 				if (value.before)
-					delete[] value.before;
+					allocator().deallocate(value.before, value.before_alloc_size);
 				value.before = value.pointer;
 				value.before_size = core_t::count;
 				value.before_alloc_size = value.alloc_size;
@@ -541,7 +542,7 @@ private:
 		}
 		else {
 			value.pointer = reinterpret_cast<char*> (
-				std::realloc(value.pointer, size)
+				::realloc(value.pointer, size)
 			);
 			value.alloc_size = size;
 		}
@@ -549,15 +550,15 @@ private:
 
 	template <bool respace_heap>
 	constexpr void respace(size_t size) noexcept {
-		auto& value     = core_t::value;
-		auto& allocator = core_t::allocator;
+		auto& value = core_t::value;
+		auto& alloc = allocator();
 		if constexpr (respace_heap) {
-			pointer_t clone = allocator.allocate(core_t::count);
+			pointer_t clone = alloc.allocate(core_t::count);
 			strutil::strcopy(clone, core_t::buffer, core_t::count);
-			value.pointer = allocator.allocate(size);
+			value.pointer = alloc.allocate(size);
 			value.alloc_size = size;
 			strutil::strcopy(value.pointer, clone, core_t::count);
-			delete[] clone;
+			alloc.deallocate(clone, core_t::count);
 			if constexpr (string_traits::value_trait == value_traits::remain) {
 				if (value.before) {
 					value.before = nullptr;
@@ -565,12 +566,14 @@ private:
 			}
 		}
 		else {
-			pointer_t clone = allocator.allocate(size);
+			pointer_t clone = alloc.allocate(size);
 			strutil::strcopy(clone, value.pointer, size);
-			delete[] value.pointer;
-			delete[] value.before;
+			alloc.deallocate(value.pointer, value.alloc_size);
+			if constexpr (string_traits::value_trait == value_traits::remain) {
+				alloc.deallocate(value.before, value.before_alloc_size);
+			}
 			strutil::strcopy(core_t::buffer, clone, size);
-			delete[] clone;
+			alloc.deallocate(clone, size);
 		}
 	}
 
@@ -647,14 +650,30 @@ private:
 		return { pointer(), core_t::count };
 	}
 
+	template <typename CastType>
+	constexpr CastType to_cast(size_t offset)
+		noexcept requires (
+		    requires {
+		        CastType{ pointer_t(), size_t() };
+	        }
+		)
+	{
+		return { pointer() + offset, core_t::count - offset };
+	}
+
 private:
 
-	constexpr void write(char_t char_value) noexcept {
-		auto& value = core_t::value;
+	constexpr void append_write(char_t char_value) noexcept {
+		auto& value   = core_t::value;
 		size_t& count = core_t::count;
-		if (value.before == value.pointer) {
-			value.pointer = core_t::allocator.allocate(value.alloc_size);
-			strutil::strcopy(value.pointer, value.before, count);
+		if (count + 1 > value.alloc_size) {
+			reisze_impl((count + 1) * 1.5);
+		}
+		if constexpr (string_traits::value_trait == value_traits::remain) {
+			if (value.before == value.pointer) {
+				value.pointer = allocator().allocate(value.alloc_size);
+				strutil::strcopy(value.pointer, value.before, count);
+			}
 		}
 		value.pointer[count] = char_value;
 		value.pointer[count + 1] = char_t();
@@ -667,10 +686,11 @@ private:
 		}
 		else {
 			if (is_big_mode()) {
-				write(char_value);
+				append_write(char_value);
 			}
 			else {
 				respace<true>(next_size * 1.2);
+				core_t::value.pointer[core_t::count] = char_value;
 			}
 		}
 		core_t::count += 1;
@@ -682,15 +702,16 @@ private:
 	constexpr void destruct() noexcept {
 		if (is_big_mode()) {
 			auto& value = core_t::value;
+			auto& alloc = allocator();
 			if constexpr (string_traits::value_trait == value_traits::remain) {
 				if (value.before != value.pointer) {
-					delete[] value.before;
+					alloc.deallocate(value.before, value.before_alloc_size);
 				}
 			}
-			delete[] value.pointer;
+			alloc.deallocate(value.pointer, value.alloc_size);
 		}
 	}
 };
 
-//export template <character_type CharType>
-//using string = basic_string<string_traits<CharType, value_traits::remain, strutil<CharType, std::allocator<CharType>>>>;
+export template <character_type CharType, value_traits ValueTraits = value_traits::no_residue>
+using string = basic_string<string_traits<CharType, ValueTraits, strutil<CharType, std::allocator<CharType>>>>;

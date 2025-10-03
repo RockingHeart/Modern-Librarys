@@ -27,7 +27,7 @@
     <dt>关于string在no_residue值特性下的特性</dt>
 </dl>
 
-- [x] 占用字节为24字节（MSVC）
+- [x] 64位占用字节为24字节（MSVC，且allocator无状态）
 
 
 <dl>

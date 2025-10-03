@@ -365,7 +365,7 @@
                 - 参数列表: (void)
                 - CastType to(void)
                     - 用于将动态字符串对象转换为CastType类型对象
-                    - 你需要填入模板参数
+                    - 需要填入模板参数
                     ``` C++
                     import string;
                     import std;
@@ -378,4 +378,22 @@
                     }
                     ```
                     #### 以上代码输出： "Hello"
+                    函数返回值描述：它由CastType所构造
+                
+                - 参数列表：(size_t)
+                - CastType to(size_t offset)
+                    - 用于将动态字符串对象偏移offset数目的字符串转换为CastType类型对象
+                    - 需要填入模板参数
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::string std_str = str.to<std::string>(1);
+                        std::cout << std_str << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： "ello"
                     函数返回值描述：它由CastType所构造
