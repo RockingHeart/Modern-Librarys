@@ -71,6 +71,7 @@ struct string_box {
 	struct buffer_t {
 		char_t        pointer[buffer_size]{};
 		unsigned char count : 7;
+		bool cache          : 1;
 	};
 
 	union {
@@ -78,9 +79,7 @@ struct string_box {
 		buffer_t       buffer;
 	};
 
-	bool cache : 1;
-
-	constexpr  string_box() noexcept : buffer{ .count = 0 }, cache(true) {
+	constexpr  string_box() noexcept : buffer{ .count = 0, .cache = true } {
 		if constexpr (string_traits::value_trait == value_traits::remain) {
 			value.before = nullptr;
 		}
@@ -412,7 +411,7 @@ private:
 		value.count = size;
 		strutil::strcopy(value.pointer, str, size);
 		value.pointer[size] = char_t();
-		core_t::cache = false;
+		core_t::buffer.cache = false;
 	}
 
 	template <size_type SizeType>
@@ -438,7 +437,7 @@ private:
 				char_value,
 				size
 			);
-			core_t::cache = false;
+			core_t::buffer.cache = false;
 		}
 	}
 
@@ -497,12 +496,12 @@ private:
 
 	[[nodiscard]]
 	constexpr bool is_big_mode() const noexcept {
-		return !core_t::cache;
+		return !core_t::buffer.cache;
 	}
 
 	[[nodiscard]]
 	constexpr bool is_ceche_mode() const noexcept {
-		return core_t::cache;
+		return core_t::buffer.cache;
 	}
 
 private:
@@ -607,14 +606,14 @@ private:
 
 	constexpr bool resize_string(size_t size, char_t fill) noexcept {
 		auto& value = core_t::value;
-		if (core_t::cache) {
+		if (core_t::buffer.cache) {
 			auto& buffer = core_t::buffer;
 			if (size > core_t::buffer_size) {
 				respace<true>(size);
 				value.count = size;
 				strutil::strset(value.pointer, fill, value.count - 1);
 				value.pointer[value.count - 1] = char_t();
-				core_t::cache = false;
+				buffer.cache = false;
 			}
 			else {
 				buffer.pointer[size] = char_t();
@@ -699,7 +698,7 @@ private:
 	constexpr basic_string& append(char_t char_value) noexcept {
 		auto& value        = core_t::value;
 		size_t& heap_count = value.count;
-		if (core_t::cache) {
+		if (core_t::buffer.cache) {
 			auto& buffer = core_t::buffer;
 			size_t size  = buffer.count;
 			size_t next  = size + 1;
@@ -708,7 +707,7 @@ private:
 				value.pointer[heap_count] = char_value;
 				++heap_count;
 				value.pointer[heap_count] = char_t();
-				core_t::cache = false;
+				buffer.cache = false;
 			}
 			else {
 				buffer.pointer[size] = char_value;

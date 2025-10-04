@@ -10,6 +10,7 @@ auto strset(void* ptr, int val, size_t size) {
 }
 
 int main() {
+	std::cout << sizeof(string<char, value_traits::remain>) << '\n';
 	string<char, value_traits::remain> str = "A";
 	std::cout << str.max_size() << '\n';
 	str.resize(50, 'a');

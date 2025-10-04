@@ -28,13 +28,16 @@
 </dl>
 
 - [x] 64位占用字节为24字节（MSVC，且allocator无状态）
+- [x] 64位的缓存大小为23字节（MSVC，且allocator无状态）
 
 
 <dl>
     <dt>关于string在remain值特性下的特性</dt>
 </dl>
 
-- [x] 当数据未变更时使用原数据，当数据变更时使用新数据
+- [x] 双重数据
+- [x] 64位占用字节为48字节（MSVC，且allocator无状态）
+- [x] 64位的缓存大小为47字节（MSVC，且allocator无状态）
 
 ## CMake使用教程
 *下载*此项目至本地 <br>
