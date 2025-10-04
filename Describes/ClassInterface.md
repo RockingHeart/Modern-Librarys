@@ -279,10 +279,11 @@
                 函数返回值描述：此函数返回bool值，指告用户replace成功与否
 
             ## resize
-            - 返回值类型：bool 非静态成员函数名：resize 参数列表：(size_t)
-            - bool resize(size_t size)
+            - 返回值类型：bool 非静态成员函数名：resize 参数列表：(size_t, char_t)
+            - bool resize(size_t size, char_t fill)
                 - 用于重置与更新动态字符串<br>
                     **参数size用于控制重置的大小**
+                    **参数fill用于填充扩展**
                     ``` C++
                     import string;
                     import std;
