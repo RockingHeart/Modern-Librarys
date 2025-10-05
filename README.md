@@ -87,7 +87,7 @@
  7. size(void)（已实现）
  8. resize(size)（已实现）
  9. at(size_t)（未实现）
-10. index(size_t)（未实现）
+10. index(...)（已实现两个重载）
 11. template<class Type> Type to(...)（已实现一个重载）<br>
     已实现数量：9
 

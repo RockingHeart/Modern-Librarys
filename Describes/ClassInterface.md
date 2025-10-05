@@ -1,6 +1,28 @@
 # 此为介绍类与其接口的文档
 
+- 字符串接口快照表
+| Functions | Shoots |
+| :---: | :---: | :---: |
+| construct | [construct] |
+| begin and end | [begin_and_end] |
+| index | [index] |
+| clear residue | [clear_residue] |
+| leave residue | [leave_residue] |
+| const string | [const_string] |
+| disconnect | [disconnect] |
+| max size | [max_size] |
+| mode state | [mode_state] |
+| operator | [operator] |
+| replace | [replace] |
+| residue | [residue] |
+| resize | [resize] |
+| restore cache mode | [restore_cache_mode] |
+| size | [size] |
+| tick | [tick] |
+| to | [to] |
+
 - String
+
     > basic_string是模板类
     >    - 它需要填入string_traits
     >        - string_traits需要满足string_traits_type约束
@@ -51,7 +73,8 @@
                 函数返回描述：无
 
             ## index
-            - 返回值类型：match<size_t> 非静态成员函数名：index
+            - 非静态成员函数名：index
+                - 返回值类型：match<size_t> 
                 - 参数列表：(char_t, size_t, size_t)
                 - match<size_t> index(char_t target, size_t point, size_t end)
                     - 用于查找指定目标的索引
@@ -68,6 +91,23 @@
                     #### 以上代码第一次输出：1
                     #### 以上代码第二次输出：3
                     函数返回值描述：其返回值类型为模板结构体：template <ResultType> match，有成员为bool类型的found与Result类型的result，found存储查询成功结果，result存储查询结果。
+                
+                - 返回值类型：bool
+                - 参数列表：(size_t)
+                - bool index(size_t position)
+                - 用于判断position处于合法下标范围
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.index(4) << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： true
+                    函数返回值描述：合法则返回true，否则返回false
 
                     
             
@@ -182,7 +222,7 @@
                     #### 以上代码str1输出： 0（缓存模式）<br>以上代码str2输出：1（大模式）
                     函数返回值类型描述：mode_status是枚举类型，内部有cache与big两种值，对应缓存模式与大模式。
 
-            ## oeprator+=
+            ## operator+=
             - 返回值类型：basic_string& 非静态成员运算符重载函数符号：+=
                 - 参数列表：(char_t)
                 - basic_string& operator+=(char_t char_value)
@@ -367,23 +407,6 @@
                     #### 以上代码输出： 5
                     函数返回描述：无
 
-            ## sub
-            - 返回值类型：size_t 非静态成员函数名：bool 参数列表：(size_t)
-            - size_t sub(size_t position)
-                - 用于判断position处于合法下标范围
-                    ``` C++
-                    import string;
-                    import std;
-
-                    int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                        std::cout << str.sub(4) << '\n'
-                        return 0;
-                    }
-                    ```
-                    #### 以上代码输出： true
-                    函数返回值描述：合法则返回true，否则返回false
-
             ## tick
             - 返回值类型：size_t 非静态成员函数名：tick
                 - 参数列表: (char_t, size_t, size_t)
@@ -440,3 +463,22 @@
                     ```
                     #### 以上代码输出： "ello"
                     函数返回值描述：它由CastType所构造
+
+
+[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#string_core 
+[begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#begin-and-end
+[index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#index
+[clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#clear_residue
+[leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#leave_residue
+[const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#const_string
+[disconnect]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#disconnect
+[max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#max_size
+[mode_state]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#mode_state
+[operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#operator
+[replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#replace
+[residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#residue
+[resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#resize
+[restore_cache_mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#restore_cache_mode
+[size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#size
+[tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#tick
+[to]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#to
