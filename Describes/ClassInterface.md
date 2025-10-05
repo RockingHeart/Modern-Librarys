@@ -1,5 +1,7 @@
 # 此为介绍类与其接口的文档
 
+- 字符串接口快照表
+
 | Functions | Shoots |
 | :---: | :---: |
 | construct | [construct] |
