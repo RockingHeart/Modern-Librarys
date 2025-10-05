@@ -2,7 +2,7 @@
 
 ## 字符串接口快照表
 
-| Functions | Shoots |
+| Interfaces | Shoots |
 | :---: | :---: |
 | construct | [construct] |
 | begin and end | [begin_and_end] |
