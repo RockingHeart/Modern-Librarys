@@ -4,13 +4,13 @@
     > basic_string是模板类
     >
         > [!NOTE]
-            > - 它需要填入string_traits
-    >        - string_traits需要满足string_traits_type约束
+        > - 它需要填入string_traits
+            > - string_traits需要满足string_traits_type约束
 
     > string_trait是模板类
     >
         > [!NOTE]
-            > - 它需要填入char_t与value_traits
+        > - 它需要填入char_t与value_traits
 
     > value_traits是类枚举
     >    - no_residue
