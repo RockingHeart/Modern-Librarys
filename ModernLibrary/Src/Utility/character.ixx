@@ -1,4 +1,4 @@
-export module utility:strutil;
+export module utility : strutil;
 
 import :type_restion;
 

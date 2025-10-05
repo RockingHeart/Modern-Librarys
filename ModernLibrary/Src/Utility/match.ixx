@@ -1,4 +1,4 @@
-export module utility:match;
+export module utility : match;
 
 export template <typename ResultType>
 struct match {

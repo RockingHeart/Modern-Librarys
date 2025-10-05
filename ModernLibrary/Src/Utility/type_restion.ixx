@@ -1,4 +1,4 @@
-export module utility:type_restion;
+export module utility : type_restion;
 
 import <type_traits>;
 

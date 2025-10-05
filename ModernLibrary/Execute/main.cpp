@@ -10,6 +10,7 @@ auto strset(void* ptr, int val, size_t size) {
 }
 
 int main() {
+	constexpr size_t i = 0;
 	std::cout << sizeof(string<char, value_traits::remain>) << '\n';
 	string<char, value_traits::remain> str = "A";
 	std::cout << str.max_size() << '\n';
@@ -33,6 +34,9 @@ int main() {
 	std::cout << std_str1 << '\n';
 	std::string std_str2 = str.to<std::string>(4);
 	std::cout << std_str2 << '\n';
-	std::cout << str.sub(40) << '\n';
+	std::cout << str.index(40) << '\n';
+	str.resize(30, 'a');
+	str.restore_cache_mode();
+	std::cout << str.const_string() << '\n';
 	return 0;
 }

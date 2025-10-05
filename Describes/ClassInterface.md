@@ -308,6 +308,46 @@
                     #### 以上代码第一次输出："Hello" 0 24<br>以上代码第二次输出："Hello" 1 30
                     函数返回值描述：此函数返回bool值，指告用户resize成功与否
 
+            ## restore_cache_mode
+            - 返回值类型：bool 非静态成员函数名：restore_cache_mode
+                - 参数列表：(void)
+                - bool restore_cache_mode(void)
+                    - 用于恢复至缓存模式
+                        - 此无参重载将自动计算恢复长度
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { 'A', 50 };
+                        str[0] = ':';
+                        str1.resize(30);
+                        str.restore_cache_mode();
+                        std::cout << str.const_string() << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：":AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                    函数返回值描述：恢复成功则返回true，反之回false
+                    
+                - 参数列表：(size_t)
+                - bool restore_cache_mode(size_t size)
+                    - 用于恢复至缓存模式
+                        - 调用此size_t重载，若成功，缓存大小设定为size
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { 'A', 50 };
+                        str.restore_cache_mode(12);
+                        std::cout << str.const_string() << '\n';
+                        return 0;
+                    }
+                    ```
+                     #### 以上代码输出："AAAAAAAAAAAA"
+                    函数返回值描述：恢复成功则返回true，反之回false
+
             ## size
             - 返回值类型：size_t 非静态成员函数名：size 参数列表：(void)
             - size_t size(void)

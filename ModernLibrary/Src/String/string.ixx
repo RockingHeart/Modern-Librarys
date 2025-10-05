@@ -22,14 +22,14 @@ export template <
 >
 struct string_traits {
 	using char_t          = CharType;
-	using reference       = CharType&;
+	using reference_t     = CharType&;
 	using pointer_t       = CharType*;
 	using const_pointer_t = const CharType*;
 
 	using strutil = StringUtility;
 	using alloc_t = typename strutil::alloc_t;
 
-	static constexpr value_traits value_trait = ValueTrait;
+	constexpr static value_traits value_traits = ValueTrait;
 };
 
 template <class StringTraits>
@@ -64,7 +64,7 @@ struct string_box {
 		};
 	};
 
-	using box_value_type = box_value_t<string_traits::value_trait>;
+	using box_value_type = box_value_t<string_traits::value_traits>;
 
 	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / sizeof(char_t);
 
@@ -80,7 +80,7 @@ struct string_box {
 	};
 
 	constexpr  string_box() noexcept : buffer{ .count = 0, .cache = true } {
-		if constexpr (string_traits::value_trait == value_traits::remain) {
+		if constexpr (string_traits::value_traits == value_traits::remain) {
 			value.before = nullptr;
 		}
 	};
@@ -99,7 +99,7 @@ protected:
 
 public:
 	using char_t          = typename string_traits::char_t;
-	using reference       = typename string_traits::reference;
+	using reference_t     = typename string_traits::reference_t;
 	using pointer_t       = typename string_traits::pointer_t;
 	using const_pointer_t = typename string_traits::const_pointer_t;
 
@@ -148,21 +148,15 @@ public:
 
 public:
 
-	constexpr size_t size(this basic_string& self) {
+	constexpr size_t size(this basic_string& self) noexcept {
 		return self.string_length();
 	}
 
-	constexpr size_t capacity(this basic_string& self) {
-		if (self.is_ceche_mode()) {
-			return buffer_size - self.buffer.count;
-		}
-		else {
-			auto& value = self.value;
-			return value.alloc_size - value.count;
-		}
+	constexpr size_t capacity(this basic_string& self) noexcept {
+		return self.string_capacity();
 	}
 
-	constexpr size_t max_size(this basic_string& self) {
+	constexpr size_t max_size(this basic_string& self) noexcept {
 		if (self.is_ceche_mode()) {
 			return self.buffer_size;
 		}
@@ -214,6 +208,17 @@ public:
 	}
 
 	template <class... ArgsType>
+	[[nodiscard]] constexpr bool restore_cache_mode(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.restore_string_cache_mode(args...);
+	        }
+		)
+	{
+		return self.restore_string_cache_mode(args...);
+	}
+
+	template <class... ArgsType>
 	[[nodiscard]] constexpr bool replace(this basic_string& self, ArgsType&&... args)
         noexcept requires (
 		    requires {
@@ -227,7 +232,7 @@ public:
 public:
 
 	template <class... ArgsType>
-	[[nodiscard]] constexpr match<size_t> index(this basic_string& self, ArgsType&&... args)
+	[[nodiscard]] constexpr auto index(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.index_string(args...);
@@ -235,11 +240,6 @@ public:
 		)
 	{
 		return self.index_string(args...);
-	}
-
-	[[nodiscard]]
-	constexpr bool sub(this basic_string& self, size_t position) noexcept {
-		return position < self.string_length();
 	}
 
 public:
@@ -333,7 +333,7 @@ public:
 
 public:
 
-	constexpr reference operator[](this basic_string& self, size_t position) noexcept {
+	constexpr reference_t operator[](this basic_string& self, size_t position) noexcept {
 		if (self.is_ceche_mode()) {
 			return self.buffer.pointer[position];
 		}
@@ -356,18 +356,21 @@ public:
 public:
 
 	constexpr ~string_core() noexcept {
-		static_cast<basic_string*>(this)->destruct();
+		basic_string* self = static_cast<basic_string*>(this);
+		if (self->is_big_mode()) {
+			self->destruct();
+		}
 	}
 };
 
 template <class Traits>
 concept string_traits_type = requires {
 	typename Traits::char_t;
-	typename Traits::reference;
+	typename Traits::reference_t;
 	typename Traits::pointer_t;
 	typename Traits::const_pointer_t;
 
-	Traits::value_trait;
+	Traits::value_traits;
 };
 
 export template <string_traits_type StringTraits>
@@ -378,13 +381,13 @@ private:
 	using core_t = string_core<basic_string<StringTraits>, StringTraits>;
 
 public:
-	using string_traits = StringTraits;
+	using string_traits =          StringTraits;
 	using strutil       = typename string_traits::strutil;
 	using alloc_t       = typename string_traits::alloc_t;
 
 public:
 	using char_t          = typename string_traits::char_t;
-	using reference       = typename string_traits::reference;
+	using reference_t     = typename string_traits::reference_t;
 	using pointer_t       = typename string_traits::pointer_t;
 	using const_pointer_t = typename string_traits::const_pointer_t;
 
@@ -456,7 +459,7 @@ private:
 			size_t buf_size = buffer.count;
 			pointer_t cache = alloc.allocate(buf_size);
 			strutil::strcopy(cache, buffer.pointer, buf_size);
-			if constexpr (string_traits::value_trait == value_traits::remain) {
+			if constexpr (string_traits::value_traits == value_traits::remain) {
 				value.before = nullptr;
 			}
 			value.pointer = alloc.allocate(size);
@@ -465,7 +468,7 @@ private:
 			alloc.deallocate(cache, buf_size);
 		}
 		else {
-			if constexpr (string_traits::value_trait == value_traits::remain) {
+			if constexpr (string_traits::value_traits == value_traits::remain) {
 				if (value.before) {
 					alloc.deallocate(value.before, value.before_alloc_size);
 				}
@@ -483,12 +486,24 @@ private:
 		}
 	}
 
+private:
+
 	constexpr size_t string_length() const noexcept {
 		if (is_ceche_mode()) {
 			return core_t::buffer.count;
 		}
 		else {
 			return core_t::value.count;
+		}
+	}
+
+	constexpr size_t string_capacity() const noexcept {
+		if (is_ceche_mode()) {
+			return core_t::buffer_size - core_t::buffer.count;
+		}
+		else {
+			auto& value = core_t::value;
+			return value.alloc_size - value.count;
 		}
 	}
 
@@ -590,7 +605,7 @@ private:
 	}
 
 	constexpr bool replace_string (
-		reference char_value, size_t point, size_t end
+		reference_t char_value, size_t point, size_t end
 	) noexcept {
 		pointer_t data = replace_impl(point, end);
 		if (data == nullptr) {
@@ -604,33 +619,79 @@ private:
 
 private:
 
-	constexpr bool resize_string(size_t size, char_t fill) noexcept {
+	constexpr bool restore_string_cache_mode(size_t size) noexcept {
+		if (!is_big_mode() || size >= core_t::buffer_size) {
+			return false;
+		}
+		if (!index_string(size)) {
+			return false;
+		}
+		alloc_t& alloc = allocator();
+		auto& value = core_t::value;
+		pointer_t cache = alloc.allocate(size);
+		strutil::strcopy(cache, value.pointer, size);
+		alloc.deallocate(value.pointer, value.count);
+		auto& buffer = core_t::buffer;
+		buffer.count = size;
+		buffer.pointer[size] = '\0';
+		buffer.cache = true;
+		if constexpr (string_traits::value_traits == value_traits::remain) {
+			if (value.before) {
+				alloc.deallocate(value.before, value.before_count);
+			}
+		}
+		strutil::strcopy(buffer.pointer, cache, size);
+		alloc.deallocate(cache, size);
+		return true;
+	}
+
+	constexpr bool restore_string_cache_mode() noexcept {
+		auto& value = core_t::value;
+		size_t size = 1;
+		if (value.count < core_t::buffer_size) {
+			size = value.count;
+			return restore_string_cache_mode(size);
+		}
+		size_t cap = string_capacity();
+		if (cap < core_t::buffer_size) {
+			size = cap;
+		}
+		else {
+			size_t result = cap - core_t::buffer_size;
+			if (result < core_t::buffer_size) {
+				size = result;
+			}
+		}
+		return restore_string_cache_mode(size);
+	}
+
+	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
 		auto& value = core_t::value;
 		if (core_t::buffer.cache) {
 			auto& buffer = core_t::buffer;
-			if (size > core_t::buffer_size) {
+			if (size < core_t::buffer_size) {
+				buffer.pointer[size] = char_t();
+				buffer.count = size;
+			}
+			else {
 				respace<true>(size);
 				value.count = size;
 				strutil::strset(value.pointer, fill, value.count - 1);
 				value.pointer[value.count - 1] = char_t();
 				buffer.cache = false;
 			}
-			else {
-				buffer.pointer[size] = char_t();
-				buffer.count = size;
-			}
 		}
 		else {
 			size_t& strlen = value.count;
-			if (size > value.alloc_size) {
+			if (size < value.alloc_size) {
+				value.pointer[size] = char_t();
+				strlen = size;
+			}
+			else {
 				respace<false>(size);
 				value.count = size;
 				strutil::strset(value.pointer, fill, value.count - 1);
 				value.pointer[value.count - 1] = char_t();
-			}
-			else {
-				value.pointer[size] = char_t();
-				strlen = size;
 			}
 		}
 		return true;
@@ -658,6 +719,10 @@ private:
 			}
 		}
 		return { false, 0 };
+	}
+
+	constexpr bool index_string(size_t position) noexcept {
+		return position < string_length();
 	}
 
 	constexpr match<size_t> index_string (
@@ -702,16 +767,16 @@ private:
 			auto& buffer = core_t::buffer;
 			size_t size  = buffer.count;
 			size_t next  = size + 1;
-			if (next >= core_t::buffer_size) {
+			if (next < core_t::buffer_size) {
+				buffer.pointer[size] = char_value;
+				++buffer.count;
+			}
+			else {
 				respace<true>(next + 1);
 				value.pointer[heap_count] = char_value;
 				++heap_count;
 				value.pointer[heap_count] = char_t();
 				buffer.cache = false;
-			}
-			else {
-				buffer.pointer[size] = char_value;
-				++buffer.count;
 			}
 		}
 		else {
@@ -729,16 +794,14 @@ private:
 private:
 
 	constexpr void destruct() noexcept {
-		if (is_big_mode()) {
-			auto& value = core_t::value;
-			auto& alloc = allocator();
-			if constexpr (string_traits::value_trait == value_traits::remain) {
-				if (value.before) {
-					alloc.deallocate(value.before, value.before_count);
-				}
+		auto& value = core_t::value;
+		auto& alloc = allocator();
+		if constexpr (string_traits::value_traits == value_traits::remain) {
+			if (value.before) {
+				alloc.deallocate(value.before, value.before_count);
 			}
-			alloc.deallocate(value.pointer, value.alloc_size);
 		}
+		alloc.deallocate(value.pointer, value.alloc_size);
 	}
 };
 
