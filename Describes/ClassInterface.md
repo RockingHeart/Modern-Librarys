@@ -315,7 +315,7 @@
                 - bool restore_cache_mode(void)
                     - 用于恢复至缓存模式
                         - 此无参重载将自动计算恢复长度
-                        - 若自动计算失败，其默认长度为1
+                            - 若自动计算失败，其默认长度为1
                     ``` C++
                     import string;
                     import std;
