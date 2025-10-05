@@ -33,6 +33,7 @@
                 - 用于构造多个单个字符的动态字符串<br>
                     **参数size用于传入此方法构造需要的长度**
             
+            
             ## begin and end
             - 返回值类型：pointer_t 非静态成员函数名：begin 参数列表：(void) 与 返回值类型：pointer_t 非静态成员函数名：end 参数列表：（void）
             - pointer_t begin(void) 与 pointer_t end(void)
@@ -314,6 +315,7 @@
                 - bool restore_cache_mode(void)
                     - 用于恢复至缓存模式
                         - 此无参重载将自动计算恢复长度
+                        - 若自动计算失败，其默认长度为1
                     ``` C++
                     import string;
                     import std;
