@@ -38,23 +38,30 @@
     - 作用：动态存储字符串
         - 类型描述：若string_trait的模板参数为char，则char_t为char，reference为char&，pointer_t为char*，const_pointer_t为const char*，以此类推
         - 以下为接口：
-            ## string_core
-            - 返回值类型：string_core 构造函数名：string_core
+            ## basic_string
+            - 返回值类型：basic_string 构造函数名：basic_string
                 - 参数列表：(void)
-                - string_core(void)
-                    - 用于构造动态字符串<br>
+                - basic_string(void)
+                    - 用于构造空状态动态字符串<br>
                 - 参数列表：(const_pointer_t)
-                - string_core(const_pointer_t str)
-                    - 用于构造动态字符串<br>
+                - basic_string(const_pointer_t str)
+                    - 用于构造具有str的动态字符串<br>
                         **参数str用于传入需存储的字符串，自动获取其字符串大小**
                 - 参数列表：(const_pointer_t, size_t)
-                - string_core(const_pointer_t str, size_t size)
-                    - 用于构造动态字符串<br>
+                - basic_string(const_pointer_t str, size_t size)
+                    - 用于构造具有size偏移str的动态字符串<br>
                         **参数str用于传入需存储的字符串 <br> 参数size用于告知构造函数需存储的字符串大小**
-            - 模板：template<size_type SizeType> 返回值类型：string_core 构造函数名：string_core 参数列表：(SizeType, char_t)
-            - template<size_type SizeType> string_core(char_t char_value, SizeType size)
+            - 模板：template<size_type SizeType> 返回值类型：basic_string basic_string 参数列表：(SizeType, char_t)
+            - template<size_type SizeType> basic_string(char_t char_value, SizeType size)
                 - 用于构造多个单个字符的动态字符串<br>
                     **参数size用于传入此方法构造需要的长度**
+            - 参数列表：(const basic_string&)
+            - basic_string(const basic_string& object)
+                - 用于构造与object相同的动态字符串副本<br>
+            - 参数列表：(basic_string&&)
+            - basic_string(basic_string&&)
+                - 用于构造转移从object的所有权<br>
+                
             
             
             ## begin and end
@@ -466,7 +473,7 @@
                     函数返回值描述：它由CastType所构造
 
 
-[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#string_core 
+[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#basic_string
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#begin-and-end
 [index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#index
 [clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#clear_residue

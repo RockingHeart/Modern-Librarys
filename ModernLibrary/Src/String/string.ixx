@@ -121,33 +121,6 @@ private:
 
 public:
 
-	constexpr string_core() noexcept = default;
-
-	constexpr string_core(const_pointer_t str)
-		noexcept : box_t()
-	{
-		static_cast<basic_string*>(this)->construct(str, ::strlen(str));
-	}
-
-	constexpr string_core(const_pointer_t str, size_t size)
-		noexcept : box_t()
-	{
-		static_cast<basic_string*>(this)->construct(str, size);
-	}
-
-	template <class... ArgsType>
-	constexpr string_core(ArgsType&&... args)
-		noexcept requires (
-		    requires {
-		        static_cast<basic_string*>(this)->construct(args...);
-	        }
-		)
-	{
-		static_cast<basic_string*>(this)->construct(args...);
-	}
-
-public:
-
 	constexpr size_t size(this basic_string& self) noexcept {
 		return self.string_length();
 	}
@@ -352,15 +325,6 @@ public:
 	{
 		return self.append(args...);
 	}
-
-public:
-
-	constexpr ~string_core() noexcept {
-		basic_string* self = static_cast<basic_string*>(this);
-		if (self->is_big_mode()) {
-			self->destruct();
-		}
-	}
 };
 
 template <class Traits>
@@ -392,56 +356,38 @@ public:
 	using const_pointer_t = typename string_traits::const_pointer_t;
 
 public:
+	using self_t = basic_string<StringTraits>;
+
+public:
 	using core_t::core_t;
 
-private:
+public:
 
-	constexpr void construct(const_pointer_t str, size_t size) noexcept {
+	constexpr basic_string(const_pointer_t str) noexcept {
+		assign(str, strutil::strlenof(str));
+	}
+
+	constexpr basic_string(const_pointer_t str, size_t size) noexcept {
 		if (size == 0) {
 			return;
 		}
-		auto& buffer = core_t::buffer;
-		if (size < core_t::buffer_size) {
-			strutil::strcopy(buffer.pointer, str, size);
-			buffer.pointer[size] = char_t();
-			buffer.count = size;
-			return;
-		}
-		auto& value = core_t::value;
-		size_t alloc_size = size * 2;
-		value.pointer = allocator().allocate(alloc_size);
-		value.alloc_size = alloc_size;
-		value.count = size;
-		strutil::strcopy(value.pointer, str, size);
-		value.pointer[size] = char_t();
-		core_t::buffer.cache = false;
+		assign(str, size);
 	}
 
 	template <size_type SizeType>
-	constexpr void construct(char_t char_value, SizeType size) noexcept {
+	constexpr basic_string(char_t char_value, SizeType size) noexcept {
 		if (size == 0) {
 			return;
 		}
-		if (size < core_t::buffer_size) {
-			strutil::strset (
-				core_t::buffer,
-				char_value,
-				size
-			);
-			core_t::count = size;
-		}
-		else {
-			auto& value = core_t::value;
-			value.pointer = allocator().allocate(size);
-			value.count = size;
-			value.alloc_size = size;
-			strutil::strset (
-				value.pointer,
-				char_value,
-				size
-			);
-			core_t::buffer.cache = false;
-		}
+		assign<SizeType>(char_value, size);
+	}
+
+	constexpr basic_string(const basic_string& object) noexcept {
+		assign(object);
+	}
+
+	constexpr basic_string(basic_string&& object) noexcept {
+		object.move(*this);
 	}
 
 private:
@@ -483,6 +429,123 @@ private:
 				value.pointer = reinterpret_cast<pointer_t>(::realloc(value.pointer, size));
 				value.alloc_size = size;
 			}
+		}
+	}
+
+	constexpr void copy(auto& self, auto& object) {
+		strutil::strcopy(
+			self.pointer,
+			object.pointer,
+			object.count
+		);
+		self.count = self.count;
+		self.cache = true;
+	}
+
+private:
+
+	constexpr void assign(const_pointer_t str, size_t size) noexcept {
+		auto& buffer = core_t::buffer;
+		if (size < core_t::buffer_size) {
+			strutil::strcopy(buffer.pointer, str, size);
+			buffer.pointer[size] = char_t();
+			buffer.count = size;
+			return;
+		}
+		auto& value       = core_t::value;
+		size_t alloc_size = size * 2;
+		value.pointer     = allocator().allocate(alloc_size);
+		value.alloc_size  = alloc_size;
+		value.count       = size;
+		strutil::strcopy(value.pointer, str, size);
+		value.pointer[size]  = char_t();
+		core_t::buffer.cache = false;
+	}
+
+	template <size_type SizeType>
+	constexpr void assign(char_t char_value, SizeType size) noexcept {
+		if (size < core_t::buffer_size) {
+			strutil::strset(
+				core_t::buffer,
+				char_value,
+				size
+			);
+			core_t::count = size;
+		}
+		else {
+			auto& value   = core_t::value;
+			value.pointer = allocator().allocate(size);
+			value.count   = size;
+			value.alloc_size = size;
+			strutil::strset(
+				value.pointer,
+				char_value,
+				size
+			);
+			core_t::buffer.cache = false;
+		}
+	}
+
+	constexpr void assign(const basic_string& object) noexcept {
+		auto& self_buffer   = core_t::buffer;
+		auto& object_buffer = object.buffer;
+		if (object.is_ceche_mode()) {
+			copy(self_buffer, object_buffer);
+		}
+		else {
+			alloc_t& alloc     = allocator();
+			auto& self_value   = core_t::value;
+			auto& object_value = object.value;
+			self_value.pointer = alloc.allocate (
+				object_value.count + 1
+			);
+			strutil::strcopy (
+				self_value.pointer,
+				object_value.pointer,
+				object_value.count
+			);
+			self_value.count                     = object_value.count;
+			self_value.pointer[self_value.count] = char_t();
+			if constexpr (string_traits::value_traits == value_traits::remain) {
+				if (object_value.before) {
+					self_value.before = alloc.allocate(
+						object_value.before_alloc_size + 1
+					);
+					strutil::strcopy(
+						self_value.before,
+						object_value.before,
+						object_value.before_count
+					);
+					self_value.before_count                    = object_value.before_count;
+					self_value.before[self_value.before_count] = char_t();
+				}
+			}
+			self_buffer.cache = false;
+		}
+	}
+
+	constexpr void move(basic_string& object) noexcept {
+		auto& self_buffer   = core_t::buffer;
+		auto& object_buffer = object.buffer;
+		if (is_ceche_mode()) {
+			copy(self_buffer, object_buffer);
+		}
+		else {
+			auto& self_value     = core_t::value;
+			auto& object_value   = object.value;
+			object_value.pointer = self_value.pointer;
+			object_value.count   = self_value.count;
+			object_buffer.cache  = false;
+			self_value.pointer   = nullptr;
+			if constexpr (string_traits::value_traits == value_traits::remain) {
+				if (self_value.before) {
+					object_value.before            = self_value.before;
+					object_value.before_count      = self_value.before_count;
+					object_value.before_alloc_size = self_value.before_alloc_size;
+				}
+				self_value.before = nullptr;
+			}
+			self_buffer.cache = true;
 		}
 	}
 
@@ -675,8 +738,8 @@ private:
 			}
 			else {
 				respace<true>(size);
+				strutil::strset(value.pointer + value.count, fill, size - value.count);
 				value.count = size;
-				strutil::strset(value.pointer, fill, value.count - 1);
 				value.pointer[value.count - 1] = char_t();
 				buffer.cache = false;
 			}
@@ -689,8 +752,8 @@ private:
 			}
 			else {
 				respace<false>(size);
+				strutil::strset(value.pointer + value.count, fill, size - value.count);
 				value.count = size;
-				strutil::strset(value.pointer, fill, value.count - 1);
 				value.pointer[value.count - 1] = char_t();
 			}
 		}
@@ -791,17 +854,19 @@ private:
 		return *this;
 	}
 
-private:
+public:
 
-	constexpr void destruct() noexcept {
-		auto& value = core_t::value;
-		auto& alloc = allocator();
-		if constexpr (string_traits::value_traits == value_traits::remain) {
-			if (value.before) {
-				alloc.deallocate(value.before, value.before_count);
+	constexpr ~basic_string() noexcept {
+		if (is_big_mode()) {
+			auto& value = core_t::value;
+			auto& alloc = allocator();
+			if constexpr (string_traits::value_traits == value_traits::remain) {
+				if (value.before) {
+					alloc.deallocate(value.before, value.before_count);
+				}
 			}
+			alloc.deallocate(value.pointer, value.alloc_size);
 		}
-		alloc.deallocate(value.pointer, value.alloc_size);
 	}
 };
 

@@ -11,8 +11,8 @@ auto strset(void* ptr, int val, size_t size) {
 
 int main() {
 	constexpr size_t i = 0;
-	std::cout << sizeof(string<char, value_traits::remain>) << '\n';
-	string<char, value_traits::remain> str = "A";
+	std::cout << sizeof(string<char, value_traits::no_residue>) << '\n';
+	string<char, value_traits::no_residue> str = "A";
 	std::cout << str.max_size() << '\n';
 	str.resize(50, 'a');
 	str.resize(100, 'a');
@@ -38,5 +38,13 @@ int main() {
 	str.resize(30, 'a');
 	str.restore_cache_mode();
 	std::cout << str.const_string() << '\n';
+
+	string<char, value_traits::remain> str1 = "Hello!!! My World, I like u, Do you like me.....?";
+	str1.resize(100, 'a');
+	string<char, value_traits::remain> str2 = str1;
+	string<char, value_traits::remain> str3 = std::move(str1);
+	std::cout << str1.const_string() << '\n';
+	std::cout << str2.const_string() << '\n';
+	std::cout << str3.const_string() << '\n';
 	return 0;
 }
