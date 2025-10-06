@@ -7,8 +7,8 @@
     - 将sub功能函数集成于index函数，并删除非静态成员函数sub
     - 添加非静态成员函数：restore_cache_mode
         - 用于恢复动态字符串的状态至缓存模式
-    - 删除string_core的构造函数
-        - 并将构造函数转移至basic_string
+    - 将相对应的构造函数转移至basic_string
+        - 并删除string_core的构造函数
     - 添加拷贝构造函数
     - 添加移动构造函数
 
