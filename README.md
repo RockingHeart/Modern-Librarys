@@ -58,8 +58,8 @@
 2. 参数为(char_t, size_t)的构造函数（已实现）
 3. 参数为(const_pointer_t)的构造函数（已实现）
 4. 参数为(const_pointer_t, size_t)的构造函数（已实现）
-5. 参数为(const basic_string&)的构造函数（未实现）
-6. 参数为(basic_string&&)的构造函数（未实现）<br>
+5. 参数为(const basic_string&)的构造函数（已实现）
+6. 参数为(basic_string&&)的构造函数（已实现）<br>
     已实现数量：3
 
 ### 运算符重载函数的实现
