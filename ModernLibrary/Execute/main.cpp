@@ -38,7 +38,6 @@ int main() {
 	str.resize(30, 'a');
 	str.restore_cache_mode();
 	std::cout << str.const_string() << '\n';
-
 	string<char, value_traits::remain> str1 = "Hello!!! My World, I like u, Do you like me.....?";
 	str1.resize(100, 'a');
 	string<char, value_traits::remain> str2 = str1;
@@ -46,5 +45,7 @@ int main() {
 	std::cout << str1.const_string() << '\n';
 	std::cout << str2.const_string() << '\n';
 	std::cout << str3.const_string() << '\n';
+	string<char, value_traits::remain> str4 = 'A';
+	std::cout << (str4 == 'A') << '\n';
 	return 0;
 }

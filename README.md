@@ -3,11 +3,13 @@
 ## 正在实现String
 
 * 快速了解这个项目
-    - 项目接文：[ClassInterface]
-    - 项目协议：[License]
-    - 项目更新：[UpdateLog]
     - 项目源码：[Source]
-    - 项目文介：[ImplationFile]
+    - String
+        - 项目接文：[ClassInterface]
+        - 项目未来：[Future]
+        - 项目协议：[License]
+        - 项目更新：[UpdateLog]
+        - 项目文介：[ImplationFile]
 
 ## 规划表
 > *实现状态随时更新*
@@ -69,13 +71,13 @@
     3. (basic_string&&)
 2. 以下实现均要求实现其参数为1-3的函数
     1. operator =（未实现）
-    2. operator ==（未实现）
-    3. operator +（未实现）
-    4. operator +=（未实现）
-3. operator[] (size_t)（已实现）
-4. operator& (void)（未实现）
-5. operator| (...)（未实现一个重载）<br>
-    已实现数量：1
+    2. operator +（未实现）
+    3. operator +=（已实现一个重载）
+3. operator ==(...)（已实现两个重载）
+4. operator[] (size_t)（已实现）
+5. operator& (void)（未实现）
+6. operator| (...)（未实现一个重载）<br>
+    已实现数量：3
 
 ### 非静态成员函数的实现
  1. begin(void)（已实现）
@@ -86,16 +88,17 @@
  6. max_size(void)（已实现）
  7. size(void)（已实现）
  8. resize(size)（已实现）
- 9. at(size_t)（未实现）
+ 9. at(size_t)（已实现）
 10. index(...)（已实现两个重载）
 11. template<class Type> Type to(...)（已实现一个重载）<br>
-    已实现数量：9
+    已实现数量：11
 
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
 
-[ClassInterface]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md
-[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
-[UpdateLog]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/UpdateLog.md
+[ClassInterface-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md
+[Future]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/Future-String.md
+[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/License-String.md
+[UpdateLog]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/UpdateLog-String.md
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
-[ImplationFile]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ImplationFile.md
+[ImplationFile]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ImplationFile-String.md

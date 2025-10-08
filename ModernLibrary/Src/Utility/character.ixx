@@ -20,29 +20,73 @@ public:
 	using pointer_t       = CharType*;
 	using const_pointer_t = const CharType*;
 
+private:
+
+	template <character_type CharType = char_t>
+	struct compile;
+
+	template <>
+	struct compile<char> {
+		constexpr static int strcmp (
+			const char* left, const char* right, size_t size
+		) noexcept {
+			return ::__builtin_memcmp(left, right, size);
+		}
+
+		constexpr static size_t strlen(const char* str) noexcept {
+			return ::__builtin_strlen(str);
+		}
+	};
+
+	template <>
+	struct compile<wchar_t> {
+		constexpr static int strcmp(
+			const wchar_t* left, const wchar_t* right, size_t size
+		) noexcept {
+			return ::__builtin_wmemcmp(left, right, size);
+		}
+
+		constexpr static size_t strlen(const wchar_t* str) noexcept {
+			return ::__builtin_wcslen(str);
+		}
+	};
+
 public:
 	using alloc_t = AllocType;
 
-public:
-
-	template <character_type CharType = CharType>
-	constexpr static size_t strlenof(const CharType*) noexcept;
-
 private:
 
-	template <character_type CharType = CharType>
+	template <character_type CharType = char_t>
+	constexpr static size_t length(const CharType* str) noexcept;
+
+	template <character_type CharType = char_t>
 	constexpr static CharType* copy (
 		CharType* dest, const CharType* src, size_t size
 	) noexcept;
 
-	template <character_type CharType = CharType>
+	template <character_type CharType = char_t>
 	constexpr static CharType* set (
 		CharType* dest, CharType value, size_t size
 	) noexcept;
 
+	template <character_type CharType = char_t>
+	constexpr static int compare (
+		const CharType* left, const CharType* right, size_t size
+	) noexcept;
+
 public:
 
-	template <character_type CharType = CharType>
+	template <character_type CharType = char_t>
+	constexpr static size_t strlenof(const CharType* str) noexcept {
+		if consteval {
+			return compile<CharType>::strlen(str);
+		}
+		else {
+			return length<CharType>(str);
+		}
+	}
+
+	template <character_type CharType = char_t>
 	constexpr static CharType* strcopy (
 		CharType* dest, const CharType* src, size_t size
 	) noexcept {
@@ -63,7 +107,7 @@ public:
 		}
 	}
 
-	template <character_type CharType = CharType>
+	template <character_type CharType = char_t>
 	constexpr static CharType* strset (
 		CharType* dest, CharType value, size_t size
 	) noexcept {
@@ -85,29 +129,29 @@ public:
 		}
 	}
 
-public:
-	
-	template <>
-	constexpr static size_t strlenof<char>(const char* str) noexcept {
+	template <character_type CharType = char_t>
+	constexpr static int strcmp (
+		const CharType* left, const CharType* right, size_t size
+	) noexcept {
 		if consteval {
-			return ::__builtin_strlen(str);
+			return compile<CharType>::strcmp(left, right, size);
 		}
 		else {
-			return ::strlen(str);
-		}
-	}
-
-	template <>
-	constexpr static size_t strlenof<wchar_t>(const wchar_t* str) noexcept {
-		if consteval {
-			return ::__builtin_wcslen(str);
-		}
-		else {
-			return ::wcslen(str);
+			return compare<CharType>(left, right, size);
 		}
 	}
 
 private:
+
+	template <>
+	constexpr static size_t length<char>(const char* str) noexcept {
+		return ::strlen(str);
+	};
+
+	template <>
+	constexpr static size_t length<wchar_t>(const wchar_t* str) noexcept {
+		return ::wcslen(str);
+	};
 
 	template <>
 	constexpr static char* copy<char> (
@@ -135,5 +179,19 @@ private:
 		wchar_t* dest, wchar_t value, size_t size
 	) noexcept {
 		return ::wmemset(dest, value, size);
+	}
+
+	template <>
+	constexpr static int compare<char> (
+		const char* left, const char* right, size_t size
+	) noexcept {
+		return ::memcmp(left, right, size);
+	}
+
+	template <>
+	constexpr static int compare<wchar_t> (
+		const wchar_t* left, const wchar_t* right, size_t size
+	) noexcept {
+		return ::wmemcmp(left, right, size);
 	}
 };

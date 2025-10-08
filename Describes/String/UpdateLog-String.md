@@ -11,5 +11,10 @@
         - 并删除string_core的构造函数
     - 添加拷贝构造函数
     - 添加移动构造函数
+    - 添加参数为(char_t)的构造函数
+    - 添加operator==(...)
+        - 添加参数为(char_t)的operator==重载
+        - 添加参数为(const_pointer_t)的operator==重载
+    - 添加非静态成员at函数
 
 ## Describes更新不记录于此日志中

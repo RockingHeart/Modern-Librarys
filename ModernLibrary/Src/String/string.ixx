@@ -79,11 +79,16 @@ struct string_box {
 		buffer_t       buffer;
 	};
 
-	constexpr  string_box() noexcept : buffer{ .count = 0, .cache = true } {
-		if constexpr (string_traits::value_traits == value_traits::remain) {
-			value.before = nullptr;
-		}
+	constexpr  string_box(char_t char_value)
+		noexcept : buffer{ .count = 1, .cache = true}
+	{
+		buffer.pointer[0] = char_value;
 	};
+
+	constexpr  string_box()
+		noexcept : buffer{ .count = 0, .cache = true } {
+	};
+
 	constexpr ~string_box() noexcept = default;
 };
 
@@ -96,6 +101,7 @@ public:
 
 protected:
 	using box_t = string_box<StringTraits>;
+	using box_t::box_t;
 
 public:
 	using char_t          = typename string_traits::char_t;
@@ -325,6 +331,19 @@ public:
 	{
 		return self.append(args...);
 	}
+
+public:
+
+	template <class... ArgsType>
+	constexpr bool operator==(this basic_string& self, ArgsType... args)
+		noexcept requires (
+		    requires {
+		        self.compare(args...);
+	        }
+		)
+	{
+		return self.compare(args...);
+	}
 };
 
 template <class Traits>
@@ -359,9 +378,10 @@ public:
 	using self_t = basic_string<StringTraits>;
 
 public:
-	using core_t::core_t;
 
-public:
+	constexpr basic_string(char_t char_value)
+		noexcept : core_t(char_value) {
+	}
 
 	constexpr basic_string(const_pointer_t str) noexcept {
 		assign(str, strutil::strlenof(str));
@@ -797,6 +817,13 @@ private:
 		return last_index(target, point, end);
 	}
 
+	constexpr reference_t at(size_t position) {
+		if (position < string_length()) {
+			throw "Out range";
+		}
+		return pointer()[position];
+	}
+
 private:
 
 	template <typename CastType>
@@ -852,6 +879,30 @@ private:
 			value.pointer[heap_count] = char_t();
 		}
 		return *this;
+	}
+
+private:
+
+	constexpr bool compare(char_t char_value) noexcept {
+		if (string_length() != 1) {
+			return false;
+		}
+		return pointer()[0] == char_value;
+	}
+
+	constexpr bool compare(const_pointer_t str) noexcept {
+		size_t strlen = strutil::strlenof(str);
+		size_t size   = string_length();
+		if (strlen != size) {
+			return false;
+		}
+		const_pointer_t data = pointer();
+		if (data[0] != str[0]) {
+			return false;
+		}
+		data += 1; str += 1;
+		size -= 1;
+		return !strutil::strcmp(data, str, size);
 	}
 
 public:

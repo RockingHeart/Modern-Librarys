@@ -42,27 +42,45 @@
             - 返回值类型：basic_string 构造函数名：basic_string
                 - 参数列表：(void)
                 - basic_string(void)
-                    - 用于构造空状态动态字符串<br>
+                    - 用于构造空状态动态字符串 <br>
                 - 参数列表：(const_pointer_t)
                 - basic_string(const_pointer_t str)
-                    - 用于构造具有str的动态字符串<br>
+                    - 用于构造具有str的动态字符串 <br>
                         **参数str用于传入需存储的字符串，自动获取其字符串大小**
                 - 参数列表：(const_pointer_t, size_t)
                 - basic_string(const_pointer_t str, size_t size)
-                    - 用于构造具有size偏移str的动态字符串<br>
+                    - 用于构造具有size偏移str的动态字符串 <br>
                         **参数str用于传入需存储的字符串 <br> 参数size用于告知构造函数需存储的字符串大小**
             - 模板：template<size_type SizeType> 返回值类型：basic_string basic_string 参数列表：(SizeType, char_t)
             - template<size_type SizeType> basic_string(char_t char_value, SizeType size)
-                - 用于构造多个单个字符的动态字符串<br>
+                - 用于构造多个单个字符的动态字符串 <br>
                     **参数size用于传入此方法构造需要的长度**
             - 参数列表：(const basic_string&)
             - basic_string(const basic_string& object)
-                - 用于构造与object相同的动态字符串副本<br>
+                - 用于构造与object相同的动态字符串副本 <br>
             - 参数列表：(basic_string&&)
-            - basic_string(basic_string&&)
-                - 用于构造转移从object的所有权<br>
+            - basic_string(basic_string&& object)
+                - 用于构造转移从object的所有权 <br>
+            - 参数列表：(char_t)
+            - basic_string(char_t char_value)
+                - 用于构造以单个字符串char_value为内容的动态字符串 <br>
                 
-            
+            ## at
+            - 返回值类型：reference_t 非静态成员函数名：at
+                - 参数列表：(size_t)
+                - reference_t at(size_t position)
+                    - 用于获取指定位置的字符
+                        - 若position超出正常范围，则抛出错误。若抛出错误，其需捕获类型为const char*
+                    ``` C++
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.at(0) << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：'H'
+                    函数返回描述：无
+
             
             ## begin and end
             - 返回值类型：pointer_t 非静态成员函数名：begin 参数列表：(void) 与 返回值类型：pointer_t 非静态成员函数名：end 参数列表：（void）
@@ -265,6 +283,40 @@
                         }
                         ```
                         #### 以上代码输出：'H'
+                        函数返回描述：无
+            
+            ## operator==
+            - 返回值类型：bool 非静态成员运算符重载函数符号：[]==
+                - 参数类型：(char_t)
+                - bool operator==(char_t char_value)
+                    - 用于比较存储的内容是否等于char_value
+                         ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "A", 1 };
+                            std::cout << (str == 'A') << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：1
+                        函数返回描述：无
+                
+                - 参数类型：(const_pointer_t)
+                - bool operator==(const_pointer_t str)
+                    - 用于比较存储的内容是否等于str
+                         ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 1 };
+                            std::cout << (str == "Hello") << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：1
                         函数返回描述：无
 
             ## replace
@@ -472,7 +524,7 @@
                     #### 以上代码输出： "ello"
                     函数返回值描述：它由CastType所构造
 
-
+[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#at
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#basic_string
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#begin-and-end
 [index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#index
