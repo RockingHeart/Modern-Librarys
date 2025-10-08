@@ -5,11 +5,11 @@
 * 快速了解这个项目
     - 项目源码：[Source]
     - String
-        - 项目接文：[ClassInterface-String]
-        - 项目未来：[Future-String]
-        - 项目协议：[License-String]
-        - 项目更新：[UpdateLog-String]
-        - 项目文介：[ImplationFile-String]
+        - 接文：[ClassInterface-String]
+        - 未来：[Future-String]
+        - 协议：[License-String]
+        - 更新：[UpdateLog-String]
+        - 文介：[ImplationFile-String]
 
 ## 规划表
 > *实现状态随时更新*
