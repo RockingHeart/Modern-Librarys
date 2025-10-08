@@ -91,7 +91,7 @@
  9. at(size_t)（已实现）
 10. index(...)（已实现两个重载）
 11. template<class Type> Type to(...)（已实现一个重载）<br>
-    已实现数量：11
+    已实现数量：12
 
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
