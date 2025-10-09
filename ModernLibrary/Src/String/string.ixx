@@ -221,6 +221,17 @@ public:
 		return self.index_string(args...);
 	}
 
+	template <class... ArgsType>
+	constexpr reference_t at(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.at_string(args...);
+	        }
+		)
+	{
+		return self.at_string(args...);
+	}
+
 public:
 
 	template <typename CastType, class... ArgsType>
@@ -822,7 +833,7 @@ private:
 		return last_index(target, point, end);
 	}
 
-	constexpr reference_t at(size_t position) {
+	constexpr reference_t at_string(size_t position) {
 		if (position >= string_length()) {
 			throw "Out range";
 		}
