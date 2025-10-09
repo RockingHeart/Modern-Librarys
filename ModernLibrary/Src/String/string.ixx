@@ -823,7 +823,7 @@ private:
 	}
 
 	constexpr reference_t at(size_t position) {
-		if (position < string_length()) {
+		if (position >= string_length()) {
 			throw "Out range";
 		}
 		return pointer()[position];
