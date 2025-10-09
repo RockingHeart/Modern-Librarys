@@ -97,7 +97,7 @@
 This project is currently using Chinese to support MD files.
 
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
-[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/License-String.md
+[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
 
 [ClassInterface-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md
 [Future-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/Future-String.md

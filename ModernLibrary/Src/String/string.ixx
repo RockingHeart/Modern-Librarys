@@ -6,7 +6,8 @@ import <xmemory>;
 
 export enum class value_traits {
 	no_residue,
-	remain
+	remain,
+	enhance
 };
 
 template <class Utility>
@@ -63,6 +64,10 @@ struct string_box {
 			size_t alloc_size;
 		};
 	};
+
+	template <>
+	struct box_value_t<value_traits::enhance>
+		:  box_value_t<value_traits::remain> { };
 
 	using box_value_type = box_value_t<string_traits::value_traits>;
 
@@ -426,12 +431,39 @@ public:
 
 private:
 
+	consteval static bool trait_is_enhance_mode() noexcept {
+		return string_traits::value_traits == value_traits::enhance;
+	}
+
+	consteval static bool trait_is_remain_mode() noexcept {
+		return string_traits::value_traits == value_traits::remain;
+	}
+
+	consteval static bool trait_is_advanced_mode() noexcept {
+		return trait_is_enhance_mode() && trait_is_remain_mode();
+	}
+
+private:
+
+	constexpr size_t ration_size(size_t size) const noexcept {
+		static constexpr size_t type_size = sizeof(char_t);
+		if constexpr (trait_is_enhance_mode() && type_size > 1) {
+			if (size % type_size != 0) {
+				return (size + type_size - 1) & ~(type_size - 1);
+			}
+		}
+		return size;
+	}
+
+private:
+
 	constexpr alloc_t& allocator() noexcept {
 		return *reinterpret_cast<alloc_t*>(this);
 	}
 
 	template <bool init_heap>
 	constexpr void respace(size_t size) {
+		size           = ration_size(size);
 		auto& value    = core_t::value;
 		alloc_t& alloc = allocator();
 		if constexpr (init_heap) {
@@ -440,13 +472,13 @@ private:
 			pointer_t cache = alloc.allocate(size);
 			strutil::strcopy(cache, buffer.pointer, buf_size);
 			value.pointer = cache;
-			if constexpr (string_traits::value_traits == value_traits::remain) {
+			if constexpr (trait_is_advanced_mode()) {
 				value.before = nullptr;
 			}
 			value.alloc_size = size;
 		}
 		else {
-			if constexpr (string_traits::value_traits == value_traits::remain) {
+			if constexpr (trait_is_advanced_mode()) {
 				if (value.before) {
 					alloc.deallocate(value.before, value.before_alloc_size);
 				}
@@ -538,7 +570,7 @@ private:
 			);
 			self_value.count                     = object_value.count;
 			self_value.pointer[self_value.count] = char_t();
-			if constexpr (string_traits::value_traits == value_traits::remain) {
+			if constexpr (trait_is_advanced_mode()) {
 				if (object_value.before) {
 					self_value.before = alloc.allocate(
 						object_value.before_alloc_size + 1
@@ -569,7 +601,7 @@ private:
 			object_value.count   = self_value.count;
 			object_buffer.cache  = false;
 			self_value.pointer   = nullptr;
-			if constexpr (string_traits::value_traits == value_traits::remain) {
+			if constexpr (trait_is_advanced_mode()) {
 				if (self_value.before) {
 					object_value.before            = self_value.before;
 					object_value.before_count      = self_value.before_count;
@@ -730,7 +762,7 @@ private:
 		buffer.count = size;
 		buffer.pointer[size] = '\0';
 		buffer.cache = true;
-		if constexpr (string_traits::value_traits == value_traits::remain) {
+		if constexpr (trait_is_advanced_mode()) {
 			if (value.before) {
 				alloc.deallocate(value.before, value.before_count);
 			}
@@ -927,7 +959,7 @@ public:
 		if (is_big_mode()) {
 			auto& value = core_t::value;
 			auto& alloc = allocator();
-			if constexpr (string_traits::value_traits == value_traits::remain) {
+			if constexpr (trait_is_advanced_mode()) {
 				if (value.before) {
 					alloc.deallocate(value.before, value.before_count);
 				}
