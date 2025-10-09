@@ -4,4 +4,4 @@
     - 被增强的operator=(basic_string&& object)
         - 若self为空，且object不为空，则转移object至self
         - 若self不为空，且object为空，则不做任何操作
-        - 若self与object都为空，则做swap操作
+        - 若self与object皆不为空，则做swap操作
