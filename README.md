@@ -4,10 +4,10 @@
 
 * 快速了解这个项目
     - 项目源码：[Source]
+    - 项目协议：[License]
     - String
         - 接文：[ClassInterface-String]
         - 未来：[Future-String]
-        - 协议：[License-String]
         - 更新：[UpdateLog-String]
         - 文介：[ImplationFile-String]
 
@@ -96,9 +96,10 @@
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
 
+[Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
+[License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/License-String.md
+
 [ClassInterface-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md
 [Future-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/Future-String.md
-[License-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/License-String.md
 [UpdateLog-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/UpdateLog-String.md
-[Source-String]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
 [ImplationFile-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ImplationFile-String.md

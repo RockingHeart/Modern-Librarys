@@ -379,6 +379,9 @@ public:
 
 public:
 
+	constexpr basic_string()
+		noexcept = default;
+
 	constexpr basic_string(char_t char_value)
 		noexcept : core_t(char_value) {
 	}
@@ -423,15 +426,13 @@ private:
 		if constexpr (init_heap) {
 			auto& buffer    = core_t::buffer;
 			size_t buf_size = buffer.count;
-			pointer_t cache = alloc.allocate(buf_size);
+			pointer_t cache = alloc.allocate(size);
 			strutil::strcopy(cache, buffer.pointer, buf_size);
+			value.pointer = cache;
 			if constexpr (string_traits::value_traits == value_traits::remain) {
 				value.before = nullptr;
 			}
-			value.pointer = alloc.allocate(size);
-			strutil::strcopy(value.pointer, cache, buf_size);
 			value.alloc_size = size;
-			alloc.deallocate(cache, buf_size);
 		}
 		else {
 			if constexpr (string_traits::value_traits == value_traits::remain) {
@@ -753,12 +754,15 @@ private:
 		if (core_t::buffer.cache) {
 			auto& buffer = core_t::buffer;
 			if (size < core_t::buffer_size) {
-				buffer.pointer[size] = char_t();
+				if (buffer.pointer[size]) {
+					buffer.pointer[size] = char_t();
+				}
 				buffer.count = size;
 			}
 			else {
-				respace<true>(size);
-				strutil::strset(value.pointer + value.count, fill, size - value.count);
+				size_t strlen = string_length();
+				respace<true>(size * 1.5);
+				strutil::strset(value.pointer + strlen, fill, size - strlen);
 				value.count = size;
 				value.pointer[value.count - 1] = char_t();
 				buffer.cache = false;
@@ -771,8 +775,9 @@ private:
 				strlen = size;
 			}
 			else {
-				respace<false>(size);
-				strutil::strset(value.pointer + value.count, fill, size - value.count);
+				size_t strlen = string_length();
+				respace<false>(size * 1.5);
+				strutil::strset(value.pointer + strlen, fill, size - strlen);
 				value.count = size;
 				value.pointer[value.count - 1] = char_t();
 			}
@@ -862,7 +867,7 @@ private:
 				++buffer.count;
 			}
 			else {
-				respace<true>(next + 1);
+				respace<true>(next * 1.5);
 				value.pointer[heap_count] = char_value;
 				++heap_count;
 				value.pointer[heap_count] = char_t();
@@ -872,7 +877,7 @@ private:
 		else {
 			size_t next = heap_count + 1;
 			if (next >= value.alloc_size) {
-				respace<false>(next + 1);
+				respace<false>(next * 1.5);
 			}
 			value.pointer[heap_count] = char_value;
 			++heap_count;
