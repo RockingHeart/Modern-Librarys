@@ -581,23 +581,23 @@
                         函数返回描述：无
 
 
-[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#basic_string
-[at]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#at
-[element]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#element
-[begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#begin-and-end
-[index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#index
-[clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#clear_residue
-[leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#leave_residue
-[const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#const_string
-[disconnect]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#disconnect
-[empty]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#empty
-[max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#max_size
-[mode_state]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#mode_state
-[operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#operator
-[replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#replace
-[residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#residue
-[resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#resize
-[restore_cache_mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#restore_cache_mode
-[size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#size
-[tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#tick
-[to]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#to
+[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#basic_string
+[at]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#at
+[element]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#element
+[begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#begin-and-end
+[index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#index
+[clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#clear_residue
+[leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#leave_residue
+[const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#const_string
+[disconnect]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#disconnect
+[empty]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#empty
+[max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#max_size
+[mode_state]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#mode_state
+[operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#operator
+[replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#replace
+[residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#residue
+[resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#resize
+[restore_cache_mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#restore_cache_mode
+[size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#size
+[tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#tick
+[to]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to
