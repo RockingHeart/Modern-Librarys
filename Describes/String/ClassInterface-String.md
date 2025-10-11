@@ -5,12 +5,15 @@
 | Interfaces | Shoots |
 | :---: | :---: |
 | construct | [construct] |
+| at | [at] |
+| element | [element] |
 | begin and end | [begin_and_end] |
 | index | [index] |
 | clear residue | [clear_residue] |
 | leave residue | [leave_residue] |
 | const string | [const_string] |
 | disconnect | [disconnect] |
+| empty | [empty] |
 | max size | [max_size] |
 | mode state | [mode_state] |
 | operator | [operator] |
@@ -75,6 +78,22 @@
                     int main() {
                         basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
                         std::cout << str.at(0) << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：'H'
+                    函数返回描述：无
+            
+            ## element
+            - 返回值类型：char_t 非静态成员函数名：element
+                - 参数列表：(size_t)
+                - char_t element(size_t position)
+                    - 用于获取指定位置的字符
+                        - 若position超出正常范围，则返回空（Null）字符。
+                    ``` C++
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.element(0) << '\n';
                         return 0;
                     }
                     ```
@@ -206,6 +225,24 @@
                     ```
                     #### 以上代码输出："ell"
                     函数返回值描述：返回截取后的字符串
+            
+            ## empty
+            - 返回值类型：bool 非静态成员函数名：empty
+                - 参数列表：(void)
+                - bool empty(void)
+                    - 用于检测动态字符串是否为空
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        std::cout << str.empty() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：false
+                    函数返回描述：无
 
             
             ## max_size
@@ -247,77 +284,6 @@
                     ```
                     #### 以上代码str1输出： 0（缓存模式）<br>以上代码str2输出：1（大模式）
                     函数返回值类型描述：mode_status是枚举类型，内部有cache与big两种值，对应缓存模式与大模式。
-
-            ## operator+=
-            - 返回值类型：basic_string& 非静态成员运算符重载函数符号：+=
-                - 参数列表：(char_t)
-                - basic_string& operator+=(char_t char_value)
-                    - 用于扩展动态字符串
-                        ``` C++
-                        import string;
-                        import std;
-
-                        int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                            str += 'A';
-                            std::cout << str.const_string() << '\n'
-                            return 0;
-                        }
-                        ```
-                        #### 以上代码输出："HelloA"
-                        函数返回值描述：返回调用operator+=的对象
-            
-            ## operator[]
-            - 返回值类型：reference 非静态成员运算符重载函数符号：[]
-                - 参数列表：(size_t)
-                - reference operator[](size_t position)
-                    - 用于获取指定位置的字符，而非字符串
-                        ``` C++
-                        import string;
-                        import std;
-
-                        int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                            std::cout << str[0] << '\n'
-                            return 0;
-                        }
-                        ```
-                        #### 以上代码输出：'H'
-                        函数返回描述：无
-            
-            ## operator==
-            - 返回值类型：bool 非静态成员运算符重载函数符号：[]==
-                - 参数类型：(char_t)
-                - bool operator==(char_t char_value)
-                    - 用于比较存储的内容是否等于char_value
-                         ``` C++
-                        import string;
-                        import std;
-
-                        int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "A", 1 };
-                            std::cout << (str == 'A') << '\n'
-                            return 0;
-                        }
-                        ```
-                        #### 以上代码输出：1
-                        函数返回描述：无
-                
-                - 参数类型：(const_pointer_t)
-                - bool operator==(const_pointer_t str)
-                    - 用于比较存储的内容是否等于str
-                         ``` C++
-                        import string;
-                        import std;
-
-                        int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 1 };
-                            std::cout << (str == "Hello") << '\n'
-                            return 0;
-                        }
-                        ```
-                        #### 以上代码输出：1
-                        函数返回描述：无
 
             ## replace
             - 返回值类型：bool 非静态成员函数名：replace
@@ -524,14 +490,107 @@
                     #### 以上代码输出： "ello"
                     函数返回值描述：它由CastType所构造
 
-[construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#at
+            ## operator
+            - operator+=
+            - 返回值类型：basic_string& 非静态成员运算符重载函数符号：+=
+                - 参数列表：(char_t)
+                - basic_string& operator+=(char_t char_value)
+                    - 用于扩展动态字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str += 'A';
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："HelloA"
+                        函数返回值描述：返回调用operator+=的对象
+            
+            - operator[]
+            - 返回值类型：reference 非静态成员运算符重载函数符号：[]
+                - 参数列表：(size_t)
+                - reference operator[](size_t position)
+                    - 用于获取指定位置的字符，而非字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            std::cout << str[0] << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：'H'
+                        函数返回描述：无
+            
+            - operator==
+                - 返回值类型：bool 非静态成员运算符重载函数符号：==
+                - 参数类型：(char_t)
+                - bool operator==(char_t char_value)
+                    - 用于比较存储的内容是否等于char_value
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "A", 1 };
+                            std::cout << (str == 'A') << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：1
+                        函数返回描述：无
+                
+                - 参数类型：(const_pointer_t)
+                - bool operator==(const_pointer_t str)
+                    - 用于比较存储的内容是否等于str
+                         ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 1 };
+                            std::cout << (str == "Hello") << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：1
+                        函数返回描述：无
+                
+            - operator bool
+                - 返回值类型：bool 非静态成员运算符重载函数符号：bool
+                - 参数类型：(void)
+                - bool operator bool(void)
+                    - 用于检测动态字符串是否不为空
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            std::cout << bool(str) << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：true
+                        函数返回描述：无
+
+
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#basic_string
+[at]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#at
+[element]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#element
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#begin-and-end
 [index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#index
 [clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#clear_residue
 [leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#leave_residue
 [const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#const_string
 [disconnect]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#disconnect
+[empty]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#empty
 [max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#max_size
 [mode_state]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#mode_state
 [operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/ClassInterface.md#operator

@@ -237,6 +237,17 @@ public:
 		return self.at_string(args...);
 	}
 
+	template <class... ArgsType>
+	constexpr reference_t element(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.string_element(args...);
+	        }
+		)
+	{
+		return self.string_element(args...);
+	}
+
 public:
 
 	template <typename CastType, class... ArgsType>
@@ -274,6 +285,13 @@ public:
 		)
 	{
 		return self.disconnect_string(args...);
+	}
+
+public:
+
+	[[nodiscard]]
+	constexpr bool empty(this basic_string& self) noexcept {
+		return self.is_empty();
 	}
 
 public:
@@ -324,6 +342,13 @@ public:
 		self.allocator().deallocate(value.before, value.before_alloc_size);
 		value.before = nullptr;
 		return true;
+	}
+
+public:
+
+	[[nodiscard]]
+	constexpr bool operator bool(this basic_string& self) noexcept {
+		return !self.is_empty();
 	}
 
 public:
@@ -872,6 +897,13 @@ private:
 		return pointer()[position];
 	}
 
+	constexpr char_t string_element(size_t position) {
+		if (position >= string_length()) {
+			return '\0';
+		}
+		return pointer()[position];
+	}
+
 private:
 
 	template <typename CastType>
@@ -931,6 +963,7 @@ private:
 
 private:
 
+	[[nodiscard]]
 	constexpr bool compare(char_t char_value) noexcept {
 		if (string_length() != 1) {
 			return false;
@@ -938,6 +971,7 @@ private:
 		return pointer()[0] == char_value;
 	}
 
+	[[nodiscard]]
 	constexpr bool compare(const_pointer_t str) noexcept {
 		size_t strlen = strutil::strlenof(str);
 		size_t size   = string_length();
@@ -951,6 +985,11 @@ private:
 		data += 1; str += 1;
 		size -= 1;
 		return !strutil::strcmp(data, str, size);
+	}
+
+	[[nodiscard]]
+	constexpr bool is_empty() const noexcept {
+		return string_length() == 0;
 	}
 
 public:
