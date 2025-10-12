@@ -75,8 +75,7 @@
     3. operator +=（已实现一个重载）
 3. operator ==(...)（已实现两个重载）
 4. operator[] (size_t)（已实现）
-5. operator& (void)（未实现）
-6. operator| (...)（未实现一个重载）<br>
+5. operator& (void)（未实现）<br>
     已实现数量：5
 
 ### 非静态成员函数的实现
