@@ -7,6 +7,8 @@
 | construct | [construct] |
 | at | [at] |
 | element | [element] |
+| swap | [swap] |
+| move | [move] |
 | begin and end | [begin_and_end] |
 | index | [index] |
 | clear residue | [clear_residue] |
@@ -93,11 +95,45 @@
                     ``` C++
                     int main() {
                         basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                        std::cout << str.element(0) << '\n';
+                        std::cout << str.const_string() << '\n';
                         return 0;
                     }
                     ```
                     #### 以上代码输出：'H'
+                    函数返回描述：无
+
+            ## swap
+            - 返回值类型：void 非静态成员函数名：swap
+                - 参数列表：(basic_string&)
+                - void swap(basic_string& object)
+                    - 用于交换动态字符串
+                    ``` C++
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str2 = { "World", 5 };
+                        str1.swap(str2);
+                        std::cout << str.const_string() << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出："World"
+                    函数返回描述：无
+
+            ## move
+            - 返回值类型：void 非静态成员函数名：move
+                - 参数列表：(basic_string&)
+                - void move(basic_string& object)
+                    - 用于交换动态字符串
+                    ``` C++
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                        basic_string<string_traits<char, value_traits::remain>> str2 = { "World", 5 };
+                        str1.move(str2);
+                        std::cout << str.const_string() << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出："World"
                     函数返回描述：无
 
             
@@ -579,11 +615,43 @@
                         ```
                         #### 以上代码输出：true
                         函数返回描述：无
+            
+            - operator =
+                - 返回值类型：basic_string& 非静态成员运算符重载函数符号：=
+                - 参数类型：(basic_string&&)
+                - basic_string& operator =(basic_string&&object)
+                    - 用于赋值移动运算
+                        - 非加强模式
+                            - 无条件地将object移动到self
+                        - 是加强模式
+                            - 若self与object皆不为空
+                                - self与object做交换
+                            - 否则
+                                - 无条件地将object移动到self
+                        - 返回移动后的self
+                    ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str1;
+                            basic_string<string_traits<char, value_traits::remain>> str2 = { "Hello", 5 };
+                            str1 = std::move(str2)
+                            std::cout << str1 << '\n'
+                            std::cout << str2 << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码第一次输出："Hello"
+                        #### 以上代码第二次输出：""
+                        函数返回描述：无
 
 
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#basic_string
 [at]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#at
 [element]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#element
+[swap]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#swap
+[move]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#move
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#begin-and-end
 [index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#index
 [clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#clear_residue

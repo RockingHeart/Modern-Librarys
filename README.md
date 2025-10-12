@@ -29,8 +29,8 @@
     <dt>关于string在no_residue值特性下的特性</dt>
 </dl>
 
-- [x] 64位占用字节为24字节（MSVC，且allocator无状态）
-- [x] 64位的缓存大小为23字节（MSVC，且allocator无状态）
+- [x] 64位占用字节为24字节（MSVC，char类型，且allocator无状态）
+- [x] 64位缓存大小为23字节（MSVC，char类型，且allocator无状态）
 
 
 <dl>
@@ -70,7 +70,7 @@
     2. (const basic_string&)
     3. (basic_string&&)
 2. 以下实现均要求实现其参数为1-3的函数
-    1. operator =（未实现）
+    1. operator =（已实现一个重载）
     2. operator +（未实现）
     3. operator +=（已实现一个重载）
 3. operator ==(...)（已实现两个重载）

@@ -8,10 +8,12 @@ wchar_t arr2[5]{};
 auto strset(void* ptr, int val, size_t size) {
 	return ::memset(ptr, val, size);
 }
-import <windows.h>;
+//import <windows.h>;
 int main() {
 	constexpr size_t i = 0;
-	std::cout << sizeof(string<char, value_traits::no_residue>) << '\n';
+	string strT = "Hello";
+	string strTs = L"Hello";
+	std::cout << sizeof(string<char>) << '\n';
 	string<char, value_traits::no_residue> str = "A";
 	std::cout << str.max_size() << '\n';
 	str.resize(50, 'a');
@@ -48,8 +50,14 @@ int main() {
 	string<char, value_traits::remain> str4 = 'A';
 	std::cout << (str4 == 'A') << '\n';
 	constexpr size_t resu = __builtin_strlen("HG");
-	string<char, value_traits::enhance> str5 = "Hello!!! My World, I like u, Do you like me.....?";
-	str5.resize(100, 'a');
+	string<char, value_traits::remain> str5 = "Hello!!!";
+	str5.swap(str3);
+	std::cout << str3.const_string() << '\n';
 	std::cout << str5.const_string() << '\n';
+	string<char, value_traits::enhance> str6 = "Hello!!!A";
+	string<char, value_traits::enhance> str7 = "Hello!!";
+	str6 = std::move(str7);
+	std::cout << str6.const_string() << '\n';
+	std::cout << (str7 == "Hello!!!A") << '\n';
 	return 0;
 }
