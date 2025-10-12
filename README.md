@@ -77,7 +77,7 @@
 4. operator[] (size_t)（已实现）
 5. operator& (void)（未实现）
 6. operator| (...)（未实现一个重载）<br>
-    已实现数量：3
+    已实现数量：5
 
 ### 非静态成员函数的实现
  1. begin(void)（已实现）
