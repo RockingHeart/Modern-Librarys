@@ -29,7 +29,7 @@
     <dt>关于string在no_residue值特性下的特性</dt>
 </dl>
 
-- [x] 64位占用字节为24字节（MSVC，char类型，且allocator无状态）
+- [x] 64位占用大小为24字节（MSVC，char类型，且allocator无状态）
 - [x] 64位缓存大小为23字节（MSVC，char类型，且allocator无状态）
 
 
@@ -38,8 +38,8 @@
 </dl>
 
 - [x] 双重数据
-- [x] 64位占用字节为48字节（MSVC，char类型，且allocator无状态）
-- [x] 64位的缓存大小为47字节（MSVC，char类型，且allocator无状态）
+- [x] 64位占用大小为48字节（MSVC，char类型，且allocator无状态）
+- [x] 64位缓存大小为47字节（MSVC，char类型，且allocator无状态）
 
 ## CMake使用教程
 *下载*此项目至本地 <br>
