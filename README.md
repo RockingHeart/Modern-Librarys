@@ -24,7 +24,7 @@
 > [!TIP]
 > 接口调用采用C++26的显示This与模板可变参数
 >
-> 若不知晓接口如何使用，请阅读：[ClassInterface]
+> 若不知晓接口如何使用，请阅读指定文档
 
 <dl>
     <dt>关于string在no_residue值特性下的特性</dt>
