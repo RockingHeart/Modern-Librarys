@@ -527,6 +527,60 @@
                     函数返回值描述：它由CastType所构造
 
             ## operator
+            - operator+
+            - 返回值类型：basic_string 非静态成员运算符重载函数符号：+
+                - 参数列表：(char_t)
+                - basic_string operator+(char_t char_value)
+                    - 用于组合新建一个动态字符串对象
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            basic_string<string_traits<char, value_traits::remain>> str2 = str + 'A';
+                            std::cout << str2.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："HelloA"
+                        函数返回值描述：返回调用operator+=的对象
+
+                - 参数列表：(const_pointer)
+                - basic_string operator+(const_pointer pointer)
+                    - 用于组合新建一个动态字符串对象
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            basic_string<string_traits<char, value_traits::remain>> str2 = str + " World";
+                            std::cout << str2.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："Hello World"
+                        函数返回值描述：返回调用operator+=的对象
+
+                - 参数列表：(basic_string&)
+                - basic_string operator+(basic_string& object)
+                    - 用于组合新建一个动态字符串对象
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                            basic_string<string_traits<char, value_traits::remain>> str2 = { " Wello", 5 };
+                            basic_string<string_traits<char, value_traits::remain>> str3 = str1 + str2;
+                            std::cout << str2.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："Hello World"
+                        函数返回值描述：返回调用operator+=的对象
+
             - operator+=
             - 返回值类型：basic_string& 非静态成员运算符重载函数符号：+=
                 - 参数列表：(char_t)
@@ -544,6 +598,41 @@
                         }
                         ```
                         #### 以上代码输出："HelloA"
+                        函数返回值描述：返回调用operator+=的对象
+                
+                - 参数列表：(const_pointer)
+                - basic_string& operator+=(const_pointer pointer)
+                    - 用于扩展动态字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str += " World";
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："Hello World"
+                        函数返回值描述：返回调用operator+=的对象
+
+                - 参数列表：(basic_string&)
+                - basic_string& operator+=(basic_string& pointer)
+                    - 用于扩展动态字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                            basic_string<string_traits<char, value_traits::remain>> str2 = { "World", 5 };
+                            str1 += str2;
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："Hello World"
                         函数返回值描述：返回调用operator+=的对象
             
             - operator[]
@@ -565,8 +654,8 @@
                         函数返回描述：无
             
             - operator==
-                - 返回值类型：bool 非静态成员运算符重载函数符号：==
-                - 参数类型：(char_t)
+            - 返回值类型：bool 非静态成员运算符重载函数符号：==
+                - 参数列表：(char_t)
                 - bool operator==(char_t char_value)
                     - 用于比较存储的内容是否等于char_value
                         ``` C++
@@ -582,7 +671,7 @@
                         #### 以上代码输出：1
                         函数返回描述：无
                 
-                - 参数类型：(const_pointer_t)
+                - 参数列表：(const_pointer_t)
                 - bool operator==(const_pointer_t str)
                     - 用于比较存储的内容是否等于str
                          ``` C++
@@ -599,11 +688,11 @@
                         函数返回描述：无
                 
             - operator bool
-                - 返回值类型：bool 非静态成员运算符重载函数符号：bool
-                - 参数类型：(void)
+            - 返回值类型：bool 非静态成员运算符重载函数符号：bool
+                - 参数列表：(void)
                 - bool operator bool(void)
                     - 用于检测动态字符串是否不为空
-                        ``` C++
+                         ``` C++
                         import string;
                         import std;
 
@@ -617,34 +706,69 @@
                         函数返回描述：无
             
             - operator =
-                - 返回值类型：basic_string& 非静态成员运算符重载函数符号：=
-                - 参数类型：(basic_string&&)
-                - basic_string& operator =(basic_string&&object)
-                    - 用于赋值移动运算
-                        - 非加强模式
-                            - 无条件地将object移动到self
-                        - 是加强模式
-                            - 若self与object皆不为空
-                                - self与object做交换
-                            - 否则
-                                - 无条件地将object移动到self
-                        - 返回移动后的self
-                    ``` C++
-                        import string;
-                        import std;
+            - 返回值类型：basic_string& 非静态成员运算符重载函数符号：=
+                - 参数列表：(char_t)
+                    - basic_string& operator =(char_t char_value)
+                        - 用于赋值
+                            ``` C++
+                            import string;
+                            import std;
 
-                        int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str1;
-                            basic_string<string_traits<char, value_traits::remain>> str2 = { "Hello", 5 };
-                            str1 = std::move(str2)
-                            std::cout << str1 << '\n'
-                            std::cout << str2 << '\n'
-                            return 0;
-                        }
-                        ```
-                        #### 以上代码第一次输出："Hello"
-                        #### 以上代码第二次输出：""
-                        函数返回描述：无
+                            int main() {
+                                basic_string<string_traits<char, value_traits::remain>> str1;
+                                str1 = 'A';
+                                std::cout << str1 << '\n'
+                                return 0;
+                            }
+                            ```
+                            #### 以上代码第一次输出："A"
+                            函数返回描述：无
+
+                    - 参数列表：(basic_string&)
+                    - basic_string& operator =(basic_string& object)
+                        - 用于赋值
+                            ``` C++
+                            import string;
+                            import std;
+
+                            int main() {
+                                basic_string<string_traits<char, value_traits::remain>> str1;
+                                basic_string<string_traits<char, value_traits::remain>> str2 = { "Hello", 5 };
+                                str1 = str2;
+                                std::cout << str1 << '\n'
+                                return 0;
+                            }
+                            ```
+                            #### 以上代码第一次输出："Hello"
+                            函数返回描述：无
+                    
+                    - 参数列表：(basic_string&&)
+                    - basic_string& operator =(basic_string&& object)
+                        - 用于赋值移动运算
+                            - 非加强模式
+                                - 无条件地将object移动到self
+                            - 是加强模式
+                                - 若self与object皆不为空
+                                    - self与object做交换
+                                - 否则
+                                    - 无条件地将object移动到self
+                            - 返回移动后的self
+                            ``` C++
+                            import string;
+                            import std;
+
+                            int main() {
+                                basic_string<string_traits<char, value_traits::remain>> str1;
+                                basic_string<string_traits<char, value_traits::remain>> str2 = { "Hello", 5 };
+                                str1 = std::move(str2);
+                                std::cout << str1 << '\n'
+                                std::cout << str2 << '\n'
+                                return 0;
+                            }
+                            ```
+                            #### 以上代码第一次输出："Hello"
+                            #### 以上代码第二次输出：""
+                            函数返回描述：无
 
 
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#basic_string

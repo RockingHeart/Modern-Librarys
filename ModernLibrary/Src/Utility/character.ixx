@@ -1,4 +1,4 @@
-export module utility : strutil;
+﻿export module utility : strutil;
 
 import :type_restion;
 
@@ -157,7 +157,8 @@ private:
 	constexpr static char* copy<char> (
 		char* dest, const char* src, size_t size
 	) noexcept {
-		return static_cast<char*>(::memcpy(dest, src, size));
+		::memcpy(dest, src, size);
+		return dest;
 	}
 
 	template <>
@@ -171,7 +172,8 @@ private:
 	constexpr static char* set<char> (
 		char* dest, char value, size_t size
 	) noexcept {
-		return static_cast<char*>(::memset(dest, value, size));
+		::memset(dest, value, size);
+		return dest;
 	}
 
 	template <>

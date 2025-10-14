@@ -5,6 +5,7 @@
 * 快速了解这个项目
     - 项目源码：[Source]
     - 项目协议：[License]
+    - 项目欢庆：[Rejoice]
     - String
         - 接文：[ClassInterface-String]
         - 未来：[Future-String]
@@ -16,7 +17,7 @@
 
 | 项目实现 | 实现状态 | 实现时间 |
 | :---: | :---: | :---: |
-| string | 正在实现 | 实现基础有效时间为2025年11月份之前 |
+| string | 已实现 | 实现基础有效时间为2025年11月份之前 |
 | small_vector | 待实现 | 待String实现完毕 |
 | vector | 待实现 | 待small_vector实现完毕 |
 
@@ -70,13 +71,12 @@
     2. (const basic_string&)
     3. (basic_string&&)
 2. 以下实现均要求实现其参数为1-3的函数
-    1. operator =（已实现一个重载）
-    2. operator +（未实现）
-    3. operator +=（已实现一个重载）
-3. operator ==(...)（已实现两个重载）
-4. operator[] (size_t)（已实现）
-5. operator& (void)（未实现）<br>
-    已实现数量：5
+    1. operator =（已实现完基础要求的重载）
+    3. operator +=（已实现完基础要求的重载）
+3. operator +(...)（已实现三个重载）
+4. operator ==(...)（已实现两个重载）
+5. operator[] (size_t)（已实现）
+    已实现数量：18
 
 ### 非静态成员函数的实现
  1. begin(void)（已实现）
@@ -97,6 +97,7 @@ This project is currently using Chinese to support MD files.
 
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
 [License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
+[Rejoice]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Rejoice.md
 
 [ClassInterface-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md
 [Future-String]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/Future-String.md

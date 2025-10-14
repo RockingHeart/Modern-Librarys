@@ -1,18 +1,22 @@
-import std;
+﻿import std;
 import string;
 import utility; 
 import <wchar.h>;
 char arr1[32]{};
 wchar_t arr2[5]{};
 
-auto strset(void* ptr, int val, size_t size) {
-	return ::memset(ptr, val, size);
-}
-//import <windows.h>;
+import <windows.h>;
 int main() {
-	constexpr size_t i = 0;
-	string strT = "Hello";
-	string strTs = L"Hello";
+	string<char, string_core, value_traits::enhance> str = "Hello";
+	str += ' ';
+	str += "World";
+	str += ' ';
+	str += str;
+	string<char, string_core, value_traits::enhance> str2 = "Hello";
+	str = 'A';
+	string<char, string_core, value_traits::enhance> str3 = str + 'A';
+	std::cout << str3.const_string() << '\n';
+	/*string strTs = L"Hello";
 	std::cout << sizeof(string<char>) << '\n';
 	string<char, value_traits::no_residue> str = "A";
 	std::cout << str.max_size() << '\n';
@@ -58,6 +62,6 @@ int main() {
 	string<char, value_traits::enhance> str7 = "Hello!!";
 	str6 = std::move(str7);
 	std::cout << str6.const_string() << '\n';
-	std::cout << (str7 == "Hello!!!A") << '\n';
+	std::cout << (str7 == "Hello!!!A") << '\n';*/
 	return 0;
 }
