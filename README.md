@@ -75,7 +75,7 @@
     3. operator +=（已实现完基础要求的重载）
 3. operator +(...)（已实现三个重载）
 4. operator ==(...)（已实现两个重载）
-5. operator[] (size_t)（已实现）
+5. operator[] (size_t)（已实现）<br>
     已实现数量：18
 
 ### 非静态成员函数的实现
