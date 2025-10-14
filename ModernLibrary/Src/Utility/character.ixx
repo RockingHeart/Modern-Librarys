@@ -86,6 +86,27 @@ public:
 		}
 	}
 
+	template <size_t StrLen, character_type CharType = char_t>
+	constexpr static CharType* strcopy(
+		CharType* dest, const CharType* src
+	) noexcept {
+		if constexpr (StrLen < 7) {
+			switch (StrLen) {
+				case 6: dest[5] = src[5];
+				case 5: dest[4] = src[4];
+				case 4: dest[3] = src[3];
+				case 3: dest[2] = src[2];
+				case 2: dest[1] = src[1];
+				case 1: dest[0] = src[0];
+					break;
+			}
+			return dest;
+		}
+		else {
+			return copy<CharType>(dest, src, StrLen);
+		}
+	}
+
 	template <character_type CharType = char_t>
 	constexpr static CharType* strcopy (
 		CharType* dest, const CharType* src, size_t size

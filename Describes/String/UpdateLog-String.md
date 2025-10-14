@@ -27,6 +27,7 @@
             |+|: 添加参数为(char_t)的operator+重载
             |+|: 添加参数为(const_pointer_t)的operator+重载
             |+|: 添加参数为(basic_string&)的operator+重载
+        [2025.10.14] 添加参数为可编译期确认字符串的构造函数
     ## 删除
         [2025.10.12] 将count成员删除
         [2025.10.12] 删除string_core的构造函数

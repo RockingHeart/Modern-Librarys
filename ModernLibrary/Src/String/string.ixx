@@ -150,6 +150,11 @@ public:
 		noexcept : core_t(char_value) {
 	}
 
+	template <size_t StrLen>
+	constexpr basic_string(char_t (&str)[StrLen]) noexcept {
+		assign_init<StrLen>(str);
+	}
+
 	constexpr basic_string(const_pointer_t str) noexcept {
 		assign_init(str, strutil::strlenof(str));
 	}
@@ -180,15 +185,15 @@ public:
 private:
 
 	constexpr basic_string(basic_string& object, char_t value) noexcept {
-		assign_init(object, value);
+		assign_init(object, &value, 1);
 	}
 
 	constexpr basic_string(basic_string& object, const_pointer_t pointer) noexcept {
-		assign_init(object, pointer);
+		assign_init(object, pointer, strutil::strlenof(pointer));
 	}
 
 	constexpr basic_string(basic_string& object, basic_string& right_object) noexcept {
-		assign_init(object, right_object);
+		assign_init(object, right_object.pointer(), right_object.string_length());
 	}
 
 private:
@@ -225,7 +230,6 @@ private:
 
 	template <bool init_heap>
 	constexpr void respace(size_t size) {
-		size               = ration_size(size);
 		box_value_t& value = core_t::value;
 		alloc_t& alloc     = allocator();
 		if constexpr (init_heap) {
@@ -310,10 +314,47 @@ private:
 
 private:
 
-	template <class... ArgsType>
-	constexpr void assign_init(basic_string& object, ArgsType&&... args) noexcept {
-		assign_init(object.pointer(), object.string_length());
-		this->operator+=(std::forward<ArgsType>(args)...);
+	constexpr void assign_init(basic_string& object, const_pointer_t pointer, size_t size) noexcept {
+		box_buffer_t& buffer = core_t::buffer;
+		if (size < core_t::buffer_size) {
+			size_t obj_size = object.string_length();
+			strutil::strcopy(buffer.pointer, object.pointer(), obj_size);
+			strutil::strcopy(buffer.pointer + obj_size, pointer, size);
+			buffer.count = obj_size + size;
+			buffer.pointer[buffer.count] = char_t();
+			return;
+		}
+		box_value_t& value = core_t::value;
+		size_t obj_size    = object.string_length();
+		value.count        = obj_size + size;
+		size_t alloc_size  = value.count * 2;
+		value.pointer      = allocator().allocate(alloc_size);
+		value.alloc_size   = alloc_size;
+		strutil::strcopy(value.pointer, object.pointer(), obj_size);
+		strutil::strcopy(value.pointer + obj_size, pointer, size);
+		value.pointer[value.count] = char_t();
+		buffer.cache = false;
+	}
+
+	template <size_t StrLen>
+	constexpr void assign_init(const_pointer_t str) noexcept {
+		box_buffer_t& buffer = core_t::buffer;
+		if constexpr (StrLen < core_t::buffer_size) {
+			strutil::strcopy<StrLen>(buffer.pointer, str);
+			buffer.pointer[StrLen] = char_t();
+			buffer.count = StrLen;
+			return;
+		}
+		else {
+			box_value_t& value = core_t::value;
+			constexpr size_t alloc_size = StrLen * 2;
+			value.pointer    = allocator().allocate(alloc_size);
+			value.alloc_size = alloc_size;
+			value.count      = StrLen;
+			strutil::strcopy<StrLen>(value.pointer, str);
+			value.pointer[StrLen] = char_t();
+			buffer.cache          = false;
+		}
 	}
 
 	constexpr void assign_init(const_pointer_t str, size_t size) noexcept {
@@ -1247,8 +1288,11 @@ public:
 	}
 };
 
-export template <character_type CharType, template<class, class> class StringCore = string_core, value_traits ValueTraits = value_traits::no_residue >
+export template <character_type CharType, value_traits ValueTraits = value_traits::no_residue, template<class, class> class StringCore = string_core>
 using string = basic_string<string_traits<CharType, ValueTraits, strutil<CharType, std::allocator<CharType>>>, StringCore>;
 
-export template <character_type CharType, template<class, class> class StringCore = string_core, value_traits ValueTraits = value_traits::no_residue>
+export template <character_type CharType, value_traits ValueTraits = value_traits::no_residue, template<class, class> class StringCore = string_core>
 basic_string(const CharType*) -> basic_string<string_traits<CharType, ValueTraits, strutil<CharType, std::allocator<CharType>>>, StringCore>;
+
+export using cstring = string<char>;
+export using wstring = string<wchar_t>;

@@ -6,16 +6,32 @@ char arr1[32]{};
 wchar_t arr2[5]{};
 
 import <windows.h>;
+
+static void test_std() {
+	static std::string not_optimize;
+	auto stime = GetTickCount64();
+	for (size_t i = 0; i < 50000000; i++) {
+		std::string str1 = "Hello";
+		not_optimize = str1;
+	}
+	auto etime = GetTickCount64();
+	std::cout << "Std String: " << (etime - stime) << '\n';
+}
+
+static void test_my() {
+	static cstring not_optimize;
+	auto stime = GetTickCount64();
+	for (size_t i = 0; i < 50000000; i++) {
+		cstring str1 = "Hello";
+		not_optimize = str1;
+	}
+	auto etime = GetTickCount64();
+	std::cout << "My String: " << (etime - stime) << '\n';
+}
+
 int main() {
-	string<char, string_core, value_traits::enhance> str = "Hello";
-	str += ' ';
-	str += "World";
-	str += ' ';
-	str += str;
-	string<char, string_core, value_traits::enhance> str2 = "Hello";
-	str = 'A';
-	string<char, string_core, value_traits::enhance> str3 = str + 'A';
-	std::cout << str3.const_string() << '\n';
+	test_std();
+	test_my();
 	/*string strTs = L"Hello";
 	std::cout << sizeof(string<char>) << '\n';
 	string<char, value_traits::no_residue> str = "A";
