@@ -97,7 +97,7 @@
 This project is currently using Chinese to support MD files.
 
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
-[Namspace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Namespace.md
+[Namespace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Namespace.md
 [License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
 [Rejoice]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Rejoice.md
 
