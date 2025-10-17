@@ -56,19 +56,22 @@
                 - basic_string(const_pointer_t str, size_t size)
                     - 用于构造具有size偏移str的动态字符串 <br>
                         **参数str用于传入需存储的字符串 <br> 参数size用于告知构造函数需存储的字符串大小**
-            - 模板：template<size_type SizeType> 返回值类型：basic_string basic_string 参数列表：(SizeType, char_t)
-            - template<size_type SizeType> basic_string(char_t char_value, SizeType size)
-                - 用于构造多个单个字符的动态字符串 <br>
-                    **参数size用于传入此方法构造需要的长度**
-            - 参数列表：(const basic_string&)
-            - basic_string(const basic_string& object)
-                - 用于构造与object相同的动态字符串副本 <br>
-            - 参数列表：(basic_string&&)
-            - basic_string(basic_string&& object)
-                - 用于构造转移从object的所有权 <br>
-            - 参数列表：(char_t)
-            - basic_string(char_t char_value)
-                - 用于构造以单个字符串char_value为内容的动态字符串 <br>
+                - 模板：template<size_type SizeType> 返回值类型：basic_string basic_string 参数列表：(SizeType, char_t)
+                - template<size_type SizeType> basic_string(char_t char_value, SizeType size)
+                    - 用于构造多个单个字符的动态字符串 <br>
+                        **参数size用于传入此方法构造需要的长度**
+                - 参数列表：(const basic_string&)
+                - basic_string(const basic_string& object)
+                    - 用于构造与object相同的动态字符串副本 <br>
+                - 参数列表：(basic_string&&)
+                - basic_string(basic_string&& object)
+                    - 用于构造转移从object的所有权 <br>
+                - 参数列表：(char_t)
+                - basic_string(char_t char_value)
+                    - 用于构造以单个字符串char_value为内容的动态字符串 <br>
+                - 参数列表：(wrap::char_wrap)
+                - basic_string(const wrap::char_wrap& wrap)
+                    - 用于编译期构造 <br>
                 
             ## at
             - 返回值类型：reference_t 非静态成员函数名：at

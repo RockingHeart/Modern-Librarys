@@ -13,15 +13,18 @@ elseif(GCC)
 endif()
 
 file(GLOB StringPath "ModernLibrary/Src/String/*.ixx")
+file(GLOB WrapPath "ModernLibrary/Src/Wrap/*.ixx")
 file(GLOB UtilityPath "ModernLibrary/Src/Utility/*.ixx")
 
 add_executable(ModernLibrary
     ${StringPath}
+    ${WrapPath}
     ${UtilityPath}
     ModernLibrary/Execute/main.cpp
 )
 
 source_group("String" FILES ${StringPath})
+source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
 
 source_group("Execute" ModernLibrary/Execute/main.cpp)

@@ -4,6 +4,7 @@
 
 * 快速了解这个项目
     - 项目源码：[Source]
+    - 项目名间：[Namespace]
     - 项目协议：[License]
     - 项目欢庆：[Rejoice]
     - String
@@ -96,6 +97,7 @@
 This project is currently using Chinese to support MD files.
 
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
+[Namspace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Namespace.md
 [License]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/License.md
 [Rejoice]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Rejoice.md
 

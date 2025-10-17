@@ -4,14 +4,14 @@ import utility;
 import <wchar.h>;
 char arr1[32]{};
 wchar_t arr2[5]{};
-
 import <windows.h>;
 
 static void test_std() {
 	static std::string not_optimize;
 	auto stime = GetTickCount64();
-	for (size_t i = 0; i < 50000000; i++) {
+	for (size_t i = 0; i < 500000000; i++) {
 		std::string str1 = "Hello";
+		str1 += "World";
 		not_optimize = str1;
 	}
 	auto etime = GetTickCount64();
@@ -19,10 +19,11 @@ static void test_std() {
 }
 
 static void test_my() {
-	static cstring not_optimize;
+	static dast::string<char> not_optimize;
 	auto stime = GetTickCount64();
-	for (size_t i = 0; i < 50000000; i++) {
-		cstring str1 = "Hello";
+	for (size_t i = 0; i < 500000000; i++) {
+		dast::cstring str1 = "Hello";
+		str1 += "World";
 		not_optimize = str1;
 	}
 	auto etime = GetTickCount64();
@@ -30,6 +31,7 @@ static void test_my() {
 }
 
 int main() {
+	dast::cstring str = wrap::char_wrap{ "Hello" };
 	test_std();
 	test_my();
 	/*string strTs = L"Hello";
