@@ -8,7 +8,7 @@ if (MSVC)
     add_compile_options(/std:c++latest)
     add_compile_options(/std:clatest)
     add_compile_options(/experimental:module)
-elseif(GCC)
+else()
     add_compile_options(-fmodules)
 endif()
 
