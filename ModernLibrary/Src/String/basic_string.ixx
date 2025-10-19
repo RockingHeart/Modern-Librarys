@@ -153,29 +153,28 @@ private:
 			pointer_t cache      = alloc.allocate(size);
 			strutil::strcopy(cache, buffer.pointer, buf_size);
 			cache[buf_size] = char_t();
-			value.pointer = cache;
+			value.pointer   = cache;
 			if constexpr (trait_is_advanced_mode()) {
 				value.before = nullptr;
 			}
-			value.alloc_size = size;
 		}
 		else {
-			if constexpr (trait_is_advanced_mode()) {
-				value.pointer = alloc.allocate(size);
-				if (value.before && value.before != value.pointer) {
-					alloc.deallocate(value.before, value.before_alloc_size);
-					value.before = value.pointer;
-					value.before_count = value.count;
-					value.before_alloc_size = value.alloc_size;
-					strutil::strcopy(value.pointer, value.before, value.before_count);
-				}
-				value.alloc_size = size;
+			if constexpr (requires { value.before; }) {
+				alloc.deallocate(value.before, value.before_alloc_size);
+				value.before            = value.pointer;
+				value.before_count      = value.count;
+				value.before_alloc_size = value.alloc_size;
+				value.pointer           = alloc.allocate(size);
+				strutil::strcopy(value.pointer, value.before, value.before_count);
 			}
 			else {
-				value.pointer = reinterpret_cast<pointer_t>(::realloc(value.pointer, size));
-				value.alloc_size = size;
+				pointer_t old_ptr = value.pointer;
+				value.pointer     = alloc.allocate(size);
+				strutil::strcopy(value.pointer, old_ptr, value.count);
+				alloc.deallocate(old_ptr, value.count);
 			}
 		}
+		value.alloc_size = size;
 	}
 
 	constexpr void copy_buffer(auto& object, auto& self) {
@@ -647,38 +646,26 @@ private:
 	}
 
 	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
+		pointer_t data     = pointer();
+		if (size < core_t::buffer_size) {
+			data[size] = fill;
+			return true;
+		}
 		box_value_t& value = core_t::value;
-		if (core_t::buffer.cache) {
-			auto& buffer = core_t::buffer;
-			if (size < core_t::buffer_size) {
-				if (buffer.pointer[size]) {
-					buffer.pointer[size] = char_t();
-				}
-				buffer.count = size;
+		size_t strlen      = string_length();
+		if (is_big_mode()) {
+			if (size < value.alloc_size) {
+				data[size] = fill;
+				return true;
 			}
-			else {
-				size_t strlen = string_length();
-				respace<true>(size * 1.5);
-				strutil::strset(value.pointer + strlen, fill, size - strlen);
-				value.count = size;
-				value.pointer[value.count - 1] = char_t();
-				buffer.cache = false;
-			}
+			respace<false>(size);
 		}
 		else {
-			size_t& strlen = value.count;
-			if (size < value.alloc_size) {
-				value.pointer[size] = char_t();
-				strlen = size;
-			}
-			else {
-				size_t strlen = string_length();
-				respace<false>(size * 1.5);
-				strutil::strset(value.pointer + strlen, fill, size - strlen);
-				value.count = size;
-				value.pointer[value.count - 1] = char_t();
-			}
+			respace<true>(size);
 		}
+		strutil::strset(value.pointer + strlen, fill, size - strlen);
+		value.count                    = size;
+		value.pointer[value.count - 1] = char_t();
 		return true;
 	}
 

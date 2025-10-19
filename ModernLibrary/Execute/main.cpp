@@ -6,12 +6,29 @@ char arr1[32]{};
 wchar_t arr2[5]{};
 import <windows.h>;
 
+template <class Ty>
+struct ailor {
+	using value_type = Ty;
+
+	constexpr Ty* allocate(size_t n) {
+		return static_cast<Ty*>(::operator new[](n * sizeof(Ty),
+			std::align_val_t(alignof(Ty))));
+	}
+
+	constexpr void deallocate(void* ptr, size_t) noexcept {
+		::operator delete[](ptr, std::align_val_t(alignof(Ty)));
+	}
+
+	// For allocator completeness
+	using propagate_on_container_move_assignment = std::true_type;
+	using is_always_equal = std::true_type;
+};
+
 static void test_std() {
-	static std::string not_optimize;
+	static std::basic_string<wchar_t, std::char_traits<wchar_t>, ailor<wchar_t>> not_optimize;
 	auto stime = GetTickCount64();
-	for (size_t i = 0; i < 500000000; i++) {
-		std::string str1 = "Hello";
-		str1 += "World";
+	for (size_t i = 0; i < 50000000; i++) {
+		std::basic_string<wchar_t, std::char_traits<wchar_t>, ailor<wchar_t>> str1 = L"Hell";
 		not_optimize = str1;
 	}
 	auto etime = GetTickCount64();
@@ -19,11 +36,10 @@ static void test_std() {
 }
 
 static void test_my() {
-	static dast::string<char> not_optimize;
+	static dast::wstring<ailor<wchar_t>> not_optimize;
 	auto stime = GetTickCount64();
-	for (size_t i = 0; i < 500000000; i++) {
-		dast::cstring str1 = "Hello";
-		str1 += "World";
+	for (size_t i = 0; i < 50000000; i++) {
+		dast::wstring<ailor<wchar_t>> str1 = L"Hell";
 		not_optimize = str1;
 	}
 	auto etime = GetTickCount64();
@@ -31,7 +47,6 @@ static void test_my() {
 }
 
 int main() {
-	dast::cstring str = wrap::char_wrap{ "Hello" };
 	test_std();
 	test_my();
 	/*string strTs = L"Hello";

@@ -29,12 +29,12 @@ template <
 	character_type CharType, traits::value_traits ValueTrait, string_utility_type StringUtility
 >
 struct traits::string_traits {
-	using char_t          = CharType;
-	using reference_t     = CharType&;
-	using pointer_t       = CharType*;
+	using char_t          =       CharType;
+	using reference_t     =       CharType&;
+	using pointer_t       =       CharType*;
 	using const_pointer_t = const CharType*;
 
-	using strutil = StringUtility;
+	using strutil =          StringUtility;
 	using alloc_t = typename strutil::alloc_t;
 
 	constexpr static value_traits value_traits = ValueTrait;

@@ -50,5 +50,7 @@
         [2025.10.17] 将string的实现分块
         [2025.10.17] 将原本的参数类型为char[]的编译期构造函数改为类型为wrap::char_wrap
         [2025.10.17] 将string归类至dast
+        [2025.10.18] 更改respace的逻辑错误：使用realloc更改为使用allocator重新申请内存
+        [2025.10.19] 根据Future的要求，对resize进行优化
 
 ## Describes更新不记录于此日志中
