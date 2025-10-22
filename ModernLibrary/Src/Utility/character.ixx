@@ -4,15 +4,7 @@ import :type_restion;
 
 import <wchar.h>;
 
-template <class AllocType>
-concept allocator_type = requires(AllocType Al) {
-	Al.allocate;
-	Al.deallocate;
-	typename AllocType::value_type;
-};
-
-export template <character_type CharType, allocator_type AllocType>
-	requires(is_character_type<typename AllocType::value_type>)
+export template <character_type CharType>
 struct strutil {
 public:
 	using char_t          = CharType;
@@ -51,9 +43,6 @@ private:
 		}
 	};
 
-public:
-	using alloc_t = AllocType;
-
 private:
 
 	template <character_type CharType = char_t>
@@ -86,44 +75,29 @@ public:
 		}
 	}
 
-	template <size_t StrLen, character_type CharType = char_t>
-	constexpr static CharType* strcopy(
-		CharType* dest, const CharType* src
-	) noexcept {
-		if constexpr (StrLen < 7) {
-			switch (StrLen) {
-				case 6: dest[5] = src[5];
-				case 5: dest[4] = src[4];
-				case 4: dest[3] = src[3];
-				case 3: dest[2] = src[2];
-				case 2: dest[1] = src[1];
-				case 1: dest[0] = src[0];
-					break;
-			}
-			return dest;
-		}
-		else {
-			return copy<CharType>(dest, src, StrLen);
-		}
-	}
-
 	template <character_type CharType = char_t>
 	constexpr static CharType* strcopy (
 		CharType* dest, const CharType* src, size_t size
 	) noexcept {
-		if (size < 7) {
-			switch (size) {
-				case 6: dest[5] = src[5];
-				case 5: dest[4] = src[4];
-				case 4: dest[3] = src[3];
-				case 3: dest[2] = src[2];
-				case 2: dest[1] = src[1];
-				case 1: dest[0] = src[0];
-					break;
+		if consteval {
+			for (size_t i = 0; i != size; ++i) {
+				dest[i] = src[i];
 			}
 			return dest;
 		}
 		else {
+			if (size < 7) {
+				switch (size) {
+					case 6: dest[5] = src[5];
+					case 5: dest[4] = src[4];
+					case 4: dest[3] = src[3];
+					case 3: dest[2] = src[2];
+					case 2: dest[1] = src[1];
+					case 1: dest[0] = src[0];
+						break;
+				}
+				return dest;
+			}
 			return copy<CharType>(dest, src, size);
 		}
 	}

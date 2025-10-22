@@ -3,6 +3,7 @@
 import string_box;
 
 import <type_traits>;
+import <iterator>;
 
 export template <class BasicString, class StringTraits>
 	requires (
@@ -66,10 +67,11 @@ public:
 public:
 
 	constexpr mode_status mode_state(this basic_string& self) {
-		if (self.is_ceche_mode()) {
-			return mode_status::cache;
-		}
-		return mode_status::big;
+		constexpr static mode_status state[] = {
+			mode_status::cache,
+			mode_status::big
+		};
+		return state[self.is_big_mode()];
 	}
 
 public:
@@ -85,11 +87,16 @@ public:
 	}
 
 	constexpr pointer_t end(this basic_string& self) noexcept {
-		const size_t& size = self.string_length();
-		if (self.is_ceche_mode()) {
-			return self.buffer.pointer + size;
-		}
-		return self.value.pointer + size;
+		return self.pointer() + self.string_length();
+	}
+
+	constexpr auto reverse(this basic_string& self) noexcept {
+		struct revit {
+			basic_string* self;
+			auto begin() { return std::reverse_iterator{ self->end()   }; }
+			auto end()   { return std::reverse_iterator{ self->begin() }; }
+		};
+		return revit{ &self };
 	}
 
 public:

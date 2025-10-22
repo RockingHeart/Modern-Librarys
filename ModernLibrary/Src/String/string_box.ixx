@@ -46,7 +46,7 @@ struct string_box {
 	struct buffer_t {
 		char_t        pointer[buffer_size]{};
 		unsigned char count : 7;
-		bool cache : 1;
+		bool          cache : 1;
 	};
 
 	union {
@@ -61,8 +61,8 @@ struct string_box {
 	};
 
 	constexpr  string_box()
-		noexcept : buffer{ .count = 0, .cache = true } {
-	};
+		noexcept : buffer{ .count = 0, .cache = true }
+	{};
 
 	constexpr ~string_box() noexcept = default;
 };

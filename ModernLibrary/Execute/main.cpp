@@ -1,14 +1,26 @@
 ﻿import std;
 import string;
 import utility; 
-import <wchar.h>;
-char arr1[32]{};
-wchar_t arr2[5]{};
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "Hello";
-	str.resize(100, '.');
-	std::cout << str.const_string();
+	auto stime = GetTickCount64();
+	for (size_t i = 0; i < 100000000; i++) {
+		std::string str = "Hello";
+		str.resize(100);
+	}
+	auto etime = GetTickCount64();
+	std::cout << "std resize: " << (etime - stime) << '\n';
+
+	stime = GetTickCount64();
+	for (size_t i = 0; i < 100000000; i++) {
+		dast::cstring str = "Hello";
+		str.resize(100, [](auto& value, size_t size, size_t strlen) -> size_t {
+			memset(value.pointer + strlen, '!', size - strlen);
+			return 0;
+		});
+	}
+	etime = GetTickCount64();
+	std::cout << "my resize: " << (etime - stime) << '\n';
 	return 0;
 }
