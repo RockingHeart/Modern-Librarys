@@ -59,5 +59,9 @@
         [1.1.4] 优化非静态成员函数resize的性能
         [1.1.4] 对strcopy添加编译期分支预测，支持编译期调用
         [1.1.5] 优化非静态成员函数resize的性能
+        [1.1.6] 更新restore_cache_mode的逻辑并优化其性能
+    
+    ## 保留
+        [1.1.6] 参数为(size_t, Option)的resize_string暂不纳入更新列表，因为日后可能会删除它
 
 ## Describes更新不记录于此日志中

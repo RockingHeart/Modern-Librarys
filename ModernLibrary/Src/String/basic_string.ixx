@@ -572,7 +572,7 @@ private:
 private:
 
 	constexpr bool restore_string_cache_mode(size_t size) noexcept {
-		if (!is_big_mode() || size >= core_t::buffer_size) {
+		if (is_ceche_mode() || size >= core_t::buffer_size) {
 			return false;
 		}
 		if (!index_string(size)) {
@@ -600,22 +600,15 @@ private:
 
 	constexpr bool restore_string_cache_mode() noexcept {
 		box_value_t& value = core_t::value;
-		size_t size = 1;
 		if (value.count < core_t::buffer_size) {
-			size = value.count;
-			return restore_string_cache_mode(size);
+			return restore_string_cache_mode(value.count);
 		}
-		size_t cap = string_capacity();
-		if (cap < core_t::buffer_size) {
-			size = cap;
-		}
-		else {
-			size_t result = cap - core_t::buffer_size;
-			if (result < core_t::buffer_size) {
-				size = result;
-			}
-		}
-		return restore_string_cache_mode(size);
+		size_t bufsize = core_t::buffer_size;
+		size_t result[] = {
+			bufsize,
+			bufsize * bufsize / (string_capacity() + 1)
+		};
+		return restore_string_cache_mode(result[is_big_mode()]);
 	}
 
 	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
@@ -642,14 +635,14 @@ private:
 	}
 
 	template <class OptionType>
-	constexpr bool resize_string(size_t size, OptionType&& option) noexcept {
-		static_assert(
-			std::is_same_v<
-			    decltype(option(core_t::value, size_t(), size_t())),
-			    size_t
-			>,
-			"The return type is not size_t."
-		);
+	constexpr bool resize_string(size_t size, OptionType&& option)
+		noexcept requires (
+		    std::is_same_v <
+		        decltype(option(core_t::value, size_t(), size_t())),
+		        size_t
+		    >
+		)
+	{
 		if (is_ceche_mode()) {
 			if (size < core_t::buffer_size) {
 				core_t::buffer.pointer[size] = char_t();

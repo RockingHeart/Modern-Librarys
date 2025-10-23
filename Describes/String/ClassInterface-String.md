@@ -420,17 +420,22 @@
                 - bool restore_cache_mode(void)
                     - 用于恢复至缓存模式
                         - 此无参重载将自动计算恢复长度
-                            - 若自动计算失败，其默认长度为1
+                            - 若是大模式
+                                - 返回计算的长度
+                                    - 长度按照剩余空间计算
+                                        - 剩余空间越大，结果越小，但最小不小于0
+                                        - 剩余空间越小，结果越大，但最大不大于缓存最大空间
+                            - 若是小模式
+                                - 不做任何改变
+                        - 自动计算长度保证动态修改大小符合空间所需
                     ``` C++
                     import string;
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { 'A', 50 };
-                        str[0] = ':';
-                        str1.resize(30);
+                        dast::cstring str = "Hello AAAAAAAAAAA";
                         str.restore_cache_mode();
-                        std::cout << str.const_string() << '\n';
+                        std::cout << str.size() << '\n';
                         return 0;
                     }
                     ```
