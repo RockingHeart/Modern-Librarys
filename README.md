@@ -95,7 +95,7 @@
 
 ## Q&A
 ### Q: 关于String，为什么接口是core，basic是核心实现，而basic又实现构造函数、析构函数、运算符？
-### A: 因为接口作为core，调用基础的实现，他人也可以实现核心并替换不唯一的core，而非我的实现就是核心。
+### A: 此String利用crtp，而非传统的继承，因在其设计上，可分离式接口与实现并且核心可由用户实现，而非用户实现basic。但这导致了一个问题，core实际调用的成员接口是basic的，如果core调用的basic接口的参数需要传入basic自身类型，那么会导致类型不匹配问题--解决此问题可以将core自身参数转为basic类型，但是转换会增加运行时消耗，crtp本实现0抽象成本，如果转换其自身类型，就本末倒置了，为了解决该问题，使basic实现构造函数等成员：核心实现构造等成员，那么在传入自身参数时的类型是basic，结合basic由我实现，core可不由我实现的思想，这是一个深远且正确的选择。
 
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
