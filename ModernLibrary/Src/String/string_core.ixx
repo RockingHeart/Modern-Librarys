@@ -239,6 +239,59 @@ public:
 		return self.is_empty();
 	}
 
+	[[nodiscard]]
+	constexpr bool is_blank(this basic_string& self) noexcept {
+		return self.entrusted (
+			[](char_t value) {
+			    if (value == ' ') {
+				    return true;
+			    }
+			    return false;
+		    }
+		);
+	}
+
+	[[nodiscard]]
+	constexpr bool is_digit(this basic_string& self) noexcept {
+		return self.entrusted (
+			[](char_t value) {
+			    if (value >= '0' && value <= '9') {
+				    return true;
+			    }
+			    return false;
+		    }
+		);
+	}
+
+	[[nodiscard]]
+	constexpr bool is_lower(this basic_string& self) noexcept {
+		return self.entrusted (
+			[](char_t value) {
+			    if (value >= 'a' && value <= 'z') {
+				    return true;
+			    }
+			    return false;
+		    }
+		);
+	}
+
+	[[nodiscard]]
+	constexpr bool is_upper(this basic_string& self) noexcept {
+		return self.entrusted (
+			[](char_t value) {
+			    if (value >= 'A' && value <= 'Z') {
+					return true;
+				}
+				return false;
+		    }
+		);
+	}
+
+	[[nodiscard]]
+	constexpr bool is_enstr() const noexcept {
+		return is_lower() || is_upper();
+	}
+
 public:
 
 	constexpr const auto residue(this basic_string& self)

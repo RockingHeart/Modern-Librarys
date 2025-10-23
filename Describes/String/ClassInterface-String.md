@@ -282,6 +282,96 @@
                     ```
                     #### 以上代码输出：false
                     函数返回描述：无
+            
+            ## is_blank
+            - 返回值类型：bool 非静态成员函数名：is_blank
+                - 参数列表：(void)
+                - bool is_blank(void)
+                    - 用于检测动态字符串是否为空格字符
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "     ", 5 };
+                        std::cout << str.is_blank() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：true
+                    函数返回描述：无
+
+            ## is_digit
+            - 返回值类型：bool 非静态成员函数名：is_digit
+                - 参数列表：(void)
+                - bool is_digit(void)
+                    - 用于检测动态字符串是否为数字
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "12345", 5 };
+                        std::cout << str.is_digit() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：true
+                    函数返回描述：无
+
+            ## is_lower
+            - 返回值类型：bool 非静态成员函数名：is_lower
+                - 参数列表：(void)
+                - bool is_lower(void)
+                    - 用于检测动态字符串是否为小写的英文单词
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "abcde", 5 };
+                        std::cout << str.is_lower() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：true
+                    函数返回描述：无
+
+            ## is_upper
+            - 返回值类型：bool 非静态成员函数名：is_upper
+                - 参数列表：(void)
+                - bool is_upper(void)
+                    - 用于检测动态字符串是否为大写的英文单词
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "ABCDE", 5 };
+                        std::cout << str.is_upper() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：true
+                    函数返回描述：无
+
+            ## is_enstr
+            - 返回值类型：bool 非静态成员函数名：is_enstr
+                - 参数列表：(void)
+                - bool is_enstr(void)
+                    - 用于检测动态字符串是否为英文单词
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "ABCDEfg", 7 };
+                        std::cout << str.is_enstr() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：true
+                    函数返回描述：无
 
             
             ## max_size

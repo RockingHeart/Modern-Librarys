@@ -4,9 +4,8 @@ import utility;
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "DWAAdWDWADWADWADDAWDWDD";
-	str.restore_cache_mode();
-	std::cout << str.max_size();
+	dast::cstring str = "hello";
+	std::cout << str.is_lower();
 	/*auto stime = GetTickCount64();
 	for (size_t i = 0; i < 0; i++) {
 		std::string str = "Hello";
@@ -16,10 +15,10 @@ int main() {
 	std::cout << "std resize: " << (etime - stime) << '\n';
 
 	stime = GetTickCount64();
-	for (size_t i = 0; i < 100000000; i++) {
-		dast::cstring str = "Hello";
-		str.resize(100);
-		str.restore_cache_mode();
+	bool resu = false;
+	for (size_t i = 0; i < 1000000000; i++) {
+		dast::cstring str = "HEdLLO";
+		bool resu = str.is_upper();
 	}
 	etime = GetTickCount64();
 	std::cout << "my resize: " << (etime - stime) << '\n';*/

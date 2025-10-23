@@ -323,6 +323,8 @@ private:
 		self_buffer.cache = false;
 	}
 
+private:
+
 	constexpr basic_string& assignment(const_pointer_t pointer, size_t size) noexcept {
 		if (size + 1 >= core_t::buffer_size) {
 			respace<false>(size + 1);
@@ -380,6 +382,8 @@ private:
 		}
 		return *this;
 	}
+
+private:
 
 	constexpr void move_string(basic_string& object) noexcept {
 		box_buffer_t& self_buffer   = core_t::buffer;
@@ -439,6 +443,22 @@ private:
 		else {
 			swap_value(alloc, object_value, self_value);
 		}
+	}
+
+private:
+
+	template <class Option>
+	constexpr auto entrusted(Option&& option)
+		noexcept requires (
+		    std::is_same_v<decltype(option(char_t())), bool>
+		)
+	{
+		for (auto& char_value : *this) {
+			if (!option(char_value)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 private:
