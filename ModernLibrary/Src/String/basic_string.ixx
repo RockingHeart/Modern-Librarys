@@ -224,7 +224,7 @@ private:
 
 private:
 
-	constexpr void assign_init(
+	constexpr void assign_init (
 		basic_string& object, const_pointer_t pointer, size_t size
 	) noexcept {
 		box_buffer_t& buffer = core_t::buffer;
@@ -911,8 +911,6 @@ public:
 	{
 		return append(std::forward<ArgsType>(args)...);
 	}
-
-public:
 
 	template <class... ArgsType>
 	constexpr bool operator==(ArgsType&&... args)

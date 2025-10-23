@@ -93,6 +93,10 @@
 11. template<class Type> Type to(...)（已实现一个重载）<br>
     已实现数量：12
 
+## Q&A
+### Q: 关于String，为什么接口是core，basic是核心实现，而basic又实现构造函数、析构函数、运算符？
+### A: 因为接口作为core，调用基础的实现，他人也可以实现核心并替换不唯一的core，而非我的实现就是核心。
+
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
 
