@@ -837,17 +837,7 @@ private:
 	}
 
 	constexpr basic_string& append(basic_string& string) noexcept {
-		pointer_t data = string.pointer();
-		size_t size    = string.string_length();
-		if (std::addressof(string) == this) {
-			alloc_t& alloc = allocator();
-			pointer_t mem  = alloc.allocate(size);
-			strutil::strcopy(mem, data, size);
-			append_impl(mem, size);
-			alloc.deallocate(mem, size);
-			return *this;
-		}
-		return append_impl(data, string.string_length());
+		return append_impl(string.pointer(), string.string_length());
 	}
 
 private:

@@ -4,29 +4,25 @@ import utility;
 import <windows.h>;
 
 int main() {
-	dast::cstring str = " hello ";
-	std::cout << str.trimmed() << '\n';
-	std::cout << str.const_string() << '\n';
-	std::cout << str.size() << '\n';
-	dast::cstring::reverse_iterator rev = str.reverse();
-	for (auto& v : rev) {
-		std::cout << v << '\n';
-	}
-	/*auto stime = GetTickCount64();
-	for (size_t i = 0; i < 0; i++) {
+	auto stime = GetTickCount64();
+	static std::string nop;
+	for (size_t i = 0; i < 500000000; i++) {
 		std::string str = "Hello";
-		str.resize(100);
+		str += str;
+		nop = str;
 	}
 	auto etime = GetTickCount64();
-	std::cout << "std resize: " << (etime - stime) << '\n';
+	std::cout << "std: " << (etime - stime) << '\n';
 
 	stime = GetTickCount64();
 	bool resu = false;
-	for (size_t i = 0; i < 1000000000; i++) {
-		dast::cstring str = "HEdLLO";
-		bool resu = str.is_upper();
+	static dast::cstring dnop;
+	for (size_t i = 0; i < 500000000; i++) {
+		dast::cstring str = "hello ";
+		str += "Hello";
+		dnop = str;
 	}
 	etime = GetTickCount64();
-	std::cout << "my resize: " << (etime - stime) << '\n';*/
+	std::cout << "my: " << (etime - stime) << '\n';
 	return 0;
 }
