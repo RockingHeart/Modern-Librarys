@@ -4,8 +4,14 @@ import utility;
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "hello";
-	std::cout << str.is_lower();
+	dast::cstring str = " hello ";
+	std::cout << str.trimmed() << '\n';
+	std::cout << str.const_string() << '\n';
+	std::cout << str.size() << '\n';
+	dast::cstring::reverse_iterator rev = str.reverse();
+	for (auto& v : rev) {
+		std::cout << v << '\n';
+	}
 	/*auto stime = GetTickCount64();
 	for (size_t i = 0; i < 0; i++) {
 		std::string str = "Hello";

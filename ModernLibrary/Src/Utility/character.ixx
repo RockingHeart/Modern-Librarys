@@ -54,6 +54,11 @@ private:
 	) noexcept;
 
 	template <character_type CharType = char_t>
+	constexpr static CharType* move (
+		CharType* dest, const CharType* src, size_t size
+	) noexcept;
+
+	template <character_type CharType = char_t>
 	constexpr static CharType* set (
 		CharType* dest, CharType value, size_t size
 	) noexcept;
@@ -88,18 +93,26 @@ public:
 		else {
 			if (size < 7) {
 				switch (size) {
-					case 6: dest[5] = src[5];
-					case 5: dest[4] = src[4];
-					case 4: dest[3] = src[3];
-					case 3: dest[2] = src[2];
-					case 2: dest[1] = src[1];
-					case 1: dest[0] = src[0];
+					case 6: dest[6] = src[6];
+					case 5: dest[5] = src[5];
+					case 4: dest[4] = src[4];
+					case 3: dest[3] = src[3];
+					case 2: dest[2] = src[2];
+					case 1: dest[1] = src[1];
+					case 0: dest[0] = src[0];
 						break;
 				}
 				return dest;
 			}
 			return copy<CharType>(dest, src, size);
 		}
+	}
+
+	template <character_type CharType = char_t>
+	constexpr static CharType* strmove (
+		CharType* dest, const CharType* src, size_t size
+	) noexcept {
+		return move<CharType>(dest, src, size);
 	}
 
 	template <character_type CharType = char_t>
@@ -161,6 +174,21 @@ private:
 		wchar_t* dest, const wchar_t* src, size_t size
 	) noexcept {
 		return ::wmemcpy(dest, src, size);
+	}
+
+	template <>
+	constexpr static char* move<char> (
+		char* dest, const char* src, size_t size
+	) noexcept {
+		::memmove(dest, src, size);
+		return dest;
+	}
+
+	template <>
+	constexpr static wchar_t* move<wchar_t> (
+		wchar_t* dest, const wchar_t* src, size_t size
+	) noexcept {
+		return ::wmemmove(dest, src, size);
 	}
 
 	template <>

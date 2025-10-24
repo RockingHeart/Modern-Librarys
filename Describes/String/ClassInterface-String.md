@@ -10,12 +10,20 @@
 | swap | [swap] |
 | move | [move] |
 | begin and end | [begin_and_end] |
+| cut | [cut] |
+| reverse | [reverse] |
+| trimmed | [trimmed] |
 | index | [index] |
 | clear residue | [clear_residue] |
 | leave residue | [leave_residue] |
 | const string | [const_string] |
 | disconnect | [disconnect] |
 | empty | [empty] |
+| is_blank | [is_blank] |
+| is_digit | [is_digit] |
+| is_lower | [is_lower] |
+| is_upper | [is_upper] |
+| is_enstr | [is_enstr] |
 | max size | [max_size] |
 | mode state | [mode_state] |
 | operator | [operator] |
@@ -154,6 +162,52 @@
                 }
                 ```
                 #### 以上代码输出："H e l l o"
+                函数返回描述：无
+
+            ## cut
+            - 返回值类型：basic_string::cut 非静态成员函数名：cut 参数列表：(char_t)
+            - basic_string::cut cut(char_t char_value)
+                - 用于获取头尾裁剪的计数
+                ``` C++
+                int main() {
+                    basic_string<string_traits<char, value_traits::remain>> str = { " Hello ", 7 };
+                    std::cout << str.cut(' ');
+                    return 0;
+                }
+                ```
+                #### 以上代码输出：2
+                函数返回描述：无
+
+            ## reverse
+            - 返回值类型：basic_string::reverse_iterator 非静态成员函数名：reverse 参数列表：(void)
+            - basic_string::reverse_iterator reverse(void)
+                - 用于新建并返回反转后的动态字符串
+                ``` C++
+                int main() {
+                    basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                    for (auto& v : str.reverse()) {
+                        std::cout << v << ' ';
+                    }
+                    return 0;
+                }
+                ```
+                #### 以上代码输出："o l l e H"
+                函数返回描述：无
+
+            ## trimmed
+            - 返回值类型：size_t 非静态成员函数名：trimmed 参数列表：(char_t)
+            - basic_string::reverse_iterator trimmed(char_t char_value = ' ')
+                - 用于裁剪头尾的char_value
+                ``` C++
+                int main() {
+                    basic_string<string_traits<char, value_traits::remain>> str = { " Hello ", 5 };
+                    std::cout << str.trimmed() << '\n';
+                    std::cout << str.const_string() << '\n';
+                    return 0;
+                }
+                ```
+                #### 以上代码第一次输出：2
+                #### 以上代码第二次输出："Hello"
                 函数返回描述：无
 
             ## index
@@ -875,12 +929,20 @@
 [swap]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#swap
 [move]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#move
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#begin-and-end
+[cut]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#cut
+[reverse]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#reverse
+[trimmed]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#trimmed
 [index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#index
 [clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#clear_residue
 [leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#leave_residue
 [const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#const_string
 [disconnect]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#disconnect
 [empty]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#empty
+[is_blank]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_blank
+[is_digit]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_digit
+[is_lower]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_lower
+[is_upper]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_upper
+[is_enstr]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_enstr
 [max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#max_size
 [mode_state]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#mode_state
 [operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#operator

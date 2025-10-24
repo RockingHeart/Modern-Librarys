@@ -4,6 +4,7 @@ import string_traits;
 import char_wrap;
 
 import utility;
+import <iterator>;
 
 template <class Traits>
 concept string_traits_type = requires {
@@ -113,7 +114,23 @@ private:
 		return trait_is_enhance_mode() || trait_is_remain_mode();
 	}
 
+public:
+
+	struct reverse_iterator {
+		basic_string* self;
+		auto begin() { return std::reverse_iterator{ self->end()   }; }
+		auto end()   { return std::reverse_iterator{ self->begin() }; }
+	};
+
+	struct cut_info_t {
+		size_t count, begin, end;
+	};
+
 private:
+
+	constexpr alloc_t& allocator() noexcept {
+		return *reinterpret_cast<alloc_t*>(this);
+	}
 
 	constexpr size_t ration_size(size_t size) const noexcept {
 		static constexpr size_t type_size = sizeof(char_t);
@@ -123,12 +140,6 @@ private:
 			}
 		}
 		return size;
-	}
-
-private:
-
-	constexpr alloc_t& allocator() noexcept {
-		return *reinterpret_cast<alloc_t*>(this);
 	}
 
 	template <bool init_heap>
@@ -163,6 +174,15 @@ private:
 			}
 		}
 		value.alloc_size = size;
+	}
+
+	constexpr size_t sub_length(size_t size) noexcept {
+		if (is_large_mode()) {
+			core_t::value.count -= size;
+			return core_t::value.count;
+		}
+		core_t::buffer.count -= size;
+		return core_t::buffer.count;
 	}
 
 	constexpr void copy_buffer(box_buffer_t& object, box_buffer_t& self) noexcept {
@@ -329,7 +349,7 @@ private:
 		if (size + 1 >= core_t::buffer_size) {
 			respace<false>(size + 1);
 		}
-		if (is_big_mode()) {
+		if (is_large_mode()) {
 			box_value_t& value = core_t::value;
 			strutil::strcopy(value.pointer, pointer, size);
 			value.count = size;
@@ -395,7 +415,7 @@ private:
 		box_value_t& self_value   = core_t::value;
 		box_value_t& object_value = object.value;
 		alloc_t& object_alloc     = object.allocator();
-		if (object.is_big_mode()) {
+		if (object.is_large_mode()) {
 			object_alloc.deallocate (
 				object_value.pointer,
 				object_value.alloc_size
@@ -468,7 +488,7 @@ private:
 			core_t::buffer.count,
 			core_t::value.count
 		};
-		return sizes[is_big_mode()];
+		return sizes[is_large_mode()];
 	}
 
 	constexpr size_t string_capacity() const noexcept {
@@ -484,7 +504,7 @@ private:
 private:
 
 	[[nodiscard]]
-	constexpr bool is_big_mode() const noexcept {
+	constexpr bool is_large_mode() const noexcept {
 		return !core_t::buffer.cache;
 	}
 
@@ -500,7 +520,7 @@ private:
 			core_t::buffer.pointer,
 			core_t::value.pointer
 		};
-		return data[is_big_mode()];
+		return data[is_large_mode()];
 	}
 
 private:
@@ -628,7 +648,7 @@ private:
 			bufsize,
 			bufsize * bufsize / (string_capacity() + 1)
 		};
-		return restore_string_cache_mode(result[is_big_mode()]);
+		return restore_string_cache_mode(result[is_large_mode()]);
 	}
 
 	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
@@ -774,7 +794,7 @@ private:
 	constexpr basic_string& append_impl(const_pointer_t pointer, size_t size) noexcept {
 		box_value_t& value = core_t::value;
 		size_t& heap_count = value.count;
-		if (core_t::buffer.cache) {
+		if (is_ceche_mode()) {
 			box_buffer_t& buffer = core_t::buffer;
 			size_t strlen        = buffer.count;
 			size_t next          = strlen + size;
@@ -802,7 +822,7 @@ private:
 			if (next >= value.alloc_size) {
 				respace<false>(next * 1.5);
 			}
-			strutil::strcopy(
+			strutil::strcopy (
 				value.pointer + heap_count,
 				pointer, size
 			);
@@ -832,6 +852,80 @@ private:
 			return *this;
 		}
 		return append_impl(data, string.string_length());
+	}
+
+private:
+
+	constexpr pointer_t begin() noexcept {
+		return pointer();
+	}
+
+	constexpr pointer_t end() noexcept {
+		return pointer() + string_length();
+	}
+
+	constexpr reverse_iterator reverse_string() noexcept {
+		return { this };
+	}
+
+private:
+
+	constexpr size_t string_cut (
+		char_t char_value
+	) noexcept {
+		pointer_t data = pointer();
+		size_t strlen  = string_length();
+		if (!strlen) {
+			return 0;
+		}
+		size_t count = 0;
+		for (size_t i = 0; i < strlen; i++) {
+			if (data[i] != char_value) {
+				break;
+			}
+			++count;
+		}
+		for (size_t i = strlen - 1; i > 0; i--) {
+			if (data[i] != char_value) {
+				break;
+			}
+			++count;
+		}
+		return count;
+	}
+
+	constexpr cut_info_t string_cut_info(
+		pointer_t data, size_t strlen, char_t char_value
+	) const noexcept {
+		cut_info_t result{};
+		for (size_t i = 0; i < strlen; i++) {
+			if (data[i] != char_value) {
+				result.begin = i;
+				break;
+			}
+			++result.count;
+		}
+		for (size_t i = strlen - 1; i > 0; i--) {
+			if (data[i] != char_value) {
+				result.end = i;
+				break;
+			}
+			++result.count;
+		}
+		return result;
+	}
+
+	constexpr size_t trimmed_string(char_t char_value = ' ') noexcept {
+		size_t strlen = string_length();
+		if (!strlen) {
+			return 0;
+		}
+		pointer_t data = pointer();
+		auto [count, begin, end] = string_cut_info(data, strlen, char_value);
+		size_t next = strlen - count;
+		strutil::strmove(data, data + begin, next);
+		data[sub_length(count)] = char_t();
+		return count;
 	}
 
 private:
@@ -926,7 +1020,7 @@ public:
 public:
 
 	constexpr ~basic_string() noexcept {
-		if (is_big_mode()) {
+		if (is_large_mode()) {
 			auto& value = core_t::value;
 			auto& alloc = allocator();
 			if constexpr (trait_is_advanced_mode()) {

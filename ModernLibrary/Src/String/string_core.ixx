@@ -3,7 +3,6 @@
 import string_box;
 
 import <type_traits>;
-import <iterator>;
 
 export template <class BasicString, class StringTraits>
 	requires (
@@ -82,21 +81,59 @@ public:
 
 public:
 
-	constexpr pointer_t begin(this basic_string& self) noexcept {
-		return self.pointer();
+	template <class... ArgsType>
+	constexpr pointer_t begin(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.begin(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.begin(std::forward<ArgsType>(args)...);
 	}
 
-	constexpr pointer_t end(this basic_string& self) noexcept {
-		return self.pointer() + self.string_length();
+	template <class... ArgsType>
+	constexpr pointer_t end(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.end(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.end(std::forward<ArgsType>(args)...);
 	}
 
-	constexpr auto reverse(this basic_string& self) noexcept {
-		struct revit {
-			basic_string* self;
-			auto begin() { return std::reverse_iterator{ self->end()   }; }
-			auto end()   { return std::reverse_iterator{ self->begin() }; }
-		};
-		return revit{ &self };
+	template <class... ArgsType>
+	constexpr auto cut(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.string_cut(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.string_cut(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr auto reverse(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.reverse_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.reverse_string(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr auto trimmed(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.trimmed_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.trimmed_string(std::forward<ArgsType>(args)...);
 	}
 
 public:
