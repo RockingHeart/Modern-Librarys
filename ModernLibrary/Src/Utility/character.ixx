@@ -20,9 +20,9 @@ private:
 	template <>
 	struct compile<char> {
 		constexpr static int strcmp (
-			const char* left, const char* right, size_t size
+			const char* left, const char* src, size_t size
 		) noexcept {
-			return ::__builtin_memcmp(left, right, size);
+			return ::__builtin_memcmp(left, src, size);
 		}
 
 		constexpr static size_t strlen(const char* str) noexcept {
@@ -33,9 +33,9 @@ private:
 	template <>
 	struct compile<wchar_t> {
 		constexpr static int strcmp(
-			const wchar_t* left, const wchar_t* right, size_t size
+			const wchar_t* left, const wchar_t* src, size_t size
 		) noexcept {
-			return ::__builtin_wmemcmp(left, right, size);
+			return ::__builtin_wmemcmp(left, src, size);
 		}
 
 		constexpr static size_t strlen(const wchar_t* str) noexcept {
@@ -65,7 +65,7 @@ private:
 
 	template <character_type CharType = char_t>
 	constexpr static int compare (
-		const CharType* left, const CharType* right, size_t size
+		const CharType* left, const CharType* src, size_t size
 	) noexcept;
 
 public:
@@ -91,21 +91,9 @@ public:
 			return dest;
 		}
 		else {
-			if (size < 7) {
-				switch (size) {
-					case 6: dest[6] = src[6];
-					case 5: dest[5] = src[5];
-					case 4: dest[4] = src[4];
-					case 3: dest[3] = src[3];
-					case 2: dest[2] = src[2];
-					case 1: dest[1] = src[1];
-					case 0: dest[0] = src[0];
-						break;
-				}
-				return dest;
-			}
 			return copy<CharType>(dest, src, size);
 		}
+		
 	}
 
 	template <character_type CharType = char_t>
@@ -119,33 +107,31 @@ public:
 	constexpr static CharType* strset (
 		CharType* dest, CharType value, size_t size
 	) noexcept {
-		if (size % 16 == 0) {
-			for (size_t i = 16; i < size; i += 16) {
+		if consteval {
+			for (size_t i = 0; i < size; i++) {
+				dest[i] = value;
+			}
+		}
+		size_t i = 0;
+		if (size >= 5) {
+			for (; i < 5; i += 5) {
 				dest[i]      = value; dest[i + 1]  = value;
 				dest[i + 2]  = value; dest[i + 3]  = value;
-				dest[i + 4]  = value; dest[i + 5]  = value;
-				dest[i + 6]  = value; dest[i + 7]  = value;
-				dest[i + 8]  = value; dest[i + 9]  = value;
-				dest[i + 10] = value; dest[i + 11] = value;
-				dest[i + 12] = value; dest[i + 13] = value;
-				dest[i + 14] = value; dest[i + 15] = value;
+				dest[i + 4]  = value;
 			}
-			return dest;
 		}
-		else {
-			return set<CharType>(dest, value, size);
-		}
+		return set<CharType>(dest + i, value, size - i);
 	}
 
 	template <character_type CharType = char_t>
 	constexpr static int strcmp (
-		const CharType* left, const CharType* right, size_t size
+		const CharType* left, const CharType* src, size_t size
 	) noexcept {
 		if consteval {
-			return compile<CharType>::strcmp(left, right, size);
+			return compile<CharType>::strcmp(left, src, size);
 		}
 		else {
-			return compare<CharType>(left, right, size);
+			return compare<CharType>(left, src, size);
 		}
 	}
 
@@ -208,15 +194,15 @@ private:
 
 	template <>
 	constexpr static int compare<char> (
-		const char* left, const char* right, size_t size
+		const char* left, const char* src, size_t size
 	) noexcept {
-		return ::memcmp(left, right, size);
+		return ::memcmp(left, src, size);
 	}
 
 	template <>
 	constexpr static int compare<wchar_t> (
-		const wchar_t* left, const wchar_t* right, size_t size
+		const wchar_t* left, const wchar_t* src, size_t size
 	) noexcept {
-		return ::wmemcmp(left, right, size);
+		return ::wmemcmp(left, src, size);
 	}
 };

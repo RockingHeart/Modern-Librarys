@@ -285,12 +285,12 @@ private:
 	template <size_type SizeType>
 	constexpr void assign_init(char_t char_value, SizeType size) noexcept {
 		if (size < core_t::buffer_size) {
-			strutil::strset(
-				core_t::buffer,
+			strutil::strset (
+				core_t::buffer.pointer,
 				char_value,
 				size
 			);
-			core_t::count = size;
+			core_t::buffer.count = size;
 		}
 		else {
 			box_value_t& value = core_t::value;
