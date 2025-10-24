@@ -167,7 +167,7 @@
             ## cut
             - 返回值类型：basic_string::cut 非静态成员函数名：cut 参数列表：(char_t)
             - basic_string::cut cut(char_t char_value)
-                - 用于获取头尾裁剪的计数
+                - 用于获取头尾需裁剪的字符计数
                 ``` C++
                 int main() {
                     basic_string<string_traits<char, value_traits::remain>> str = { " Hello ", 7 };
