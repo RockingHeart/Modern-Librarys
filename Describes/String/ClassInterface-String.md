@@ -165,8 +165,8 @@
                 函数返回描述：无
 
             ## cut
-            - 返回值类型：basic_string::cut 非静态成员函数名：cut 参数列表：(char_t)
-            - basic_string::cut cut(char_t char_value)
+            - 返回值类型：size_t 非静态成员函数名：cut 参数列表：(char_t)
+            - size_t cut(char_t char_value)
                 - 用于获取头尾需裁剪的字符计数
                 ``` C++
                 int main() {

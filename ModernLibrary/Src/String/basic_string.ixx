@@ -122,10 +122,6 @@ public:
 		auto end()   { return std::reverse_iterator{ self->begin() }; }
 	};
 
-	struct cut_info_t {
-		size_t count, begin, end;
-	};
-
 private:
 
 	constexpr alloc_t& allocator() noexcept {
@@ -894,10 +890,12 @@ private:
 		return count;
 	}
 
-	constexpr cut_info_t string_cut_info(
+	constexpr auto string_cut_info(
 		pointer_t data, size_t strlen, char_t char_value
 	) const noexcept {
-		cut_info_t result{};
+		struct cut_info_t {
+			size_t count, begin, end;
+		} result{};
 		for (size_t i = 0; i < strlen; i++) {
 			if (data[i] != char_value) {
 				result.begin = i;
