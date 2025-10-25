@@ -384,18 +384,12 @@ private:
 			return *this;
 		}
 		if constexpr (trait_is_enhance_mode()) {
-			if (!object.is_empty()) {
-				if (!is_empty()) {
-					exchange_string(object);
-				}
-			}
-			else {
-				object.move_string(*this);
+			if (!object.is_empty() && !is_empty()) {
+				exchange_string(object);
+				return *this;
 			}
 		}
-		else {
-			object.move_string(*this);
-		}
+		object.move_string(*this);
 		return *this;
 	}
 
