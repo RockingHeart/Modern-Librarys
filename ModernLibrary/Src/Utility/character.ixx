@@ -111,6 +111,7 @@ public:
 			for (size_t i = 0; i < size; i++) {
 				dest[i] = value;
 			}
+			return dest;
 		}
 		size_t i = 0;
 		if (size >= 5) {
