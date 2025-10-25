@@ -961,8 +961,7 @@ private:
 		if (data[size - 1] != str[size - 1]) {
 			return false;
 		}
-		data += 1; str += 1;
-		return !strutil::strcmp(data, str, size);
+		return !strutil::strcmp(data, str, size - 1);
 	}
 
 	[[nodiscard]]
