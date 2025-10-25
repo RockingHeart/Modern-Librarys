@@ -788,7 +788,40 @@ private:
 private:
 
 	constexpr basic_string& append_impl(const_pointer_t pointer, size_t size) noexcept {
+		size_t strlen      = string_length();
+		size_t next        = strlen + size;
+		if (next < core_t::buffer_size) {
+			box_buffer_t& buffer = core_t::buffer;
+			strutil::strcopy (
+				buffer.pointer + strlen,
+				pointer, size
+			);
+			buffer.count += size;
+			buffer.pointer[buffer.count] = char_t();
+			return *this;
+		}
+
 		box_value_t& value = core_t::value;
+		size_t& heap_count = value.count;
+
+		if (is_ceche_mode()) {
+			respace<true>(next * 1.5);
+		}
+		else {
+			respace<false>(next * 1.5);
+			heap_count = strlen;
+		}
+
+		strutil::strcopy(
+			value.pointer + heap_count,
+			pointer, size
+		);
+		heap_count               += size;
+		value.pointer[heap_count] = char_t();
+		core_t::buffer.cache = false;
+		return *this;
+
+		/*box_value_t& value = core_t::value;
 		size_t& heap_count = value.count;
 		if (is_ceche_mode()) {
 			box_buffer_t& buffer = core_t::buffer;
@@ -812,20 +845,19 @@ private:
 				value.pointer[heap_count] = char_t();
 				buffer.cache              = false;
 			}
+			return *this;
 		}
-		else {
-			size_t next = heap_count + 1;
-			if (next >= value.alloc_size) {
-				respace<false>(next * 1.5);
-			}
-			strutil::strcopy (
-				value.pointer + heap_count,
-				pointer, size
-			);
-			heap_count               += size;
-			value.pointer[heap_count] = char_t();
+		size_t next = heap_count + 1;
+		if (next >= value.alloc_size) {
+			respace<false>(next * 1.5);
 		}
-		return *this;
+		strutil::strcopy(
+			value.pointer + heap_count,
+			pointer, size
+		);
+		heap_count += size;
+		value.pointer[heap_count] = char_t();
+		return *this;*/
 	}
 
 	constexpr basic_string& append(char_t char_value) noexcept {
@@ -856,9 +888,7 @@ private:
 
 private:
 
-	constexpr size_t string_cut (
-		char_t char_value
-	) noexcept {
+	constexpr size_t string_cut (char_t char_value) noexcept {
 		pointer_t data = pointer();
 		size_t strlen  = string_length();
 		if (!strlen) {
@@ -880,7 +910,7 @@ private:
 		return count;
 	}
 
-	constexpr auto string_cut_info(
+	constexpr auto string_cut_info (
 		pointer_t data, size_t strlen, char_t char_value
 	) const noexcept {
 		struct cut_info_t {

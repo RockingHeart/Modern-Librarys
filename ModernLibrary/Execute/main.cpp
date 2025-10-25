@@ -5,28 +5,21 @@ import <windows.h>;
 
 int main() {
 	auto stime = GetTickCount64();
-	//static std::string nop;
-	char buf[100];
-	static void* r = 0;
-	for (size_t i = 0; i < 100000000; i++) {
-		/*std::string str = "Hello";
-		str += str;
-		nop = str;*/
-		std::string str('1', 30);
+	for (size_t i = 0; i < 500000000; i++) {
+		std::string str = "Hello";
+		str += " World";
+		std::string str2;
+		str2 = str;
 	}
 	auto etime = GetTickCount64();
 	std::cout << "std: " << (etime - stime) << '\n';
 
 	stime = GetTickCount64();
-	bool resu = false;
-	//static dast::cstring dnop;
-	static void* t = 0;
-	for (size_t i = 0; i < 100000000; i++) {
-		/*dast::cstring str = "hello ";
-		str += "Hello";
-		dnop = str;*/
-		//t = strutil<char>::strset(buf, '\1', 99);
-		dast::cstring str('1', 30);
+	for (size_t i = 0; i < 500000000; i++) {
+		dast::cstring str = "Hello";
+		str += " World";
+		dast::cstring str2;
+		str2 = str;
 	}
 	etime = GetTickCount64();
 	std::cout << "my: " << (etime - stime) << '\n';
