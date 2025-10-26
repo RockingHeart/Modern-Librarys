@@ -24,7 +24,7 @@ concept string_core_type = requires {
 
 export template <string_traits_type StringTraits, template<class, class> class StringCore>
 class basic_string :
-	        public StringCore<basic_string<StringTraits, StringCore>, StringTraits> {
+	public StringCore<basic_string<StringTraits, StringCore>, StringTraits> {
 private:
 	friend class   StringCore<basic_string<StringTraits, StringCore>, StringTraits>;
 	using core_t = StringCore<basic_string<StringTraits, StringCore>, StringTraits>;
@@ -33,18 +33,18 @@ private:
 	static_assert(requires{ string_core_type<core_t>; });
 
 private:
-	using box_value_t  = typename core_t::box_value_type;
+	using box_value_t = typename core_t::box_value_type;
 	using box_buffer_t = typename core_t::buffer_t;
 
 public:
-	using string_traits =          StringTraits;
-	using strutil       = typename string_traits::strutil;
-	using alloc_t       = typename string_traits::alloc_t;
+	using string_traits = StringTraits;
+	using strutil = typename string_traits::strutil;
+	using alloc_t = typename string_traits::alloc_t;
 
 public:
-	using char_t          = typename string_traits::char_t;
-	using reference_t     = typename string_traits::reference_t;
-	using pointer_t       = typename string_traits::pointer_t;
+	using char_t = typename string_traits::char_t;
+	using reference_t = typename string_traits::reference_t;
+	using pointer_t = typename string_traits::pointer_t;
 	using const_pointer_t = typename string_traits::const_pointer_t;
 
 public:
@@ -53,7 +53,8 @@ public:
 public:
 
 	constexpr basic_string(void)
-		noexcept {};
+		noexcept {
+	};
 
 	constexpr basic_string(char_t char_value)
 		noexcept : core_t(char_value) {
@@ -88,6 +89,13 @@ public:
 
 private:
 
+	enum class action {
+		lower,
+		upper
+	};
+
+private:
+
 	constexpr basic_string(basic_string& object, char_t value) noexcept {
 		assign_init(object, &value, 1);
 	}
@@ -98,6 +106,29 @@ private:
 
 	constexpr basic_string(basic_string& object, basic_string& right_object) noexcept {
 		assign_init(object, right_object.pointer(), right_object.string_length());
+	}
+
+	/*template <class OptionType>
+	constexpr basic_string(basic_string& object, OptionType&& option) noexcept {
+		assign_init(object);
+		for (auto& value : *this) { option(value); }
+	}*/
+
+	constexpr basic_string(basic_string& object, action act) noexcept {
+		assign_init(object);
+		if (act == action::upper) {
+			for (auto& value : *this) {
+				if (value >= 'a' && value <= 'z') {
+					value -= 32;
+				}
+			}
+			return;
+		}
+		for (auto& value : *this) {
+			if (value >= 'A' && value <= 'Z') {
+				value += 32;
+			}
+		}
 	}
 
 private:
@@ -187,7 +218,7 @@ private:
 			object.pointer,
 			object.count
 		);
-		self.count = self.count;
+		self.count = object.count;
 	}
 
 	constexpr static void reset_value (
@@ -244,17 +275,18 @@ private:
 		basic_string& object, const_pointer_t pointer, size_t size
 	) noexcept {
 		box_buffer_t& buffer = core_t::buffer;
-		if (size < core_t::buffer_size) {
-			size_t obj_size = object.string_length();
+		size_t obj_size      = object.string_length();
+		size_t sub_len       = obj_size + size;
+		if (sub_len < core_t::buffer_size) {
 			strutil::strcopy(buffer.pointer, object.pointer(), obj_size);
 			strutil::strcopy(buffer.pointer + obj_size, pointer, size);
-			buffer.count                 = obj_size + size;
+			buffer.count                 = sub_len;
 			buffer.pointer[buffer.count] = char_t();
 			return;
 		}
 		box_value_t& value = core_t::value;
 		size_t obj_size    = object.string_length();
-		value.count        = obj_size + size;
+		value.count        = sub_len;
 		size_t alloc_size  = value.count * 2;
 		value.pointer      = allocator().allocate(alloc_size);
 		value.alloc_size   = alloc_size;
@@ -306,7 +338,7 @@ private:
 		box_buffer_t& self_buffer   = core_t::buffer;
 		box_buffer_t& object_buffer = object.buffer;
 		if (object.is_ceche_mode()) {
-			copy_buffer(self_buffer, object_buffer);
+			copy_buffer(object_buffer, self_buffer);
 			return;
 		}
 		alloc_t& alloc            = allocator();
@@ -714,7 +746,7 @@ private:
 				return { true, point };
 			}
 		}
-		return { false, 0 };
+		return {};
 	};
 
 	constexpr match<size_t> last_index (
@@ -725,7 +757,7 @@ private:
 				return { true, point };
 			}
 		}
-		return { false, 0 };
+		return {};
 	}
 
 	constexpr bool index_string(size_t position) noexcept {
@@ -814,44 +846,6 @@ private:
 		value.pointer[heap_count] = char_t();
 		core_t::buffer.cache = false;
 		return *this;
-
-		/*box_value_t& value = core_t::value;
-		size_t& heap_count = value.count;
-		if (is_ceche_mode()) {
-			box_buffer_t& buffer = core_t::buffer;
-			size_t strlen        = buffer.count;
-			size_t next          = strlen + size;
-			if (next < core_t::buffer_size) {
-				strutil::strcopy (
-					buffer.pointer + strlen,
-					pointer, size
-				);
-				buffer.count                += size;
-				buffer.pointer[buffer.count] = char_t();
-			}
-			else {
-				respace<true>(next * 1.5);
-				strutil::strcopy (
-					value.pointer + strlen,
-					pointer, size
-				);
-				heap_count                = strlen + size;
-				value.pointer[heap_count] = char_t();
-				buffer.cache              = false;
-			}
-			return *this;
-		}
-		size_t next = heap_count + 1;
-		if (next >= value.alloc_size) {
-			respace<false>(next * 1.5);
-		}
-		strutil::strcopy(
-			value.pointer + heap_count,
-			pointer, size
-		);
-		heap_count += size;
-		value.pointer[heap_count] = char_t();
-		return *this;*/
 	}
 
 	constexpr basic_string& append(char_t char_value) noexcept {
@@ -864,6 +858,29 @@ private:
 
 	constexpr basic_string& append(basic_string& string) noexcept {
 		return append_impl(string.pointer(), string.string_length());
+	}
+
+private:
+
+	constexpr basic_string lower_string() noexcept {
+		/*return { *this, [](char_t& value) {
+			if (value >= 'A' && value <= 'Z') {
+				value += 32;
+			}
+		} };*/
+		return { *this, action::lower };
+	}
+
+	constexpr basic_string upper_string() noexcept {
+		/*constexpr static char_t diff = 'a' - 'A';
+		return { *this,
+			[](char_t& value) constexpr noexcept {
+			    if (value >= 'a' && value <= 'z') {
+					value -= diff;
+				}
+		    }
+		};*/
+		return { *this, action::upper };
 	}
 
 private:

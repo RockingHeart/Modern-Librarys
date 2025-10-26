@@ -139,6 +139,30 @@ public:
 public:
 
 	template <class... ArgsType>
+	constexpr auto lower(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.lower_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.lower_string(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr auto upper(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.upper_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.upper_string(std::forward<ArgsType>(args)...);
+	}
+
+public:
+
+	template <class... ArgsType>
 	[[nodiscard]] constexpr bool resize(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {

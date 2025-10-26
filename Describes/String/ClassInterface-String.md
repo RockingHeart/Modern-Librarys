@@ -13,6 +13,8 @@
 | cut | [cut] |
 | reverse | [reverse] |
 | trimmed | [trimmed] |
+| lower | [lower] |
+| upper | [upper] |
 | index | [index] |
 | clear residue | [clear_residue] |
 | leave residue | [leave_residue] |
@@ -208,6 +210,36 @@
                 ```
                 #### 以上代码第一次输出：2
                 #### 以上代码第二次输出："Hello"
+                函数返回描述：无
+
+            ## lower
+            - 返回值类型：basic_string 非静态成员函数名：lower 参数列表：(void)
+            - basic_string lower()
+                - 用于对一个指定动态字符串对象创建小写的副本
+                ``` C++
+                int main() {
+                    basic_string<string_traits<char, value_traits::remain>> str = { "HELLO", 5 };
+                    auto lower = str.lower();
+                    std::cout << lower.const_string() << '\n';
+                    return 0;
+                }
+                ```
+                #### 以上代码输出："hello"
+                函数返回描述：无
+
+            ## upper
+            - 返回值类型：basic_string 非静态成员函数名：upper 参数列表：(void)
+            - basic_string upper()
+                - 用于对一个指定动态字符串对象创建大写的副本
+                ``` C++
+                int main() {
+                    basic_string<string_traits<char, value_traits::remain>> str = { "hello", 5 };
+                    auto upper = str.upper();
+                    std::cout << upper.const_string() << '\n';
+                    return 0;
+                }
+                ```
+                #### 以上代码输出："HELLO"
                 函数返回描述：无
 
             ## index
@@ -932,6 +964,8 @@
 [cut]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#cut
 [reverse]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#reverse
 [trimmed]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#trimmed
+[lower]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#lower
+[upper]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#upper
 [index]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#index
 [clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#clear_residue
 [leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#leave_residue
