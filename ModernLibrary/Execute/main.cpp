@@ -4,7 +4,12 @@ import utility;
 import <windows.h>;
 
 int main() {
-	auto stime = GetTickCount64();
+	dast::cstring str = "HELLO";
+	str.to_lower();
+	std::cout << str.const_string() << '\n';
+	std::cout << str.is_upper();
+
+	/*auto stime = GetTickCount64();
 	static std::string snop;
 	for (size_t i = 0; i < 500000000; i++) {
 		std::string str = "Hello";
@@ -23,6 +28,6 @@ int main() {
 		dnop = str;
 	}
 	etime = GetTickCount64();
-	std::cout << "my: " << (etime - stime) << '\n';
+	std::cout << "my: " << (etime - stime) << '\n';*/
 	return 0;
 }

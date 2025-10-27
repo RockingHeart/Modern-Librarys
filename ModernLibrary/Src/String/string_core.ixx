@@ -267,6 +267,26 @@ public:
 		return self.template to_cast<CastType>(std::forward<ArgsType>(args)...);
 	}
 
+	constexpr basic_string& to_lower(this basic_string& self) noexcept {
+		return self.delivered(
+			[](reference_t value) constexpr noexcept {
+			    if (value >= 'A' && value <= 'Z') {
+				    value += 32;
+			    }
+		    }
+		);
+	}
+
+	constexpr basic_string& to_upper(this basic_string& self) noexcept {
+		return self.delivered(
+			[](reference_t value) constexpr noexcept {
+			    if (value >= 'a' && value <= 'z') {
+				    value -= 32;
+			    }
+		    }
+		);
+	}
+
 public:
 
 	template <class... ArgsType>
@@ -303,7 +323,7 @@ public:
 	[[nodiscard]]
 	constexpr bool is_blank(this basic_string& self) noexcept {
 		return self.entrusted (
-			[](char_t value) {
+			[](char_t value) constexpr noexcept {
 			    if (value == ' ') {
 				    return true;
 			    }
@@ -315,7 +335,7 @@ public:
 	[[nodiscard]]
 	constexpr bool is_digit(this basic_string& self) noexcept {
 		return self.entrusted (
-			[](char_t value) {
+			[](char_t value) constexpr noexcept {
 			    if (value >= '0' && value <= '9') {
 				    return true;
 			    }
@@ -327,7 +347,7 @@ public:
 	[[nodiscard]]
 	constexpr bool is_lower(this basic_string& self) noexcept {
 		return self.entrusted (
-			[](char_t value) {
+			[](char_t value) constexpr noexcept {
 			    if (value >= 'a' && value <= 'z') {
 				    return true;
 			    }
@@ -339,7 +359,7 @@ public:
 	[[nodiscard]]
 	constexpr bool is_upper(this basic_string& self) noexcept {
 		return self.entrusted (
-			[](char_t value) {
+			[](char_t value) constexpr noexcept {
 			    if (value >= 'A' && value <= 'Z') {
 					return true;
 				}

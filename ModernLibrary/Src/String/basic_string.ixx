@@ -489,8 +489,8 @@ private:
 
 private:
 
-	template <class Option>
-	constexpr auto entrusted(Option&& option)
+	template <class OptionType>
+	constexpr bool entrusted(OptionType&& option)
 		noexcept requires (
 		    std::is_same_v<decltype(option(char_t())), bool>
 		)
@@ -501,6 +501,20 @@ private:
 			}
 		}
 		return true;
+	}
+
+	template <class OptionType>
+	constexpr basic_string& delivered(OptionType&& option)
+		noexcept requires (
+		    requires(OptionType option) {
+				option(this->pointer()[0]);
+	        }
+		)
+	{
+		for (auto& char_value : *this) {
+			option(char_value);
+		}
+		return *this;
 	}
 
 private:
@@ -863,7 +877,7 @@ private:
 private:
 
 	constexpr basic_string lower_string() noexcept {
-		/*return { *this, [](char_t& value) {
+		/*return { *this, [](reference_t value) {
 			if (value >= 'A' && value <= 'Z') {
 				value += 32;
 			}
@@ -874,7 +888,7 @@ private:
 	constexpr basic_string upper_string() noexcept {
 		/*constexpr static char_t diff = 'a' - 'A';
 		return { *this,
-			[](char_t& value) constexpr noexcept {
+			[](reference_t value) constexpr noexcept {
 			    if (value >= 'a' && value <= 'z') {
 					value -= diff;
 				}

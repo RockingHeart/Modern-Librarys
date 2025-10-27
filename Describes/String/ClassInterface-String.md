@@ -36,6 +36,8 @@
 | size | [size] |
 | tick | [tick] |
 | to | [to] |
+| to_lower | [to_lower] |
+| to_upper | [to_upper] |
 
 - String
 
@@ -691,6 +693,42 @@
                     ```
                     #### 以上代码输出： "Hello"
                     函数返回值描述：它由CastType所构造
+
+            ## to_lower
+            - 返回值类型：basic_string& 非静态模板成员函数名：to_lower
+                - 参数列表: (void)
+                - basic_string& to_lower(void)
+                    - 用于将自身动态字符串对象的大写英文单词元素转换为小写
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "HELLO", 5 };
+                        std::cout << std_str.to_lower().const_string() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： "hello"
+                    函数返回值描述：返回修改后的自身对象
+
+            ## to_upper
+            - 返回值类型：basic_string& 非静态模板成员函数名：to_upper
+                - 参数列表: (void)
+                - basic_string& to_upper(void)
+                    - 用于将自身动态字符串对象的小写英文单词元素转换为大写
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        basic_string<string_traits<char, value_traits::remain>> str = { "hello", 5 };
+                        std::cout << std_str.to_upper().const_string() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： "HELLO"
+                    函数返回值描述：返回修改后的自身对象
                 
                 - 参数列表：(size_t)
                 - CastType to(size_t offset)
@@ -987,3 +1025,5 @@
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#size
 [tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#tick
 [to]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to
+[to_lower]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to_lower
+[to_upper]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to_upper
