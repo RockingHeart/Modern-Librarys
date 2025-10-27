@@ -54,13 +54,15 @@ public:
 		return self.string_capacity();
 	}
 
-	constexpr size_t max_size(this basic_string& self) noexcept {
-		if (self.is_ceche_mode()) {
-			return self.buffer_size;
-		}
-		else {
-			return self.value.alloc_size;
-		}
+	template <class... ArgsType>
+	constexpr size_t max_size(this basic_string& self, ArgsType&&... args)
+		noexcept requires(
+		    requires {
+		        self.string_max_size(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.string_max_size(std::forward<ArgsType>(args)...);
 	};
 
 public:
@@ -126,7 +128,7 @@ public:
 	}
 
 	template <class... ArgsType>
-	constexpr auto trimmed(this basic_string& self, ArgsType&&... args)
+	constexpr size_t trimmed(this basic_string& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.trimmed_string(std::forward<ArgsType>(args)...);
@@ -139,7 +141,7 @@ public:
 public:
 
 	template <class... ArgsType>
-	constexpr auto lower(this basic_string& self, ArgsType&&... args)
+	constexpr basic_string lower(this basic_string& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.lower_string(std::forward<ArgsType>(args)...);
@@ -150,7 +152,7 @@ public:
 	}
 
 	template <class... ArgsType>
-	constexpr auto upper(this basic_string& self, ArgsType&&... args)
+	constexpr basic_string upper(this basic_string& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.upper_string(std::forward<ArgsType>(args)...);
@@ -233,7 +235,7 @@ public:
 public:
 
 	template <class... ArgsType>
-	constexpr auto swap(this basic_string& self, ArgsType&&... args)
+	constexpr void swap(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.exchange_string(std::forward<ArgsType>(args)...);
@@ -244,7 +246,7 @@ public:
 	}
 
 	template <class... ArgsType>
-	constexpr auto move(this basic_string& self, ArgsType&&... args)
+	constexpr void move(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.move_string(std::forward<ArgsType>(args)...);
@@ -311,6 +313,41 @@ public:
 		)
 	{
 		return self.disconnect_string(std::forward<ArgsType>(args)...);
+	}
+
+public:
+
+	template <class... ArgsType>
+	constexpr void center(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.center_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.center_string(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr void left(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.left_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.left_string(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr void right(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.right_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.right_string(std::forward<ArgsType>(args)...);
 	}
 
 public:

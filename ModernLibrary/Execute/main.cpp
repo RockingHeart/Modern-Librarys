@@ -5,9 +5,8 @@ import <windows.h>;
 
 int main() {
 	dast::cstring str = "HELLO";
-	str.to_lower();
+	str.center("*****");
 	std::cout << str.const_string() << '\n';
-	std::cout << str.is_upper();
 
 	/*auto stime = GetTickCount64();
 	static std::string snop;

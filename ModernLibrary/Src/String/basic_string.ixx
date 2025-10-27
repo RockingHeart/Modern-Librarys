@@ -89,9 +89,17 @@ public:
 
 private:
 
-	enum class action {
+	enum class char_action {
 		lower,
 		upper
+	};
+
+private:
+
+	enum class fill_action {
+		left,
+		center,
+		right
 	};
 
 private:
@@ -114,9 +122,9 @@ private:
 		for (auto& value : *this) { option(value); }
 	}*/
 
-	constexpr basic_string(basic_string& object, action act) noexcept {
+	constexpr basic_string(basic_string& object, char_action act) noexcept {
 		assign_init(object);
-		if (act == action::upper) {
+		if (act == char_action::upper) {
 			for (auto& value : *this) {
 				if (value >= 'a' && value <= 'z') {
 					value -= 32;
@@ -201,6 +209,14 @@ private:
 			}
 		}
 		value.alloc_size = size;
+	}
+
+	constexpr void set_length(size_t size) noexcept {
+		if (is_large_mode()) {
+			core_t::value.count = size;
+			return;
+		}
+		core_t::buffer.count = size;
 	}
 
 	constexpr size_t sub_length(size_t size) noexcept {
@@ -537,6 +553,13 @@ private:
 		}
 	}
 
+	constexpr size_t string_max_size() const noexcept {
+		if (is_ceche_mode()) {
+			return core_t::buffer_size;
+		}
+		return core_t::value.alloc_size;
+	}
+
 private:
 
 	[[nodiscard]]
@@ -602,6 +625,115 @@ private:
 			return {};
 		}
 		return { pointer() + point, end };
+	}
+
+private:
+
+	template <fill_action fill_act>
+	constexpr void single_fill (
+		pointer_t data, pointer_t old, char_t fill,
+		size_t fill_size, size_t str_len
+	) noexcept {
+		if constexpr (fill_act == fill_action::left || fill_act == fill_action::center) {
+			strutil::strset(data, fill, fill_size);
+			strutil::strcopy(data + fill_size, old, str_len);
+		}
+		else if constexpr (fill_act == fill_action::right) {
+			strutil::strcopy(data, old, str_len);
+			strutil::strset(data + str_len, fill, fill_size);
+		}
+		if constexpr (fill_act == fill_action::center) {
+			fill_size += str_len;
+			strutil::strset(data + fill_size, fill, fill_size);
+		}
+	}
+	template <fill_action fill_act>
+	constexpr void multiple_fill (
+		pointer_t data, pointer_t old, const_pointer_t fill,
+		size_t fill_size, size_t str_len
+	) noexcept {
+		if constexpr (fill_act == fill_action::left || fill_act == fill_action::center) {
+			strutil::strcopy(data + fill_size, old, str_len);
+			strutil::strcopy(data, fill, fill_size);
+		}
+		else if constexpr (fill_act == fill_action::right) {
+			strutil::strcopy(data, old, str_len);
+			strutil::strcopy(data + fill_size, fill, fill_size);
+		}
+		if constexpr (fill_act == fill_action::center) {
+			fill_size += str_len;
+			strutil::strcopy(data + fill_size, fill, fill_size);
+		}
+	}
+
+	template <fill_action fill_act, class FillType>
+	constexpr void align_impl(FillType fill, size_t fill_size)
+		noexcept requires (
+		    std::is_same_v<FillType, const_pointer_t>
+		    ||
+		    std::is_same_v<FillType, char_t>
+		)
+	{
+		box_buffer_t& buffer = core_t::buffer;
+		box_value_t& value   = core_t::value;
+		size_t str_len       = buffer.count;
+		pointer_t data       = buffer.pointer;
+		size_t sub_len       = fill_size;
+		if constexpr (fill_act == fill_action::center) {
+			sub_len *= 2;
+		}
+		alloc_t alloc = allocator();
+		if (is_large_mode()) {
+			data     = value.pointer;
+			str_len  = value.count;
+		}
+		sub_len      += str_len;
+		pointer_t old = alloc.allocate(str_len);
+		strutil::strcopy(old, data, str_len);
+		if (sub_len >= string_max_size()) {
+			if (is_large_mode()) {
+				alloc.deallocate(value.pointer, value.alloc_size);
+			}
+			value.alloc_size = sub_len * 1.5;
+			data = value.pointer = alloc.allocate(value.alloc_size);
+		}
+		if constexpr (std::is_same_v<FillType, char_t>) {
+			single_fill<fill_act> (
+				data, old, fill, fill_size, str_len
+			);
+		}
+		else {
+			multiple_fill<fill_act> (
+				data, old, fill, fill_size, str_len
+			);
+		}
+		alloc.deallocate(old, str_len);
+		set_length(sub_len);
+		data[sub_len] = char_t();
+	}
+
+	constexpr void center_string(char_t fill, size_t size = 1) noexcept {
+		return align_impl<fill_action::center>(fill, size);
+	}
+
+	constexpr void center_string(const_pointer_t fill) noexcept {
+		return align_impl<fill_action::center>(fill, strutil::strlenof(fill));
+	}
+
+	constexpr void left_string(char_t fill, size_t size = 1) noexcept {
+		return align_impl<fill_action::left>(fill, size);
+	}
+
+	constexpr void left_string(const_pointer_t fill) noexcept {
+		return align_impl<fill_action::left>(fill, strutil::strlenof(fill));
+	}
+
+	constexpr void right_string(char_t fill, size_t size = 1) noexcept {
+		return align_impl<fill_action::right>(fill, size);
+	}
+
+	constexpr void right_string(const_pointer_t fill) noexcept {
+		return align_impl<fill_action::right>(fill, strutil::strlenof(fill));
 	}
 
 private:
@@ -882,7 +1014,7 @@ private:
 				value += 32;
 			}
 		} };*/
-		return { *this, action::lower };
+		return { *this, char_action::lower };
 	}
 
 	constexpr basic_string upper_string() noexcept {
@@ -894,7 +1026,7 @@ private:
 				}
 		    }
 		};*/
-		return { *this, action::upper };
+		return { *this, char_action::upper };
 	}
 
 private:

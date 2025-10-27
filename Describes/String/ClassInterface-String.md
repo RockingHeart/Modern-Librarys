@@ -353,6 +353,115 @@
                     #### 以上代码输出："ell"
                     函数返回值描述：返回截取后的字符串
             
+            ## center
+            - 返回值类型：void 非静态成员函数名：center
+                - 参数列表：(char_t, size_t) 
+                    - void center(char_t fill, size_t size = 1)
+                    - 用于居中对齐
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str.center('*', 5)
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
+                    函数返回描述：无
+
+                - 参数列表：(const_pointer_t) 
+                    - void center(const_pointer_t fill)
+                    - 用于居中对齐
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str.center("*****")
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
+                    函数返回描述：无
+
+            ## left
+            - 返回值类型：void 非静态成员函数名：left
+                - 参数列表：(char_t, size_t) 
+                    - void left(char_t fill, size_t size = 1)
+                    - 用于左对齐
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str.left('*', 5)
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："\*\*\*\*\*Hello"
+                    函数返回描述：无
+
+                - 参数列表：(const_pointer_t) 
+                    - void left(const_pointer_t fill)
+                    - 用于左对齐
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str.left("*****")
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："\*\*\*\*\*Hello"
+                    函数返回描述：无
+
+            ## right
+            - 返回值类型：void 非静态成员函数名：right
+                - 参数列表：(char_t, size_t) 
+                    - void right(char_t fill, size_t size = 1)
+                    - 用于右对齐
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str.right('*', 5)
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："Hello\*\*\*\*\*"
+                    函数返回描述：无
+
+                - 参数列表：(const_pointer_t) 
+                    - void right(const_pointer_t fill)
+                    - 用于右对齐
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            str.right("*****")
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："Hello\*\*\*\*\*"
+                    函数返回描述：无
+
+            
             ## empty
             - 返回值类型：bool 非静态成员函数名：empty
                 - 参数列表：(void)
