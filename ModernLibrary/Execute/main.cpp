@@ -3,30 +3,29 @@ import string;
 import utility; 
 import <windows.h>;
 
+constexpr int foo() {
+	constexpr dast::cstring str = "eello";
+	static_assert(str[0] == 'e');
+	int resu = 0;
+	for (auto& c : str) {
+		resu += c;
+	}
+	static_assert(str);
+	static_assert(str == "eello");
+	constexpr auto state = str.mode_state();
+	return resu;
+}
+
+template <class Ty>
+auto foo(Ty&&);
+
+auto foo(auto&& v) { return v; }
+
 int main() {
-	dast::cstring str = "HELLO";
-	str.center("*****");
-	std::cout << str.const_string() << '\n';
-
-	/*auto stime = GetTickCount64();
-	static std::string snop;
-	for (size_t i = 0; i < 500000000; i++) {
-		std::string str = "Hello";
-		str += " World";
-		snop = str;
-	}
-	auto etime = GetTickCount64();
-	std::cout << "std: " << (etime - stime) << '\n';
-
-
-	static dast::cstring dnop;
-	stime = GetTickCount64();
-	for (size_t i = 0; i < 500000000; i++) {
-		dast::cstring str = "hello";
-		str += " World";
-		dnop = str;
-	}
-	etime = GetTickCount64();
-	std::cout << "my: " << (etime - stime) << '\n';*/
+	std::cout << foo(1);
+	constexpr int resu = foo();
+	dast::cstring str = "eello";
+	str.begin()[0] = 'H';
+	std::cout << str.const_string();
 	return 0;
 }

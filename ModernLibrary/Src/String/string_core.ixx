@@ -46,16 +46,16 @@ private:
 
 public:
 
-	constexpr size_t size(this basic_string& self) noexcept {
+	constexpr size_t size(this basic_string const& self) noexcept {
 		return self.string_length();
 	}
 
-	constexpr size_t capacity(this basic_string& self) noexcept {
+	constexpr size_t capacity(this basic_string const& self) noexcept {
 		return self.string_capacity();
 	}
 
 	template <class... ArgsType>
-	constexpr size_t max_size(this basic_string& self, ArgsType&&... args)
+	constexpr size_t max_size(this basic_string const& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.string_max_size(std::forward<ArgsType>(args)...);
@@ -67,17 +67,16 @@ public:
 
 public:
 
-	constexpr mode_status mode_state(this basic_string& self) {
-		constexpr static mode_status state[] = {
-			mode_status::cache,
-			mode_status::big
-		};
-		return state[self.is_big_mode()];
+	constexpr mode_status mode_state(this basic_string const& self) {
+		if (self.is_cache_mode()) {
+			return mode_status::cache;
+		}
+		return mode_status::big;
 	}
 
 public:
 
-	constexpr const_pointer_t const_string(this basic_string& self) {
+	constexpr const_pointer_t const_string(this basic_string const& self) {
 		return self.pointer();
 	}
 
@@ -85,29 +84,51 @@ public:
 
 	template <class... ArgsType>
 	constexpr pointer_t begin(this basic_string& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
-		        self.begin(std::forward<ArgsType>(args)...);
+		        self.string_begin(std::forward<ArgsType>(args)...);
 	        }
 		)
 	{
-		return self.begin(std::forward<ArgsType>(args)...);
+		return self.string_begin(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr const_pointer_t begin(this basic_string const& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.string_begin(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.string_begin(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr const_pointer_t end(this basic_string const& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.string_end(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.string_end(std::forward<ArgsType>(args)...);
 	}
 
 	template <class... ArgsType>
 	constexpr pointer_t end(this basic_string& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
-		        self.end(std::forward<ArgsType>(args)...);
+		        self.string_end(std::forward<ArgsType>(args)...);
 	        }
 		)
 	{
-		return self.end(std::forward<ArgsType>(args)...);
+		return self.string_end(std::forward<ArgsType>(args)...);
 	}
 
 	template <class... ArgsType>
 	constexpr auto cut(this basic_string& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
 		        self.string_cut(std::forward<ArgsType>(args)...);
 	        }
@@ -118,7 +139,7 @@ public:
 
 	template <class... ArgsType>
 	constexpr auto reverse(this basic_string& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
 		        self.reverse_string(std::forward<ArgsType>(args)...);
 	        }
@@ -434,7 +455,7 @@ public:
 	        }
 		)
 	{
-		if (self.is_ceche_mode()) {
+		if (self.is_cache_mode()) {
 			return false;
 		}
 		if (!self.value.before) {

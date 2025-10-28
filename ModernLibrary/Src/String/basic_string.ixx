@@ -157,8 +157,8 @@ public:
 
 	struct reverse_iterator {
 		basic_string* self;
-		auto begin() { return std::reverse_iterator{ self->end()   }; }
-		auto end()   { return std::reverse_iterator{ self->begin() }; }
+		auto string_begin() { return std::reverse_iterator{ self->end()   }; }
+		auto end()   { return std::reverse_iterator{ self->string_begin() }; }
 	};
 
 private:
@@ -292,17 +292,17 @@ private:
 	) noexcept {
 		box_buffer_t& buffer = core_t::buffer;
 		size_t obj_size      = object.string_length();
-		size_t sub_len       = obj_size + size;
-		if (sub_len < core_t::buffer_size) {
+		size_t sum_len       = obj_size + size;
+		if (sum_len < core_t::buffer_size) {
 			strutil::strcopy(buffer.pointer, object.pointer(), obj_size);
 			strutil::strcopy(buffer.pointer + obj_size, pointer, size);
-			buffer.count                 = sub_len;
+			buffer.count                 = sum_len;
 			buffer.pointer[buffer.count] = char_t();
 			return;
 		}
 		box_value_t& value = core_t::value;
 		size_t obj_size    = object.string_length();
-		value.count        = sub_len;
+		value.count        = sum_len;
 		size_t alloc_size  = value.count * 2;
 		value.pointer      = allocator().allocate(alloc_size);
 		value.alloc_size   = alloc_size;
@@ -353,7 +353,7 @@ private:
 	constexpr void assign_init(basic_string& object) noexcept {
 		box_buffer_t& self_buffer   = core_t::buffer;
 		box_buffer_t& object_buffer = object.buffer;
-		if (object.is_ceche_mode()) {
+		if (object.is_cache_mode()) {
 			copy_buffer(object_buffer, self_buffer);
 			return;
 		}
@@ -446,7 +446,7 @@ private:
 	constexpr void move_string(basic_string& object) noexcept {
 		box_buffer_t& self_buffer   = core_t::buffer;
 		box_buffer_t& object_buffer = object.buffer;
-		if (is_ceche_mode()) {
+		if (is_cache_mode()) {
 			copy_buffer(self_buffer, object_buffer);
 			return;
 		}
@@ -486,8 +486,8 @@ private:
 		box_buffer_t& object_buffer = object.buffer;
 		box_value_t& self_value     = core_t::value;
 		box_value_t& object_value   = object.value;
-		if (is_ceche_mode()) {
-			if (object.is_ceche_mode()) {
+		if (is_cache_mode()) {
+			if (object.is_cache_mode()) {
 				swap_buffer(alloc, self_buffer, object_buffer);
 			}
 			else {
@@ -495,7 +495,7 @@ private:
 			}
 			return;
 		}
-		if (object.is_ceche_mode()) {
+		if (object.is_cache_mode()) {
 			swap_buffer(alloc, object_buffer, self_buffer);
 		}
 		else {
@@ -536,25 +536,22 @@ private:
 private:
 
 	constexpr size_t string_length() const noexcept {
-		size_t sizes[] = {
-			core_t::buffer.count,
-			core_t::value.count
-		};
-		return sizes[is_large_mode()];
+		if (is_cache_mode()) {
+			return core_t::buffer.count;
+		}
+		return core_t::value.count;
 	}
 
 	constexpr size_t string_capacity() const noexcept {
-		if (is_ceche_mode()) {
+		if (is_cache_mode()) {
 			return core_t::buffer_size - core_t::buffer.count;
 		}
-		else {
-			auto& value = core_t::value;
-			return value.alloc_size - value.count;
-		}
+		auto& value = core_t::value;
+		return value.alloc_size - value.count;
 	}
 
 	constexpr size_t string_max_size() const noexcept {
-		if (is_ceche_mode()) {
+		if (is_cache_mode()) {
 			return core_t::buffer_size;
 		}
 		return core_t::value.alloc_size;
@@ -568,7 +565,7 @@ private:
 	}
 
 	[[nodiscard]]
-	constexpr bool is_ceche_mode() const noexcept {
+	constexpr bool is_cache_mode() const noexcept {
 		return core_t::buffer.cache;
 	}
 
@@ -582,22 +579,29 @@ private:
 		return data[is_large_mode()];
 	}
 
+	constexpr const_pointer_t pointer() const noexcept {
+		if (is_cache_mode()) {
+			return core_t::buffer.pointer;
+		}
+		return core_t::value.pointer;
+	}
+
 private:
 
 	[[nodiscard]]
-	constexpr bool within_range(size_t begin, size_t end) const noexcept {
+	constexpr bool within_range(size_t string_begin, size_t end) const noexcept {
 		size_t size = string_length();
-		return begin < size && (end - begin) <= size;
+		return string_begin < size && (end - string_begin) <= size;
 	}
 
 	[[nodiscard]]
-	constexpr bool in_range(size_t begin, size_t end) const noexcept {
-		if (begin > end) {
-			size_t old = begin;
-			begin = end;
+	constexpr bool in_range(size_t string_begin, size_t end) const noexcept {
+		if (string_begin > end) {
+			size_t old = string_begin;
+			string_begin = end;
 			end = old;
 		}
-		return within_range(begin, end);
+		return within_range(string_begin, end);
 	}
 
 private:
@@ -678,23 +682,23 @@ private:
 		box_value_t& value   = core_t::value;
 		size_t str_len       = buffer.count;
 		pointer_t data       = buffer.pointer;
-		size_t sub_len       = fill_size;
+		size_t sum_len       = fill_size;
 		if constexpr (fill_act == fill_action::center) {
-			sub_len *= 2;
+			sum_len *= 2;
 		}
 		alloc_t alloc = allocator();
 		if (is_large_mode()) {
 			data     = value.pointer;
 			str_len  = value.count;
 		}
-		sub_len      += str_len;
+		sum_len += str_len;
 		pointer_t old = alloc.allocate(str_len);
 		strutil::strcopy(old, data, str_len);
-		if (sub_len >= string_max_size()) {
+		if (sum_len >= string_max_size()) {
 			if (is_large_mode()) {
 				alloc.deallocate(value.pointer, value.alloc_size);
 			}
-			value.alloc_size = sub_len * 1.5;
+			value.alloc_size = sum_len * 1.5;
 			data = value.pointer = alloc.allocate(value.alloc_size);
 		}
 		if constexpr (std::is_same_v<FillType, char_t>) {
@@ -708,8 +712,8 @@ private:
 			);
 		}
 		alloc.deallocate(old, str_len);
-		set_length(sub_len);
-		data[sub_len] = char_t();
+		set_length(sum_len);
+		data[sum_len] = char_t();
 	}
 
 	constexpr void center_string(char_t fill, size_t size = 1) noexcept {
@@ -780,7 +784,7 @@ private:
 private:
 
 	constexpr bool restore_string_cache_mode(size_t size) noexcept {
-		if (is_ceche_mode() || size >= core_t::buffer_size) {
+		if (is_cache_mode() || size >= core_t::buffer_size) {
 			return false;
 		}
 		if (!index_string(size)) {
@@ -820,7 +824,7 @@ private:
 	}
 
 	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
-		if (is_ceche_mode()) {
+		if (is_cache_mode()) {
 			if (size < core_t::buffer_size) {
 				core_t::buffer.pointer[size] = fill;
 				return true;
@@ -851,7 +855,7 @@ private:
 		    >
 		)
 	{
-		if (is_ceche_mode()) {
+		if (is_cache_mode()) {
 			if (size < core_t::buffer_size) {
 				core_t::buffer.pointer[size] = char_t();
 				return true;
@@ -976,7 +980,7 @@ private:
 		box_value_t& value = core_t::value;
 		size_t& heap_count = value.count;
 
-		if (is_ceche_mode()) {
+		if (is_cache_mode()) {
 			respace<true>(next * 1.5);
 		}
 		else {
@@ -1031,11 +1035,19 @@ private:
 
 private:
 
-	constexpr pointer_t begin() noexcept {
+	constexpr pointer_t string_begin() noexcept {
 		return pointer();
 	}
 
-	constexpr pointer_t end() noexcept {
+	constexpr const_pointer_t string_begin() const noexcept {
+		return pointer();
+	}
+
+	constexpr pointer_t string_end() noexcept {
+		return pointer() + string_length();
+	}
+
+	constexpr const_pointer_t string_end() const noexcept {
 		return pointer() + string_length();
 	}
 
@@ -1045,7 +1057,7 @@ private:
 
 private:
 
-	constexpr size_t string_cut (char_t char_value) noexcept {
+	constexpr size_t string_cut(char_t char_value) noexcept {
 		pointer_t data = pointer();
 		size_t strlen  = string_length();
 		if (!strlen) {
@@ -1071,11 +1083,11 @@ private:
 		pointer_t data, size_t strlen, char_t char_value
 	) const noexcept {
 		struct cut_info_t {
-			size_t count, begin, end;
+			size_t count, string_begin, end;
 		} result{};
 		for (size_t i = 0; i < strlen; i++) {
 			if (data[i] != char_value) {
-				result.begin = i;
+				result.string_begin = i;
 				break;
 			}
 			++result.count;
@@ -1096,9 +1108,9 @@ private:
 			return 0;
 		}
 		pointer_t data = pointer();
-		auto [count, begin, end] = string_cut_info(data, strlen, char_value);
+		auto [count, string_begin, end] = string_cut_info(data, strlen, char_value);
 		size_t next = strlen - count;
-		strutil::strmove(data, data + begin, next);
+		strutil::strmove(data, data + string_begin, next);
 		data[sub_length(count)] = char_t();
 		return count;
 	}
@@ -1106,7 +1118,7 @@ private:
 private:
 
 	[[nodiscard]]
-	constexpr bool compare(char_t char_value) noexcept {
+	constexpr bool compare(char_t char_value) const noexcept {
 		if (string_length() != 1) {
 			return false;
 		}
@@ -1114,7 +1126,7 @@ private:
 	}
 
 	[[nodiscard]]
-	constexpr bool compare(const_pointer_t str) noexcept {
+	constexpr bool compare(const_pointer_t str) const noexcept {
 		size_t strlen = strutil::strlenof(str);
 		size_t size   = string_length();
 		if (strlen != size) {
@@ -1135,13 +1147,17 @@ private:
 public:
 
 	[[nodiscard]]
-	constexpr operator bool() noexcept {
+	constexpr operator bool() const noexcept {
 		return !is_empty();
 	}
 
 public:
 
 	constexpr reference_t operator[](size_t position) noexcept {
+		return pointer()[position];
+	}
+
+	constexpr const char_t operator[](size_t position) const noexcept {
 		return pointer()[position];
 	}
 
@@ -1182,7 +1198,7 @@ public:
 
 	template <class... ArgsType>
 	constexpr bool operator==(ArgsType&&... args)
-		noexcept requires (
+		const noexcept requires (
 		    requires {
 		        compare(std::forward<ArgsType>(args)...);
 	        }
