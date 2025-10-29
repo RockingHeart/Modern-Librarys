@@ -27,6 +27,7 @@ public:
 	using reference_t     = typename string_traits::reference_t;
 	using pointer_t       = typename string_traits::pointer_t;
 	using const_pointer_t = typename string_traits::const_pointer_t;
+	using size_t          = typename string_traits::size_t;
 
 private:
 	using basic_string =          BasicString;

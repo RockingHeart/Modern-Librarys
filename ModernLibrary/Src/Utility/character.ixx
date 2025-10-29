@@ -3,18 +3,19 @@
 import :type_restion;
 
 import <wchar.h>;
+import <cstddef>;
 
-export template <character_type CharType>
+export template <character_type CharType, class SizeType = std::size_t>
 struct strutil {
 public:
-	using char_t          = CharType;
-	using reference       = CharType&;
-	using pointer_t       = CharType*;
+	using char_t          =       CharType;
+	using reference       =       CharType&;
+	using pointer_t       =       CharType*;
 	using const_pointer_t = const CharType*;
 
 private:
 
-	template <character_type CharType = char_t>
+	template <character_type CharacterType = char_t>
 	struct compile;
 
 	template <>
@@ -45,44 +46,44 @@ private:
 
 private:
 
-	template <character_type CharType = char_t>
-	constexpr static size_t length(const CharType* str) noexcept;
+	template <character_type CharacterType = char_t>
+	constexpr static size_t length(const CharacterType* str) noexcept;
 
-	template <character_type CharType = char_t>
-	constexpr static CharType* copy (
-		CharType* dest, const CharType* src, size_t size
+	template <character_type CharacterType = char_t>
+	constexpr static CharacterType* copy (
+		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept;
 
-	template <character_type CharType = char_t>
-	constexpr static CharType* move (
-		CharType* dest, const CharType* src, size_t size
+	template <character_type CharacterType = char_t>
+	constexpr static CharacterType* move (
+		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept;
 
-	template <character_type CharType = char_t>
-	constexpr static CharType* set (
-		CharType* dest, CharType value, size_t size
+	template <character_type CharacterType = char_t>
+	constexpr static CharacterType* set (
+		CharacterType* dest, CharacterType value, size_t size
 	) noexcept;
 
-	template <character_type CharType = char_t>
+	template <character_type CharacterType = char_t>
 	constexpr static int compare (
-		const CharType* left, const CharType* src, size_t size
+		const CharacterType* left, const CharacterType* src, size_t size
 	) noexcept;
 
 public:
 
-	template <character_type CharType = char_t>
-	constexpr static size_t strlenof(const CharType* str) noexcept {
+	template <character_type CharacterType = char_t>
+	constexpr static size_t strlenof(const CharacterType* str) noexcept {
 		if consteval {
-			return compile<CharType>::strlen(str);
+			return compile<CharacterType>::strlen(str);
 		}
 		else {
-			return length<CharType>(str);
+			return length<CharacterType>(str);
 		}
 	}
 
-	template <character_type CharType = char_t>
-	constexpr static CharType* strcopy (
-		CharType* dest, const CharType* src, size_t size
+	template <character_type CharacterType = char_t>
+	constexpr static CharacterType* strcopy (
+		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept {
 		if consteval {
 			for (size_t i = 0; i != size; ++i) {
@@ -91,21 +92,21 @@ public:
 			return dest;
 		}
 		else {
-			return copy<CharType>(dest, src, size);
+			return copy<CharacterType>(dest, src, size);
 		}
 		
 	}
 
-	template <character_type CharType = char_t>
-	constexpr static CharType* strmove (
-		CharType* dest, const CharType* src, size_t size
+	template <character_type CharacterType = char_t>
+	constexpr static CharacterType* strmove (
+		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept {
-		return move<CharType>(dest, src, size);
+		return move<CharacterType>(dest, src, size);
 	}
 
-	template <character_type CharType = char_t>
-	constexpr static CharType* strset (
-		CharType* dest, CharType value, size_t size
+	template <character_type CharacterType = char_t>
+	constexpr static CharacterType* strset (
+		CharacterType* dest, CharacterType value, size_t size
 	) noexcept {
 		if consteval {
 			for (size_t i = 0; i < size; i++) {
@@ -121,18 +122,18 @@ public:
 				dest[i + 4]  = value;
 			}
 		}
-		return set<CharType>(dest + i, value, size - i);
+		return set<CharacterType>(dest + i, value, size - i);
 	}
 
-	template <character_type CharType = char_t>
+	template <character_type CharacterType = char_t>
 	constexpr static int strcmp (
-		const CharType* left, const CharType* src, size_t size
+		const CharacterType* left, const CharacterType* src, size_t size
 	) noexcept {
 		if consteval {
-			return compile<CharType>::strcmp(left, src, size);
+			return compile<CharacterType>::strcmp(left, src, size);
 		}
 		else {
-			return compare<CharType>(left, src, size);
+			return compare<CharacterType>(left, src, size);
 		}
 	}
 

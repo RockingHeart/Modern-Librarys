@@ -2,8 +2,14 @@
 
 import <type_traits>;
 
+export template<typename T, typename... Args>
+struct is_any_of : std::disjunction<std::is_same<T, Args>...> {};
+
+export template<typename T, typename... Args>
+constexpr bool is_any_of_v = is_any_of<T, Args...>::value;
+
 export template <class type>
-constexpr bool is_character_type = std::_Is_any_of_v <
+constexpr bool is_character_type = is_any_of_v <
 	type, char, wchar_t, char8_t, char16_t, char32_t
 >;
 

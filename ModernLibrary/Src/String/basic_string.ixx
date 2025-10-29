@@ -33,19 +33,20 @@ private:
 	static_assert(requires{ string_core_type<core_t>; });
 
 private:
-	using box_value_t = typename core_t::box_value_type;
+	using box_value_t  = typename core_t::box_value_type;
 	using box_buffer_t = typename core_t::buffer_t;
 
 public:
-	using string_traits = StringTraits;
-	using strutil = typename string_traits::strutil;
-	using alloc_t = typename string_traits::alloc_t;
+	using string_traits =          StringTraits;
+	using strutil       = typename string_traits::strutil;
+	using alloc_t       = typename string_traits::alloc_t;
 
 public:
-	using char_t = typename string_traits::char_t;
-	using reference_t = typename string_traits::reference_t;
-	using pointer_t = typename string_traits::pointer_t;
+	using char_t          = typename string_traits::char_t;
+	using reference_t     = typename string_traits::reference_t;
+	using pointer_t       = typename string_traits::pointer_t;
 	using const_pointer_t = typename string_traits::const_pointer_t;
+	using size_t          = typename string_traits::size_t;
 
 public:
 	using self_t = basic_string<StringTraits, StringCore>;
@@ -301,7 +302,6 @@ private:
 			return;
 		}
 		box_value_t& value = core_t::value;
-		size_t obj_size    = object.string_length();
 		value.count        = sum_len;
 		size_t alloc_size  = value.count * 2;
 		value.pointer      = allocator().allocate(alloc_size);
@@ -1013,9 +1013,10 @@ private:
 private:
 
 	constexpr basic_string lower_string() noexcept {
-		/*return { *this, [](reference_t value) {
+		/*constexpr static char_t diff = 'a' - 'A';
+		return { *this, [](reference_t value) {
 			if (value >= 'A' && value <= 'Z') {
-				value += 32;
+				value += diff;
 			}
 		} };*/
 		return { *this, char_action::lower };

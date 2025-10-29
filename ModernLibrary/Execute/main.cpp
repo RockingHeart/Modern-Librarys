@@ -1,7 +1,7 @@
-﻿import std;
-import string;
+﻿import string;
 import utility; 
 import <windows.h>;
+import <iostream>;
 
 constexpr int foo() {
 	constexpr dast::cstring str = "eello";

@@ -1,5 +1,5 @@
 # 此为更新日志，记录每次更新内容，并以版本号为索引
-当前版本号：[1.6.1]
+当前版本号：[1.6.2]
 - String（自删除缺陷起）
     ## 添加
         [1.0.0] 添加拷贝构造函数
@@ -55,6 +55,8 @@
         [1.6.1] 为basic接口的成员函数compare添加const尾部属性的实现，并修改basic接口的运算符重载成员函数==的尾部属性为const，以支持编译期
         [1.6.1] 为basic接口的运算符重载成员函数bool添加const尾部属性的实现以支持编译期
         [1.6.1] 为basic接口的运算符重载成员函数[]添加const属性的实现以支持编译期
+        [1.6.1] 为string添加模板参数：SizeType，用于自定义size_t
+        [1.6.1] 为char工具添加模板参数：SizeType，以符合string的SizeType
 
     ## 删除
         [1.0.0] 将count成员删除
@@ -63,6 +65,7 @@
         [1.1.4] 删除沉余的静态成员函数strcopy
         [1.3.1] 删除operator+=的错误逻辑代码
         [1.3.1] 删除char工具的cpy方法的小块拷贝负优化
+        [1.6.2] 删除参数为(basic_string& object, const_pointer_t pointer, size_t size)的非静态成员函数assign_init内部的错误变量声明
 
     ## 改动
         [1.0.0] 将相对应的构造函数转移至basic_string
