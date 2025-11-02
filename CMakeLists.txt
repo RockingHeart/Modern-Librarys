@@ -13,17 +13,25 @@ else()
 endif()
 
 file(GLOB StringPath "ModernLibrary/Src/String/*.ixx")
+file(GLOB SmallVectorPath "ModernLibrary/Src/SmallVector/*.ixx")
 file(GLOB WrapPath "ModernLibrary/Src/Wrap/*.ixx")
 file(GLOB UtilityPath "ModernLibrary/Src/Utility/*.ixx")
 
 add_executable(ModernLibrary
-    ${StringPath}
-    ${WrapPath}
-    ${UtilityPath}
     ModernLibrary/Execute/main.cpp
 )
 
+target_sources(ModernLibrary
+    PRIVATE
+    FILE_SET mods TYPE CXX_MODULES
+    FILES ${UtilityPath}
+    FILES ${WrapPath}
+    FILES ${StringPath}
+    FILES ${SmallVectorPath}
+)
+
 source_group("String" FILES ${StringPath})
+source_group("SmallVector" FILES ${SmallVectorPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
 
