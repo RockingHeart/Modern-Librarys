@@ -17,7 +17,7 @@ public:
 	using string_traits = StringTraits;
 
 protected:
-	using box_t        = string_box<StringTraits>;
+	using box_t        =          string_box<StringTraits>;
 	using box_value_t  = typename box_t::box_value_type;
 	using box_buffer_t = typename box_t::buffer_t;
 	using box_t::box_t;

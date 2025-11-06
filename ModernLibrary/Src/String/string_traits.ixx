@@ -11,13 +11,6 @@ concept string_utility_type = requires(Utility util) {
 	util.strlenof;
 };
 
-template <class AllocType>
-concept allocator_type = requires(AllocType Al) {
-	Al.allocate;
-	Al.deallocate;
-	typename AllocType::value_type;
-};
-
 export namespace traits {
 	enum class value_traits;
 

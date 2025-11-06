@@ -24,7 +24,7 @@ concept string_core_type = requires {
 
 export template <string_traits_type StringTraits, template<class, class> class StringCore>
 class basic_string :
-	public StringCore<basic_string<StringTraits, StringCore>, StringTraits> {
+	public         StringCore<basic_string<StringTraits, StringCore>, StringTraits> {
 private:
 	friend class   StringCore<basic_string<StringTraits, StringCore>, StringTraits>;
 	using core_t = StringCore<basic_string<StringTraits, StringCore>, StringTraits>;

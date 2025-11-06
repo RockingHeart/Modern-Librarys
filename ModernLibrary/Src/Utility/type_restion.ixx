@@ -18,3 +18,10 @@ concept character_type = is_character_type<type>;
 
 export template <typename type>
 concept size_type = std::is_integral_v<type>;
+
+export template <class AllocType>
+concept allocator_type = requires(AllocType Al) {
+	Al.allocate;
+	Al.deallocate;
+	typename AllocType::value_type;
+};
