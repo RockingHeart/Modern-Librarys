@@ -92,8 +92,11 @@
                     - 用于获取指定位置的字符
                         - 若position超出正常范围，则抛出错误。若抛出错误，其需捕获类型为const char*
                     ``` C++
+                    import string;
+                    import std;
+                    
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.at(0) << '\n';
                         return 0;
                     }
@@ -108,8 +111,11 @@
                     - 用于获取指定位置的字符
                         - 若position超出正常范围，则返回空（Null）字符。
                     ``` C++
+                    import string;
+                    import std;
+
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.const_string() << '\n';
                         return 0;
                     }
@@ -123,9 +129,12 @@
                 - void swap(basic_string& object)
                     - 用于交换动态字符串
                     ``` C++
+                    import string;
+                    import std;
+
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
-                        basic_string<string_traits<char, value_traits::remain>> str2 = { "World", 5 };
+                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str2 = { "World", 5 };
                         str1.swap(str2);
                         std::cout << str.const_string() << '\n';
                         return 0;
@@ -140,9 +149,12 @@
                 - void move(basic_string& object)
                     - 用于交换动态字符串
                     ``` C++
+                    import string;
+                    import std;
+
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
-                        basic_string<string_traits<char, value_traits::remain>> str2 = { "World", 5 };
+                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str2 = { "World", 5 };
                         str1.move(str2);
                         std::cout << str.const_string() << '\n';
                         return 0;
@@ -157,8 +169,11 @@
             - pointer_t begin(void) 与 pointer_t end(void)
                 - begin与end用于支持范围for
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                    dast::cstring str = { "Hello", 5 };
                     for (auto& c : str) {
                         std::cout << c << ' ';
                     } std::cout << '\n';
@@ -173,8 +188,11 @@
             - size_t cut(char_t char_value)
                 - 用于获取头尾需裁剪的字符计数
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = { " Hello ", 7 };
+                    dast::cstring str = { " Hello ", 7 };
                     std::cout << str.cut(' ');
                     return 0;
                 }
@@ -187,8 +205,11 @@
             - basic_string::reverse_iterator reverse(void)
                 - 用于新建并返回反转后的动态字符串
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                    dast::cstring str = { "Hello", 5 };
                     for (auto& v : str.reverse()) {
                         std::cout << v << ' ';
                     }
@@ -203,8 +224,11 @@
             - basic_string::reverse_iterator trimmed(char_t char_value = ' ')
                 - 用于裁剪头尾的char_value
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = { " Hello ", 5 };
+                    dast::cstring str = { " Hello ", 5 };
                     std::cout << str.trimmed() << '\n';
                     std::cout << str.const_string() << '\n';
                     return 0;
@@ -219,8 +243,11 @@
             - basic_string lower()
                 - 用于对一个指定动态字符串对象创建小写的副本
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = { "HELLO", 5 };
+                    dast::cstring str = { "HELLO", 5 };
                     auto lower = str.lower();
                     std::cout << lower.const_string() << '\n';
                     return 0;
@@ -234,8 +261,11 @@
             - basic_string upper()
                 - 用于对一个指定动态字符串对象创建大写的副本
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = { "hello", 5 };
+                    dast::cstring str = { "hello", 5 };
                     auto upper = str.upper();
                     std::cout << upper.const_string() << '\n';
                     return 0;
@@ -253,8 +283,11 @@
                         - 当参数point大于end时，反向查找
                         - 当参数point小于end时，正向查找
                     ``` C++
+                    import string;
+                    import std;
+                    
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.index('e', 0, str.size()) << '\n';
                         std::cout << str.index('l', str.size(), 0) << '\n';
                         return 0;
@@ -273,7 +306,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.index(4) << '\n'
                         return 0;
                     }
@@ -292,7 +325,7 @@
                     - 检查存有保留数据并清除保留数据之后返回true
                 ``` C++
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                    dast::cstring str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                     str.resize(60);
                     std::cout << str.clear_residue() << '\n';
                     return 0;
@@ -308,8 +341,11 @@
                         - 是大模式
                         - 记录保留数据的成员数据非空
                 ``` C++
+                import string;
+                import std;
+
                 int main() {
-                    basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                    dast::cstring str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                     str.resize(60);
                     std::cout << str.leave_residue() << '\n';
                     return 0;
@@ -326,7 +362,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.const_string() << '\n'
                         return 0;
                     }
@@ -345,7 +381,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.disconnect(1, 4).const_string() << '\n'
                         return 0;
                     }
@@ -363,7 +399,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str.center('*', 5)
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -380,7 +416,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str.center("*****")
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -399,7 +435,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str.left('*', 5)
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -416,7 +452,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str.left("*****")
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -435,7 +471,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str.right('*', 5)
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -452,7 +488,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str.right("*****")
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -472,7 +508,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.empty() << '\n'
                         return 0;
                     }
@@ -490,7 +526,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "     ", 5 };
+                        dast::cstring str = { "     ", 5 };
                         std::cout << str.is_blank() << '\n'
                         return 0;
                     }
@@ -508,7 +544,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "12345", 5 };
+                        dast::cstring str = { "12345", 5 };
                         std::cout << str.is_digit() << '\n'
                         return 0;
                     }
@@ -526,7 +562,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "abcde", 5 };
+                        dast::cstring str = { "abcde", 5 };
                         std::cout << str.is_lower() << '\n'
                         return 0;
                     }
@@ -544,7 +580,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "ABCDE", 5 };
+                        dast::cstring str = { "ABCDE", 5 };
                         std::cout << str.is_upper() << '\n'
                         return 0;
                     }
@@ -562,7 +598,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "ABCDEfg", 7 };
+                        dast::cstring str = { "ABCDEfg", 7 };
                         std::cout << str.is_enstr() << '\n'
                         return 0;
                     }
@@ -580,10 +616,10 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                        dast::cstring str1 = { "Hello", 5 };
                         std::cout << str.max_size() << '\n'
 
-                        basic_string<string_traits<char, value_traits::remain>> str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
+                        dast::cstring str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
                         std::cout << str.max_size() << '\n'
                         return 0;
                     }
@@ -600,10 +636,10 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                        dast::cstring str1 = { "Hello", 5 };
                         std::cout << str.mode_state() << '\n'
 
-                        basic_string<string_traits<char, value_traits::remain>> str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
+                        dast::cstring str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
                         std::cout << str.mode_state() << '\n'
                         return 0;
                     }
@@ -622,7 +658,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         str.replace("World", 0, 5);
                         std::cout << str.const_string() << '\n'
                         return 0;
@@ -639,7 +675,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         str.replace('A', 0, 5);
                         std::cout << str.const_string() << '\n'
                         return 0;
@@ -660,7 +696,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                        dast::cstring str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                         str.resize(60);
                         if (str.leave_residue()) {
 	                        std::cout << str.residue().size << '\n';
@@ -682,7 +718,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
+                        dast::cstring str1 = { "Hello", 5 };
 
                         auto print_str = [&]() {
                             std::cout << str.const_string() << ' '
@@ -738,7 +774,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str1 = { 'A', 50 };
+                        dast::cstring str1 = { 'A', 50 };
                         str.restore_cache_mode(12);
                         std::cout << str.const_string() << '\n';
                         return 0;
@@ -756,7 +792,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.size() << '\n'
                         return 0;
                     }
@@ -775,7 +811,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::cout << str.tick('l', 0, str.size()) << '\n'
                         return 0;
                     }
@@ -794,7 +830,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::string std_str = str.to<std::string>();
                         std::cout << std_str << '\n'
                         return 0;
@@ -813,7 +849,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "HELLO", 5 };
+                        dast::cstring str = { "HELLO", 5 };
                         std::cout << std_str.to_lower().const_string() << '\n'
                         return 0;
                     }
@@ -831,7 +867,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "hello", 5 };
+                        dast::cstring str = { "hello", 5 };
                         std::cout << std_str.to_upper().const_string() << '\n'
                         return 0;
                     }
@@ -848,7 +884,7 @@
                     import std;
 
                     int main() {
-                        basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                        dast::cstring str = { "Hello", 5 };
                         std::string std_str = str.to<std::string>(1);
                         std::cout << std_str << '\n'
                         return 0;
@@ -868,8 +904,8 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                            basic_string<string_traits<char, value_traits::remain>> str2 = str + 'A';
+                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str2 = str + 'A';
                             std::cout << str2.const_string() << '\n'
                             return 0;
                         }
@@ -885,8 +921,8 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
-                            basic_string<string_traits<char, value_traits::remain>> str2 = str + " World";
+                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str2 = str + " World";
                             std::cout << str2.const_string() << '\n'
                             return 0;
                         }
@@ -902,9 +938,9 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
-                            basic_string<string_traits<char, value_traits::remain>> str2 = { " Wello", 5 };
-                            basic_string<string_traits<char, value_traits::remain>> str3 = str1 + str2;
+                            dast::cstring str1 = { "Hello", 5 };
+                            dast::cstring str2 = { " Wello", 5 };
+                            dast::cstring str3 = str1 + str2;
                             std::cout << str2.const_string() << '\n'
                             return 0;
                         }
@@ -922,7 +958,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str += 'A';
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -939,7 +975,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             str += " World";
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -956,8 +992,8 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str1 = { "Hello", 5 };
-                            basic_string<string_traits<char, value_traits::remain>> str2 = { "World", 5 };
+                            dast::cstring str1 = { "Hello", 5 };
+                            dast::cstring str2 = { "World", 5 };
                             str1 += str2;
                             std::cout << str.const_string() << '\n'
                             return 0;
@@ -976,7 +1012,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             std::cout << str[0] << '\n'
                             return 0;
                         }
@@ -994,7 +1030,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "A", 1 };
+                            dast::cstring str = { "A", 1 };
                             std::cout << (str == 'A') << '\n'
                             return 0;
                         }
@@ -1010,7 +1046,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 1 };
+                            dast::cstring str = { "Hello", 1 };
                             std::cout << (str == "Hello") << '\n'
                             return 0;
                         }
@@ -1028,7 +1064,7 @@
                         import std;
 
                         int main() {
-                            basic_string<string_traits<char, value_traits::remain>> str = { "Hello", 5 };
+                            dast::cstring str = { "Hello", 5 };
                             std::cout << bool(str) << '\n'
                             return 0;
                         }
@@ -1046,7 +1082,7 @@
                             import std;
 
                             int main() {
-                                basic_string<string_traits<char, value_traits::remain>> str1;
+                                dast::cstring str1;
                                 str1 = 'A';
                                 std::cout << str1 << '\n'
                                 return 0;
@@ -1063,8 +1099,8 @@
                             import std;
 
                             int main() {
-                                basic_string<string_traits<char, value_traits::remain>> str1;
-                                basic_string<string_traits<char, value_traits::remain>> str2 = { "Hello", 5 };
+                                dast::cstring str1;
+                                dast::cstring str2 = { "Hello", 5 };
                                 str1 = str2;
                                 std::cout << str1 << '\n'
                                 return 0;
@@ -1089,8 +1125,8 @@
                             import std;
 
                             int main() {
-                                basic_string<string_traits<char, value_traits::remain>> str1;
-                                basic_string<string_traits<char, value_traits::remain>> str2 = { "Hello", 5 };
+                                dast::cstring str1;
+                                dast::cstring str2 = { "Hello", 5 };
                                 str1 = std::move(str2);
                                 std::cout << str1 << '\n'
                                 std::cout << str2 << '\n'
