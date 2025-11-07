@@ -19,7 +19,7 @@
 | clear residue | [clear_residue] |
 | leave residue | [leave_residue] |
 | const string | [const_string] |
-| disconnect | [disconnect] |
+| truncate | [truncate] |
 | empty | [empty] |
 | is_blank | [is_blank] |
 | is_digit | [is_digit] |
@@ -370,10 +370,10 @@
                     #### 以上代码输出："Hello"
                     函数返回描述：无
 
-            ## disconnect
-            - 返回值类型：basic_string 非静态成员函数名：disconnect
+            ## truncate
+            - 返回值类型：basic_string 非静态成员函数名：truncate
                 - 参数列表：(size_t, size_t)
-                - basic_string disconnect(size_t point, size_t end)
+                - basic_string truncate(size_t point, size_t end)
                     - 用于截取字符串区间的字符串 <br>
                     **参数point为截取的起始位置 <br> 参数end为截取的终止位置**
                     ``` C++
@@ -382,7 +382,7 @@
 
                     int main() {
                         dast::cstring str = { "Hello", 5 };
-                        std::cout << str.disconnect(1, 4).const_string() << '\n'
+                        std::cout << str.truncate(1, 4).const_string() << '\n'
                         return 0;
                     }
                     ```
@@ -1153,7 +1153,7 @@
 [clear_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#clear_residue
 [leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#leave_residue
 [const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#const_string
-[disconnect]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#disconnect
+[truncate]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#truncate
 [empty]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#empty
 [is_blank]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_blank
 [is_digit]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_digit
