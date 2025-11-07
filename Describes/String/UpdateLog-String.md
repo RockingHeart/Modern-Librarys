@@ -1,5 +1,5 @@
 # 此为更新日志，记录每次更新内容，并以版本号为索引
-当前版本号：[1.6.3]
+当前版本号：[1.6.4]
 - String（自删除缺陷起）
     ## 添加
         [1.0.0] 添加拷贝构造函数
@@ -101,7 +101,8 @@
         [1.4.0] 更改参数为(basic_string&)的构造函数的逻辑错误
         [1.4.0] 更改operator+=(...)的逻辑错误
         [1.6.1] 将core中的size，capacity，max_size接口的显示this引用改为显示this常量引用
-        [1.6.2] 将非静态成员函数名：disconnect更改为truncate
+        [1.6.3] 将非静态成员函数名：disconnect更改为truncate
+        [1.6.4] 将非静态成员函数名：truncate更改为extract
     
     ## 保留
         [1.1.6] 参数为(size_t, Option)的resize暂不纳入更新列表，因为日后可能会删除它

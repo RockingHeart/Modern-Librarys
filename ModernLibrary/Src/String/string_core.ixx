@@ -327,14 +327,14 @@ public:
 public:
 
 	template <class... ArgsType>
-	constexpr basic_string truncate(this basic_string& self, ArgsType&&... args)
+	constexpr basic_string extract(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
-		        self.truncate_string(std::forward<ArgsType>(args)...);
+		        self.extract_string(std::forward<ArgsType>(args)...);
 	        }
 		)
 	{
-		return self.truncate_string(std::forward<ArgsType>(args)...);
+		return self.extract_string(std::forward<ArgsType>(args)...);
 	}
 
 public:

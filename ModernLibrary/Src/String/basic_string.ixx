@@ -624,7 +624,7 @@ private:
 
 private:
 
-	constexpr basic_string truncate_string(size_t point, size_t end) noexcept {
+	constexpr basic_string extract_string(size_t point, size_t end) noexcept {
 		if (!within_range(point, end)) {
 			return {};
 		}
