@@ -82,9 +82,11 @@ public:
 	}
 
 	template <character_type CharacterType = char_t>
-	constexpr static CharacterType* strcopy (
-		CharacterType* dest, const CharacterType* src, size_t size
-	) noexcept {
+	constexpr static CharacterType* strcopy (CharacterType* dest,
+		                               const CharacterType* src,
+		                                     size_t         size)
+		noexcept
+	{
 		if consteval {
 			for (size_t i = 0; i != size; ++i) {
 				dest[i] = src[i];
@@ -105,9 +107,11 @@ public:
 	}
 
 	template <character_type CharacterType = char_t>
-	constexpr static CharacterType* strset (
-		CharacterType* dest, CharacterType value, size_t size
-	) noexcept {
+	constexpr static CharacterType* strset (CharacterType* dest,
+		                                    CharacterType  value,
+		                                    size_t         size)
+		noexcept
+	{
 		if consteval {
 			for (size_t i = 0; i < size; i++) {
 				dest[i] = value;
@@ -126,9 +130,11 @@ public:
 	}
 
 	template <character_type CharacterType = char_t>
-	constexpr static int strcmp (
-		const CharacterType* left, const CharacterType* src, size_t size
-	) noexcept {
+	constexpr static int strcmp (const CharacterType* left,
+		                         const CharacterType* src,
+		                               size_t         size)
+		noexcept
+	{
 		if consteval {
 			return compile<CharacterType>::strcmp(left, src, size);
 		}

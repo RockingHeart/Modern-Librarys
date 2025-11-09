@@ -238,17 +238,22 @@ private:
 		self.count = object.count;
 	}
 
-	constexpr static void reset_value (
-		box_value_t& value, char_t char_value, size_t size, size_t strlen
-	) noexcept {
+	constexpr static void reset_value (box_value_t& value,
+		                               char_t       char_value,
+		                               size_t       size,
+		                               size_t       strlen)
+		noexcept
+	{
 		strutil::strset(value.pointer + strlen, char_value, size - strlen);
 		value.count                    = size;
 		value.pointer[value.count - 1] = char_t();
 	}
 
-	constexpr void swap_buffer (
-		alloc_t& alloc, box_buffer_t& self_buffer, box_buffer_t& object_buffer
-	) noexcept {
+	constexpr void swap_buffer (alloc_t&      alloc,
+		                        box_buffer_t& self_buffer,
+		                        box_buffer_t& object_buffer)
+		noexcept
+	{
 		size_t cache_size = self_buffer.count;
 		pointer_t cache   = alloc.allocate(cache_size + 1);
 		strutil::strcopy(cache, self_buffer.pointer, cache_size);
@@ -261,9 +266,11 @@ private:
 		alloc.deallocate(cache, cache_size);
 	}
 
-	constexpr void swap_value (
-		alloc_t& alloc, box_value_t& self_value, box_value_t& object_value
-	) noexcept {
+	constexpr void swap_value (alloc_t&     alloc,
+		                       box_value_t& self_value,
+		                       box_value_t& object_value)
+		noexcept
+	{
 		pointer_t cache      = self_value.pointer;
 		size_t cache_size    = self_value.count;
 		self_value.pointer   = object_value.pointer;
@@ -272,9 +279,12 @@ private:
 		object_value.count   = cache_size;
 	}
 
-	constexpr void buffer_swap_value (
-		box_buffer_t& self_buffer, box_buffer_t& object_buffer, box_value_t& self_value, box_value_t& object_value
-	) noexcept {
+	constexpr void buffer_swap_value (box_buffer_t& self_buffer,
+		                              box_buffer_t& object_buffer,
+		                              box_value_t&  self_value,
+		                              box_value_t&  object_value)
+		noexcept
+	{
 		pointer_t old_ptr = object_value.pointer;
 		size_t old_size   = object_value.count;
 		strutil::strcopy(object_buffer.pointer, self_buffer.pointer, self_buffer.count);
@@ -288,9 +298,11 @@ private:
 
 private:
 
-	constexpr void assign_init (
-		basic_string& object, const_pointer_t pointer, size_t size
-	) noexcept {
+	constexpr void assign_init (basic_string&   object,
+		                        const_pointer_t pointer,
+		                        size_t          size)
+		noexcept
+	{
 		box_buffer_t& buffer = core_t::buffer;
 		size_t obj_size      = object.string_length();
 		size_t sum_len       = obj_size + size;
@@ -634,10 +646,13 @@ private:
 private:
 
 	template <fill_action fill_act>
-	constexpr void single_fill (
-		pointer_t data, pointer_t old, char_t fill,
-		size_t fill_size, size_t str_len
-	) noexcept {
+	constexpr void single_fill (pointer_t data,
+		                        pointer_t old,
+		                        char_t    fill,
+		                        size_t    fill_size,
+		                        size_t    str_len)
+		noexcept
+	{
 		if constexpr (fill_act == fill_action::left || fill_act == fill_action::center) {
 			strutil::strset(data, fill, fill_size);
 			strutil::strcopy(data + fill_size, old, str_len);
@@ -652,10 +667,13 @@ private:
 		}
 	}
 	template <fill_action fill_act>
-	constexpr void multiple_fill (
-		pointer_t data, pointer_t old, const_pointer_t fill,
-		size_t fill_size, size_t str_len
-	) noexcept {
+	constexpr void multiple_fill (pointer_t data,
+		                          pointer_t old,
+		                          const_pointer_t fill,
+		                          size_t fill_size,
+		                          size_t str_len)
+		noexcept
+	{
 		if constexpr (fill_act == fill_action::left || fill_act == fill_action::center) {
 			strutil::strcopy(data + fill_size, old, str_len);
 			strutil::strcopy(data, fill, fill_size);
@@ -751,9 +769,11 @@ private:
 		return pointer();
 	}
 
-	constexpr bool replace_string (
-		const_pointer_t str, size_t point, size_t end
-	) noexcept {
+	constexpr bool replace_string (const_pointer_t str,
+		                           size_t          point,
+		                           size_t          end)
+		noexcept
+	{
 		if (std::strlen(str) > end) {
 			return false;
 		}
@@ -768,9 +788,11 @@ private:
 		return true;
 	}
 
-	constexpr bool replace_string (
-		reference_t char_value, size_t point, size_t end
-	) noexcept {
+	constexpr bool replace_string (reference_t char_value,
+		                           size_t      point,
+		                           size_t      end)
+		noexcept
+	{
 		pointer_t data = replace_impl(point, end);
 		if (data == nullptr) {
 			return false;
@@ -816,11 +838,12 @@ private:
 			return restore_string_cache_mode(value.count);
 		}
 		size_t bufsize = core_t::buffer_size;
-		size_t result[] = {
-			bufsize,
+		if (!is_large_mode()) {
+			return restore_string_cache_mode(bufsize);
+		}
+		return restore_string_cache_mode (
 			bufsize * bufsize / (string_capacity() + 1)
-		};
-		return restore_string_cache_mode(result[is_large_mode()]);
+		);
 	}
 
 	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
@@ -830,7 +853,7 @@ private:
 				return true;
 			}
 			size_t strlen = core_t::buffer.count;
-			respace<true>(size);
+			respace<true>(size * 1.5);
 			reset_value(core_t::value, fill, size, strlen);
 		}
 		else {
@@ -840,7 +863,7 @@ private:
 				return true;
 			}
 			size_t strlen = value.count;
-			respace<false>(size);
+			respace<false>(size * 1.5);
 			reset_value(value, fill, size, strlen);
 		}
 		return true;
@@ -888,9 +911,11 @@ private:
 
 private:
 
-	constexpr match<size_t> front_index (
-		char_t target, size_t point, size_t end
-	) noexcept {
+	constexpr match<size_t> front_index (char_t target,
+		                                 size_t point,
+		                                 size_t end)
+		noexcept
+	{
 		for (const_pointer_t data = pointer(); point > 0; point--) {
 			if (data[point] == target) {
 				return { true, point };
@@ -899,9 +924,11 @@ private:
 		return {};
 	};
 
-	constexpr match<size_t> last_index (
-		char_t target, size_t point, size_t end
-	) noexcept {
+	constexpr match<size_t> last_index (char_t target,
+		                                size_t point,
+		                                size_t end)
+		noexcept
+	{
 		for (const_pointer_t data = pointer(); point < end; point++) {
 			if (data[point] == target) {
 				return { true, point };
