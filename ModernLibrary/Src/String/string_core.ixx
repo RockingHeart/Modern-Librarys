@@ -198,6 +198,17 @@ public:
 	}
 
 	template <class... ArgsType>
+	[[nodiscard]] constexpr bool reserve(this basic_string& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.reserve_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.reserve_string(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
 	[[nodiscard]] constexpr bool restore_cache_mode(this basic_string& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {

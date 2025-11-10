@@ -178,6 +178,22 @@ private:
 		return size;
 	}
 
+	constexpr void reserve_buffer(size_t size) noexcept {
+		box_value_t& value   = core_t::value;
+		alloc_t& alloc       = allocator();
+		box_buffer_t& buffer = core_t::buffer;
+		size_t buf_size      = buffer.count;
+		pointer_t cache      = alloc.allocate(size);
+		strutil::strcopy(cache, buffer.pointer, buf_size);
+		cache[buf_size] = char_t();
+		value.pointer   = cache;
+		if constexpr (trait_is_advanced_mode()) {
+			value.before = nullptr;
+		}
+		value.count      = buf_size;
+		value.alloc_size = size;
+	}
+
 	template <bool init_heap>
 	constexpr void respace(size_t size) {
 		box_value_t& value = core_t::value;
@@ -194,7 +210,7 @@ private:
 			}
 		}
 		else {
-			if constexpr (requires { value.before; }) {
+			if constexpr (trait_is_advanced_mode()) {
 				alloc.deallocate(value.before, value.before_alloc_size);
 				value.before            = value.pointer;
 				value.before_count      = value.count;
@@ -865,6 +881,24 @@ private:
 			size_t strlen = value.count;
 			respace<false>(size);
 			reset_value(value, fill, size, strlen);
+		}
+		return true;
+	}
+
+	constexpr bool reserve_string(size_t size) noexcept {
+		if (is_cache_mode()) {
+			if (size < core_t::buffer.count) {
+				return false;
+			}
+			if (size > core_t::buffer_size) {
+				reserve_buffer(size);
+			}
+		}
+		else {
+			if (size < core_t::value.count) {
+				return false;
+			}
+			respace<false>(size);
 		}
 		return true;
 	}

@@ -32,6 +32,7 @@
 | replace | [replace] |
 | residue | [residue] |
 | resize | [resize] |
+| reserve | [reserve] |
 | restore cache mode | [restore_cache_mode] |
 | size | [size] |
 | tick | [tick] |
@@ -102,7 +103,7 @@
                     }
                     ```
                     #### 以上代码输出：'H'
-                    函数返回描述：无
+                    该函数强调的返回描述：无
             
             ## element
             - 返回值类型：char_t 非静态成员函数名：element
@@ -121,7 +122,7 @@
                     }
                     ```
                     #### 以上代码输出：'H'
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## swap
             - 返回值类型：void 非静态成员函数名：swap
@@ -141,7 +142,7 @@
                     }
                     ```
                     #### 以上代码输出："World"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## move
             - 返回值类型：void 非静态成员函数名：move
@@ -161,7 +162,7 @@
                     }
                     ```
                     #### 以上代码输出："World"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             
             ## begin and end
@@ -181,7 +182,7 @@
                 }
                 ```
                 #### 以上代码输出："H e l l o"
-                函数返回描述：无
+                该函数强调的返回描述：无
 
             ## cut
             - 返回值类型：size_t 非静态成员函数名：cut 参数列表：(char_t)
@@ -198,7 +199,7 @@
                 }
                 ```
                 #### 以上代码输出：2
-                函数返回描述：无
+                该函数强调的返回描述：无
 
             ## reverse
             - 返回值类型：basic_string::reverse_iterator 非静态成员函数名：reverse 参数列表：(void)
@@ -217,7 +218,7 @@
                 }
                 ```
                 #### 以上代码输出："o l l e H"
-                函数返回描述：无
+                该函数强调的返回描述：无
 
             ## trimmed
             - 返回值类型：size_t 非静态成员函数名：trimmed 参数列表：(char_t)
@@ -236,7 +237,7 @@
                 ```
                 #### 以上代码第一次输出：2
                 #### 以上代码第二次输出："Hello"
-                函数返回描述：无
+                该函数强调的返回描述：无
 
             ## lower
             - 返回值类型：basic_string 非静态成员函数名：lower 参数列表：(void)
@@ -254,7 +255,7 @@
                 }
                 ```
                 #### 以上代码输出："hello"
-                函数返回描述：无
+                该函数强调的返回描述：无
 
             ## upper
             - 返回值类型：basic_string 非静态成员函数名：upper 参数列表：(void)
@@ -272,7 +273,7 @@
                 }
                 ```
                 #### 以上代码输出："HELLO"
-                函数返回描述：无
+                该函数强调的返回描述：无
 
             ## index
             - 非静态成员函数名：index
@@ -368,7 +369,7 @@
                     }
                     ```
                     #### 以上代码输出："Hello"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## truncate
             - 返回值类型：basic_string 非静态成员函数名：truncate
@@ -406,7 +407,7 @@
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
                 - 参数列表：(const_pointer_t) 
                     - void center(const_pointer_t fill)
@@ -423,7 +424,7 @@
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## left
             - 返回值类型：void 非静态成员函数名：left
@@ -442,7 +443,7 @@
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
                 - 参数列表：(const_pointer_t) 
                     - void left(const_pointer_t fill)
@@ -459,7 +460,7 @@
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## right
             - 返回值类型：void 非静态成员函数名：right
@@ -478,7 +479,7 @@
                         }
                         ```
                     #### 以上代码输出："Hello\*\*\*\*\*"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
                 - 参数列表：(const_pointer_t) 
                     - void right(const_pointer_t fill)
@@ -495,7 +496,7 @@
                         }
                         ```
                     #### 以上代码输出："Hello\*\*\*\*\*"
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             
             ## empty
@@ -514,7 +515,7 @@
                     }
                     ```
                     #### 以上代码输出：false
-                    函数返回描述：无
+                    该函数强调的返回描述：无
             
             ## is_blank
             - 返回值类型：bool 非静态成员函数名：is_blank
@@ -532,7 +533,7 @@
                     }
                     ```
                     #### 以上代码输出：true
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## is_digit
             - 返回值类型：bool 非静态成员函数名：is_digit
@@ -550,7 +551,7 @@
                     }
                     ```
                     #### 以上代码输出：true
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## is_lower
             - 返回值类型：bool 非静态成员函数名：is_lower
@@ -568,7 +569,7 @@
                     }
                     ```
                     #### 以上代码输出：true
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## is_upper
             - 返回值类型：bool 非静态成员函数名：is_upper
@@ -586,7 +587,7 @@
                     }
                     ```
                     #### 以上代码输出：true
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## is_enstr
             - 返回值类型：bool 非静态成员函数名：is_enstr
@@ -604,7 +605,7 @@
                     }
                     ```
                     #### 以上代码输出：true
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             
             ## max_size
@@ -625,7 +626,7 @@
                     }
                     ```
                     #### 以上代码str1输出24（缓存阈值大小）<br> 以上代码str2输出60（成员堆大小阈值。请注意：当前该阈值使用构造的字符串大小乘以2以计算，此算法待更改）
-                    函数返回描述：无
+                    该函数强调的返回描述：无
             
             ## mode_state
             - 返回值类型：mode_status 非静态成员函数名：mode_state 参数列表：(void)
@@ -710,7 +711,7 @@
             ## resize
             - 返回值类型：bool 非静态成员函数名：resize 参数列表：(size_t, char_t)
             - bool resize(size_t size, char_t fill)
-                - 用于重置与更新动态字符串<br>
+                - 用于扩展与扩展动态字符串<br>
                     **参数size用于控制重置的大小**
                     **参数fill用于填充扩展**
                     ``` C++
@@ -736,6 +737,27 @@
                     ```
                     #### 以上代码第一次输出："Hello" 0 24<br>以上代码第二次输出："Hello" 1 30
                     函数返回值描述：此函数返回bool值，指告用户resize成功与否
+
+            ## reserve
+            - 返回值类型：bool 非静态成员函数名：reserve 参数列表：(size_t)
+            - bool reserve(size_t size)
+                - 用于保留与扩展动态字符串<br>
+                    **参数size用于控制重置的大小**
+                    - 若size小于当前存储大小，则函数返回false（视为失败）
+                        - 否则进行扩展，函数返回true（视为成功）
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str1 = { "Hello", 5 };
+                        str1.reserve(50);
+                        std::cout << str1.max_size() << ' ' << str1.size() << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出："50 5"
+                    该函数强调的返回描述：若扩展成功，它并不会更改原有存储大小与元素
 
             ## restore_cache_mode
             - 返回值类型：bool 非静态成员函数名：restore_cache_mode
@@ -798,7 +820,7 @@
                     }
                     ```
                     #### 以上代码输出： 5
-                    函数返回描述：无
+                    该函数强调的返回描述：无
 
             ## tick
             - 返回值类型：size_t 非静态成员函数名：tick
@@ -1018,7 +1040,7 @@
                         }
                         ```
                         #### 以上代码输出：'H'
-                        函数返回描述：无
+                        该函数强调的返回描述：无
             
             - operator==
             - 返回值类型：bool 非静态成员运算符重载函数符号：==
@@ -1036,7 +1058,7 @@
                         }
                         ```
                         #### 以上代码输出：1
-                        函数返回描述：无
+                        该函数强调的返回描述：无
                 
                 - 参数列表：(const_pointer_t)
                 - bool operator==(const_pointer_t str)
@@ -1052,7 +1074,7 @@
                         }
                         ```
                         #### 以上代码输出：1
-                        函数返回描述：无
+                        该函数强调的返回描述：无
                 
             - operator bool
             - 返回值类型：bool 非静态成员运算符重载函数符号：bool
@@ -1070,7 +1092,7 @@
                         }
                         ```
                         #### 以上代码输出：true
-                        函数返回描述：无
+                        该函数强调的返回描述：无
             
             - operator =
             - 返回值类型：basic_string& 非静态成员运算符重载函数符号：=
@@ -1089,7 +1111,7 @@
                             }
                             ```
                             #### 以上代码第一次输出："A"
-                            函数返回描述：无
+                            该函数强调的返回描述：无
 
                     - 参数列表：(basic_string&)
                     - basic_string& operator =(basic_string& object)
@@ -1107,7 +1129,7 @@
                             }
                             ```
                             #### 以上代码第一次输出："Hello"
-                            函数返回描述：无
+                            该函数强调的返回描述：无
                     
                     - 参数列表：(basic_string&&)
                     - basic_string& operator =(basic_string&& object)
@@ -1135,7 +1157,7 @@
                             ```
                             #### 以上代码第一次输出："Hello"
                             #### 以上代码第二次输出：""
-                            函数返回描述：无
+                            该函数强调的返回描述：无
 
 
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#basic_string
@@ -1166,6 +1188,7 @@
 [replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#replace
 [residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#residue
 [resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#resize
+[reserve]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#reserve
 [restore_cache_mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#restore_cache_mode
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#size
 [tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#tick
