@@ -2,11 +2,11 @@
 
 import <type_traits>;
 
-export template<typename T, typename... Args>
-struct is_any_of : std::disjunction<std::is_same<T, Args>...> {};
+export template<typename Type, typename... Pars>
+struct is_any_of : std::disjunction<std::is_same<Type, Pars>...> {};
 
-export template<typename T, typename... Args>
-constexpr bool is_any_of_v = is_any_of<T, Args...>::value;
+export template<typename type, typename... pars>
+constexpr bool is_any_of_v = is_any_of<type, pars...>::value;
 
 export template <class type>
 constexpr bool is_character_type = is_any_of_v <
@@ -19,9 +19,9 @@ concept character_type = is_character_type<type>;
 export template <typename type>
 concept size_type = std::is_integral_v<type>;
 
-export template <class AllocType>
-concept allocator_type = requires(AllocType Al) {
+export template <class alloc_type>
+concept allocator_type = requires(alloc_type Al) {
 	Al.allocate;
 	Al.deallocate;
-	typename AllocType::value_type;
+	typename alloc_type::value_type;
 };
