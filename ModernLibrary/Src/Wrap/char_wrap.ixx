@@ -3,7 +3,7 @@
 import utility;
 
 export namespace wrap {
-	template <character_type char_t, size_t Size>
+	template <character_type CharType, size_t Size>
 	struct char_wrap;
 }
 
