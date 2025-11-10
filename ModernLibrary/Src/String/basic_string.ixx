@@ -853,7 +853,7 @@ private:
 				return true;
 			}
 			size_t strlen = core_t::buffer.count;
-			respace<true>(size * 1.5);
+			respace<true>(size);
 			reset_value(core_t::value, fill, size, strlen);
 		}
 		else {
@@ -863,7 +863,7 @@ private:
 				return true;
 			}
 			size_t strlen = value.count;
-			respace<false>(size * 1.5);
+			respace<false>(size);
 			reset_value(value, fill, size, strlen);
 		}
 		return true;
