@@ -254,6 +254,19 @@ private:
 		self.count = object.count;
 	}
 
+	constexpr void copy_buffer (box_buffer_t&   buffer,
+		                        size_t          buf_size,
+		                        const_pointer_t pointer,
+		                        size_t          size)
+		noexcept
+	{
+		strutil::strcopy(
+			buffer.pointer + buf_size,
+			pointer, size
+		);
+		buffer.count += size;
+	}
+
 	constexpr static void reset_value (box_value_t& value,
 		                               char_t       char_value,
 		                               size_t       size,
@@ -868,7 +881,8 @@ private:
 				core_t::buffer.pointer[size] = fill;
 				return true;
 			}
-			size_t strlen = core_t::buffer.count;
+			box_buffer_t& buffer = core_t::buffer;
+			size_t strlen        = buffer.count;
 			respace<true>(size);
 			reset_value(core_t::value, fill, size, strlen);
 		}
@@ -1025,37 +1039,38 @@ private:
 private:
 
 	constexpr basic_string& append_impl(const_pointer_t pointer, size_t size) noexcept {
-		size_t strlen      = string_length();
-		size_t next        = strlen + size;
-		if (next < core_t::buffer_size) {
+		if (is_cache_mode()) {
 			box_buffer_t& buffer = core_t::buffer;
-			strutil::strcopy (
-				buffer.pointer + strlen,
+			size_t buf_size      = buffer.count;
+			size_t next_size     = buf_size + size;
+			if (next_size < core_t::buffer_size) {
+				copy_buffer(buffer, buf_size, pointer, size);
+				return *this;
+			}
+			respace<true>(next_size * 1.2);
+			box_value_t& value = core_t::value;
+			strutil::strcopy(
+				value.pointer + buf_size,
 				pointer, size
 			);
-			buffer.count += size;
-			buffer.pointer[buffer.count] = char_t();
-			return *this;
-		}
-
-		box_value_t& value = core_t::value;
-		size_t& heap_count = value.count;
-
-		if (is_cache_mode()) {
-			respace<true>(next * 1.5);
+			size_t& heap_count = value.count;
+			heap_count = next_size;
+			value.pointer[heap_count] = char_t();
 		}
 		else {
-			respace<false>(next * 1.5);
-			heap_count = strlen;
+			box_value_t& value = core_t::value;
+			size_t& heap_count = value.count;
+			size_t next_size = heap_count + size;
+			if (next_size >= value.alloc_size) {
+				respace<false>(next_size * 1.2);
+			}
+			strutil::strcopy(
+				value.pointer + heap_count,
+				pointer, size
+			);
+			heap_count += size;
+			value.pointer[heap_count] = char_t();
 		}
-
-		strutil::strcopy(
-			value.pointer + heap_count,
-			pointer, size
-		);
-		heap_count               += size;
-		value.pointer[heap_count] = char_t();
-		core_t::buffer.cache = false;
 		return *this;
 	}
 

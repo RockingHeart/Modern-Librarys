@@ -4,36 +4,32 @@ import std;
 
 import <windows.h>;
 
-std::vector<std::string> std_vec(10);
-dast::fixed_vector<std::string, 10> fix_vec;
-
 int main() {
-	dast::cstring str1 = { "Hello", 50 };
-	str1.reserve(100);
-	std::cout << str1.max_size() << ' ' << str1.size() << '\n';
-	std::cout << str1.const_string();
-	/*auto stime = GetTickCount64();
-
-	for (size_t i = 0; i < 10000000000; i++) {
-		for (size_t c = 0; c < std_vec.size(); i++) {
-			std_vec[c] = "Hello";
-			std_vec.pop_back();
+	auto stime = GetTickCount64();
+	static std::string snop;
+	{
+		
+		for (size_t i = 0; i < 10000000; i++) {
+			std::string str("Hello");
+			str += "HHHHH";
+			snop = str;
 		}
 	}
 
 	auto etime = GetTickCount64();
-	std::cout << "Std: " << (etime - stime) << '\n';
+	std::cout << "Std: " << (etime - stime) << ' ' << snop << '\n';
 
 	stime = GetTickCount64();
-
-	for (size_t i = 0; i < 10000000000; i++) {
-		for (size_t c = 0; c < fix_vec.size(); i++) {
-			fix_vec.push_back("Hello");
-			fix_vec.pop_back();
+	static dast::cstring dnop;
+	{
+		for (size_t i = 0; i < 10000000; i++) {
+			dast::cstring str("Hello");
+			str += "HHHHH";
+			dnop = str;
 		}
 	}
 
 	etime = GetTickCount64();
-	std::cout << "My: " << (etime - stime) << '\n';*/
+	std::cout << "Mine: " << (etime - stime) << ' ' << dnop.const_string() << '\n';
 	return 0;
 }
