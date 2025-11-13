@@ -1047,29 +1047,33 @@ private:
 				copy_buffer(buffer, buf_size, pointer, size);
 				return *this;
 			}
-			respace<true>(next_size * 1.2);
-			box_value_t& value = core_t::value;
-			strutil::strcopy(
-				value.pointer + buf_size,
-				pointer, size
-			);
-			size_t& heap_count = value.count;
-			heap_count = next_size;
-			value.pointer[heap_count] = char_t();
+			[&]() {
+				respace<true>(next_size * 1.2);
+				box_value_t& value = core_t::value;
+				strutil::strcopy(
+					value.pointer + buf_size,
+					pointer, size
+				);
+				size_t& heap_count = value.count;
+				heap_count = next_size;
+				value.pointer[heap_count] = char_t();
+			}();
 		}
 		else {
-			box_value_t& value = core_t::value;
-			size_t& heap_count = value.count;
-			size_t next_size = heap_count + size;
-			if (next_size >= value.alloc_size) {
-				respace<false>(next_size * 1.2);
-			}
-			strutil::strcopy(
-				value.pointer + heap_count,
-				pointer, size
-			);
-			heap_count += size;
-			value.pointer[heap_count] = char_t();
+			[&]() {
+				box_value_t& value = core_t::value;
+				size_t& heap_count = value.count;
+				size_t next_size = heap_count + size;
+				if (next_size >= value.alloc_size) {
+					respace<false>(next_size * 1.2);
+				}
+				strutil::strcopy(
+					value.pointer + heap_count,
+					pointer, size
+				);
+				heap_count += size;
+				value.pointer[heap_count] = char_t();
+			}();
 		}
 		return *this;
 	}

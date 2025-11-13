@@ -9,7 +9,7 @@ int main() {
 	static std::string snop;
 	{
 		
-		for (size_t i = 0; i < 10000000; i++) {
+		for (size_t i = 0; i < 1000000000; i++) {
 			std::string str("Hello");
 			str += "HHHHH";
 			snop = str;
@@ -22,7 +22,7 @@ int main() {
 	stime = GetTickCount64();
 	static dast::cstring dnop;
 	{
-		for (size_t i = 0; i < 10000000; i++) {
+		for (size_t i = 0; i < 1000000000; i++) {
 			dast::cstring str("Hello");
 			str += "HHHHH";
 			dnop = str;
