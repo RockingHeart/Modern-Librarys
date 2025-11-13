@@ -37,6 +37,7 @@ private:
 protected:
 	using box_t::buffer_size;
 	using box_t::value, box_t::buffer;
+	using box_t::length;
 
 private:
 
