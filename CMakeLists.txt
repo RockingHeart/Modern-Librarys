@@ -13,7 +13,6 @@ else()
 endif()
 
 file(GLOB StringPath "ModernLibrary/Src/String/*.ixx")
-file(GLOB FixedVectorPath "ModernLibrary/Src/FixedVector/*.ixx")
 file(GLOB WrapPath "ModernLibrary/Src/Wrap/*.ixx")
 file(GLOB UtilityPath "ModernLibrary/Src/Utility/*.ixx")
 
@@ -27,11 +26,9 @@ target_sources(ModernLibrary
     FILES ${UtilityPath}
     FILES ${WrapPath}
     FILES ${StringPath}
-    FILES ${FixedVectorPath}
 )
 
 source_group("String" FILES ${StringPath})
-source_group("FixedVector" FILES ${FixedVectorPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
 

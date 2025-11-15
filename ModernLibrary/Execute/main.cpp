@@ -5,7 +5,8 @@ import std;
 import <windows.h>;
 
 int main() {
-	auto stime = GetTickCount64();
+	std::cout << dast::cstring().max_size();
+	/*auto stime = GetTickCount64();
 	static std::string snop;
 	{
 		
@@ -30,6 +31,6 @@ int main() {
 	}
 
 	etime = GetTickCount64();
-	std::cout << "Mine: " << (etime - stime) << ' ' << dnop.const_string() << '\n';
+	std::cout << "Mine: " << (etime - stime) << ' ' << dnop.const_string() << '\n';*/
 	return 0;
 }

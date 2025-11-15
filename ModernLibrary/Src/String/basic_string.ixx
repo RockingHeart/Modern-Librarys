@@ -233,7 +233,7 @@ private:
 			core_t::value.count = size;
 			return;
 		}
-		core_t::buffer.count = size;
+		core_t::length = size;
 	}
 
 	constexpr size_t sub_length(size_t size) noexcept {
@@ -241,8 +241,8 @@ private:
 			core_t::value.count -= size;
 			return core_t::value.count;
 		}
-		core_t::buffer.count -= size;
-		return core_t::buffer.count;
+		core_t::length -= size;
+		return core_t::length;
 	}
 
 	constexpr static void reset_value (box_value_t& value,
@@ -301,10 +301,10 @@ private:
 		pointer_t old_ptr     = object_value.pointer;
 		size_t old_size       = object_value.count;
 		size_t old_length     = obj_length;
-		strutil::strcopy(object_buffer.pointer, self_buffer.pointer, self_buffer.count);
-		object_buffer.count = self_buffer.count;
+		strutil::strcopy(object_buffer.pointer, self_buffer.pointer, self_length);
 		obj_length          = self_length;
-		object_buffer.pointer[object_buffer.count] = char_t();
+		obj_length          = self_length;
+		object_buffer.pointer[obj_length] = char_t();
 		self_value.pointer      = old_ptr;
 		self_value.count        = old_size;
 		self_length             = old_length;
@@ -325,7 +325,7 @@ private:
 			strutil::strcopy(buffer.pointer, object.core_t::buffer.pointer, obj_size);
 			strutil::strcopy(buffer.pointer + obj_size, pointer, size);
 			core_t::length             = sum_len;
-			buffer.pointer[buffer.count] = char_t();
+			buffer.pointer[core_t::length] = char_t();
 			return;
 		}
 		value.count        = sum_len;
@@ -608,7 +608,7 @@ private:
 		if (is_cache_mode()) {
 			return core_t::buffer_size;
 		}
-		return core_t::core_t::length;
+		return core_t::length;
 	}
 
 private:
@@ -740,7 +740,7 @@ private:
 	{
 		box_buffer_t& buffer = core_t::buffer;
 		box_value_t& value   = core_t::value;
-		size_t str_len       = buffer.count;
+		size_t str_len       = core_t::length;
 		pointer_t data       = buffer.pointer;
 		size_t sum_len       = fill_size;
 		if constexpr (fill_act == fill_action::center) {
@@ -750,17 +750,15 @@ private:
 		if (is_large_mode()) {
 			data     = value.pointer;
 			str_len  = value.count;
+			if (sum_len + str_len >= value.alloc_size) {
+				alloc.deallocate(value.pointer, str_len);
+				core_t::length = sum_len * 1.2;
+				data = value.pointer = alloc.allocate(core_t::length);
+			}
 		}
-		sum_len += str_len;
+		sum_len      += str_len;
 		pointer_t old = alloc.allocate(str_len);
 		strutil::strcopy(old, data, str_len);
-		if (sum_len >= string_max_size()) {
-			if (is_large_mode()) {
-				alloc.deallocate(value.pointer, core_t::length);
-			}
-			core_t::length = sum_len * 1.2;
-			data = value.pointer = alloc.allocate(core_t::length);
-		}
 		if constexpr (std::is_same_v<FillType, char_t>) {
 			single_fill<fill_act> (
 				data, old, fill, fill_size, str_len
@@ -861,7 +859,7 @@ private:
 		cache[size] = char_t();
 		alloc.deallocate(value.pointer, core_t::length);
 		box_buffer_t& buffer = core_t::buffer;
-		buffer.count         = size;
+		core_t::length       = size;
 		buffer.pointer[size] = '\0';
 		buffer.cache         = true;
 		if constexpr (trait_is_advanced_mode()) {
@@ -914,7 +912,7 @@ private:
 
 	constexpr bool reserve_string(size_t size) noexcept {
 		if (is_cache_mode()) {
-			if (size < core_t::buffer.count) {
+			if (size < core_t::length) {
 				return false;
 			}
 			if (size > core_t::buffer_size) {
@@ -949,7 +947,7 @@ private:
 			size_t strlen       = core_t::length;
 			respace<true>(size);
 			size_t resu  = option(core_t::value, size, strlen);
-			buffer.count = resu;
+			core_t::length = resu;
 			if (buffer.pointer[resu] != char_t()) {
 				buffer.pointer[resu]  = char_t();
 			}

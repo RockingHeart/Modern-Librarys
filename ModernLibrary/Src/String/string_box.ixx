@@ -34,7 +34,7 @@ struct string_box {
 
 	template <>
 	struct box_value_t<traits::value_traits::enhance>
-		: box_value_t<traits::value_traits::remain> {
+		 : box_value_t<traits::value_traits::remain> {
 	};
 
 	using box_value_type = box_value_t<string_traits::value_traits>;
@@ -42,7 +42,7 @@ struct string_box {
 	constexpr static size_t buffer_size = sizeof(box_value_type) / sizeof(char_t);
 
 	struct buffer_t {
-		char_t pointer[buffer_size]{};
+		char_t pointer[buffer_size];
 	};
 
 	union {
