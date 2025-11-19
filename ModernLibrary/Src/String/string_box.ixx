@@ -54,14 +54,21 @@ struct string_box {
 		buffer_t       buffer;
 	};
 
+	constexpr  string_box()
+		noexcept : buffer{ .count = 0, .cache = true }
+	{};
+
 	constexpr  string_box(char_t char_value)
 		noexcept : buffer{ .count = 1, .cache = true }
 	{
 		buffer.pointer[0] = char_value;
 	};
 
-	constexpr  string_box()
-		noexcept : buffer{ .count = 0, .cache = true }
+	constexpr  string_box(size_t size)
+		noexcept : buffer {
+			.count = static_cast<unsigned char>(size),
+			.cache = true
+		}
 	{};
 
 	constexpr ~string_box() noexcept = default;

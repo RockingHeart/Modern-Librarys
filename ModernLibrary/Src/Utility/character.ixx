@@ -3,6 +3,8 @@
 import :type_restion;
 
 import <wchar.h>;
+import <memory.h>;
+import <bit>;
 import <cstddef>;
 
 export template <character_type CharType, class SizeType = std::size_t>
@@ -12,6 +14,7 @@ public:
 	using reference       =       CharType&;
 	using pointer_t       =       CharType*;
 	using const_pointer_t = const CharType*;
+	using size_t          =       SizeType;
 
 private:
 
@@ -141,6 +144,20 @@ public:
 		else {
 			return compare<CharacterType>(left, src, size);
 		}
+	}
+
+	constexpr static size_t match (
+		const char* str, const char& target, size_t len
+	) noexcept {
+		const char* result = std::bit_cast<const char*>(memchr(str, target, len));
+		return static_cast<size_t>(result - str);
+	}
+
+	constexpr static size_t match (
+		const wchar_t* str, const wchar_t& target, size_t len
+	) noexcept {
+		const char* result = std::bit_cast<const char*>(wmemchr(str, target, len));
+		return static_cast<size_t>(result - str);
 	}
 
 private:

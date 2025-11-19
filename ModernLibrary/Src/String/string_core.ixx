@@ -11,8 +11,8 @@ export template <class BasicString, class StringTraits>
         }
 	)
 class string_core :
-	private   StringTraits::alloc_t,
-	protected string_box<StringTraits> {
+	private        StringTraits::alloc_t,
+	protected      string_box<StringTraits> {
 public:
 	using string_traits = StringTraits;
 
