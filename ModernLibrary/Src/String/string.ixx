@@ -12,8 +12,8 @@ export namespace dast {
 	template <character_type CharType, traits::value_traits ValueTraits = traits::value_traits::no_residue, template<class, class> class StringCore = string_core>
 	using string = basic_string<traits::string_traits<CharType, ValueTraits, strutil, std::allocator<CharType>>, StringCore>;
 
-	using cstring = string<char>;
-	using wstring = string<wchar_t>;
+	using cstring = basic_string<traits::string_traits<char, traits::value_traits::no_residue, strutil, std::allocator<char>>, string_core>;
+	using wstring = basic_string<traits::string_traits<wchar_t, traits::value_traits::no_residue, strutil, std::allocator<wchar_t>>, string_core>;
 }
 
 template <character_type CharType, traits::value_traits ValueTraits = traits::value_traits::no_residue, template<class, class> class StringCore = string_core>

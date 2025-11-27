@@ -1,11 +1,13 @@
 ﻿export module utility : strutil;
 
 import :type_restion;
+import :match;
 
 import <wchar.h>;
 import <memory.h>;
 import <bit>;
 import <cstddef>;
+import <initializer_list>;
 
 export template <character_type CharType, class SizeType = std::size_t>
 struct strutil {
@@ -85,6 +87,17 @@ public:
 	}
 
 	template <character_type CharacterType = char_t>
+	constexpr static size_t strlenof(const std::initializer_list<const CharacterType*>& list) noexcept {
+		auto* data    = list.begin();
+		auto* end     = list.end();
+		size_t sumlen = 0;
+		for (; data != end; data++) {
+			sumlen += strutil::strlenof(*data);
+		}
+		return sumlen;
+	}
+
+	template <character_type CharacterType = char_t>
 	constexpr static CharacterType* strcopy (CharacterType* dest,
 		                               const CharacterType* src,
 		                                     size_t         size)
@@ -116,7 +129,7 @@ public:
 		noexcept
 	{
 		if consteval {
-			for (size_t i = 0; i < size; i++) {
+			for (size_t i = 0; i < size; ++i) {
 				dest[i] = value;
 			}
 			return dest;
@@ -147,17 +160,36 @@ public:
 	}
 
 	constexpr static size_t match (
-		const char* str, const char& target, size_t len
+		const char* str, char target, size_t len
 	) noexcept {
 		const char* result = std::bit_cast<const char*>(memchr(str, target, len));
 		return static_cast<size_t>(result - str);
 	}
 
 	constexpr static size_t match (
-		const wchar_t* str, const wchar_t& target, size_t len
+		const wchar_t* str, wchar_t target, size_t len
 	) noexcept {
-		const char* result = std::bit_cast<const char*>(wmemchr(str, target, len));
+		const wchar_t* result = wmemchr(str, target, len);
 		return static_cast<size_t>(result - str);
+	}
+
+	constexpr static match_t<size_t> match (const char*  str,
+		                                    const char*  target,
+		                                          size_t strlen,
+	                                              size_t tarlen)
+		noexcept
+	{
+		if (strlen <= 32) {
+			for (size_t i = 0; i < strlen; i += 1) {
+				if (i + tarlen > strlen) {
+					return match::failed;
+				}
+				if (!compare<char>(str + i, target, tarlen)) {
+					return i;
+				}
+			}
+		}
+		return match::failed;
 	}
 
 private:

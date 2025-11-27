@@ -5,6 +5,7 @@ import char_wrap;
 
 import utility;
 import <iterator>;
+import <initializer_list>;
 
 template <class Traits>
 concept string_traits_type = requires {
@@ -26,8 +27,8 @@ export template <string_traits_type StringTraits, template<class, class> class S
 class basic_string :
 	public         StringCore<basic_string<StringTraits, StringCore>, StringTraits> {
 private:
-	friend class   StringCore<basic_string<StringTraits, StringCore>, StringTraits>;
-	using core_t = StringCore<basic_string<StringTraits, StringCore>, StringTraits>;
+	friend class   StringCore<basic_string, StringTraits>;
+	using core_t = StringCore<basic_string, StringTraits>;
 
 private:
 	static_assert(requires{ string_core_type<core_t>; });
@@ -49,13 +50,13 @@ public:
 	using size_t          = typename string_traits::size_t;
 
 public:
-	using self_t = basic_string<StringTraits, StringCore>;
+	using self_t = basic_string;
 
 public:
 
-	constexpr basic_string(void)
-		noexcept {
-	};
+	constexpr basic_string()
+		noexcept
+	{};
 
 	constexpr basic_string(char_t char_value)
 		noexcept : core_t(char_value) {
@@ -64,18 +65,25 @@ public:
 	constexpr basic_string(const_pointer_t str)
 		noexcept : core_t(strutil::strlenof(str))
 	{
-		assign_init(str, static_cast<size_t>(core_t::buffer.count));
+		assign_init(str);
+	}
+
+	constexpr basic_string(const std::initializer_list<const char_t*>& list, char_t fill = ' ')
+		noexcept : core_t(strutil::strlenof(list) + ((list.size() - 1) * fill))
+	{
+		assign_init(list, fill);
 	}
 
 	constexpr basic_string(const_pointer_t str, size_t size)
 		noexcept : core_t(size)
 	{
-		assign_init(str, size);
+		assign_init(str);
 	}
 
-	template <size_type SizeType>
-	constexpr basic_string(char_t char_value, SizeType size) noexcept {
-		assign_init<SizeType>(char_value, size);
+	constexpr basic_string(char_t char_value, size_t size)
+		noexcept : core_t(size)
+	{
+		assign_init(char_value);
 	}
 
 	constexpr basic_string(basic_string& object) noexcept {
@@ -343,7 +351,7 @@ private:
 		}
 		box_value_t& value = core_t::value;
 		value.count        = sum_len;
-		size_t alloc_size  = value.count * 2;
+		size_t alloc_size  = value.count * 1.5;
 		value.pointer      = allocator().allocate(alloc_size);
 		value.alloc_size   = alloc_size;
 		strutil::strcopy(value.pointer, object.pointer(), obj_size);
@@ -351,37 +359,66 @@ private:
 		value.pointer[value.count] = char_t();
 	}
 
-	constexpr void assign_init(const_pointer_t str, size_t size) noexcept {
+	constexpr void assign_init(const_pointer_t str) noexcept {
 		box_buffer_t& buffer = core_t::buffer;
-		if (size < core_t::buffer_size) {
-			strutil::strcopy(buffer.pointer, str, size);
-			buffer.pointer[size] = char_t();
+		if (is_cache_mode()) {
+			size_t buf_size = buffer.count;
+			strutil::strcopy(buffer.pointer, str, buf_size);
+			buffer.pointer[buf_size] = char_t();
 			return;
 		}
 		box_value_t& value = core_t::value;
-		size_t alloc_size  = size * 2;
+		size_t size        = value.count;
+		size_t alloc_size  = size * 1.5;
 		value.pointer      = allocator().allocate(alloc_size);
 		value.alloc_size   = alloc_size;
-		value.count        = size;
 		strutil::strcopy(value.pointer, str, size);
 		value.pointer[size]  = char_t();
 	}
 
-	template <size_type SizeType>
-	constexpr void assign_init(char_t char_value, SizeType size) noexcept {
-		if (size < core_t::buffer_size) {
+	constexpr void assign_init(const std::initializer_list<const char_t*>& list, char_t fill)
+		noexcept
+	{
+		box_buffer_t& buffer = core_t::buffer;
+		pointer_t       data = buffer.pointer;
+		size_t size          = buffer.count;
+		if (is_large_mode()) {
+			box_value_t& value = core_t::value;
+			size               = value.count;
+			size_t alloc_size  = size * 1.5;
+			data = value.pointer = allocator().allocate(alloc_size);
+			value.alloc_size = alloc_size;
+		}
+		const auto* begin = list.begin();
+		const auto* end   = list.end() - 1;
+		for (; begin != end; ++begin) {
+			size_t strlen = strutil::strlenof(*begin);
+			strutil::strcopy(data, *begin, strlen);
+			data += strlen;
+			*data = fill;
+			data += 1;
+		}
+		size_t strlen = strutil::strlenof(*begin);
+		strutil::strcopy(data, *begin, strlen);
+	}
+
+	constexpr void assign_init(char_t char_value) noexcept {
+		if (is_cache_mode()) {
+			box_buffer_t& buffer = core_t::buffer;
 			strutil::strset (
-				core_t::buffer.pointer,
+				buffer.pointer,
 				char_value,
-				size
+				buffer.count
 			);
 		}
 		else {
 			box_value_t& value = core_t::value;
-			value.pointer      = allocator().allocate(size);
-			value.count        = size;
-			value.alloc_size   = size;
-			strutil::strset(value.pointer, char_value,size);
+			size_t size        = value.count;
+			size_t alloc_size  = size * 1.5;
+			value.pointer      = allocator().allocate(alloc_size);
+			value.alloc_size   = alloc_size;
+			strutil::strset(value.pointer, char_value, size);
+			value.pointer[size] = char_t();
 		}
 	}
 
@@ -410,7 +447,7 @@ private:
 		self_value.pointer[self_value.count] = char_t();
 		if constexpr (trait_is_advanced_mode()) {
 			if (object_value.before) {
-				self_value.before = alloc.allocate(
+				self_value.before = alloc.allocate (
 					object_value.before_alloc_size + 1
 				);
 				strutil::strcopy (
@@ -651,7 +688,7 @@ private:
 		}
 		size_t cont = 0;
 		const_pointer_t data = pointer();
-		for (; point != end; point++) {
+		for (; point != end; ++point) {
 			if (data[point] == char_value) {
 				++cont;
 			}
@@ -805,7 +842,7 @@ private:
 			return false;
 		}
 		size_t index = 0;
-		for (; point < end; point++) {
+		for (; point < end; ++point) {
 			data[point] = str[index++];
 		}
 		return true;
@@ -820,7 +857,7 @@ private:
 		if (data == nullptr) {
 			return false;
 		}
-		for (; point < end; point++) {
+		for (; point < end; ++point) {
 			data[point] = char_value;
 		}
 		return true;
@@ -954,37 +991,37 @@ private:
 
 private:
 
-	constexpr match<size_t> front_index (char_t target,
-		                                 size_t point,
-		                                 size_t end)
+	constexpr match_t<size_t> front_index (char_t target,
+		                                   size_t point,
+		                                   size_t end)
 		noexcept
 	{
-		for (const_pointer_t data = pointer(); point > 0; point--) {
+		for (const_pointer_t data = pointer(); point > 0; --point) {
 			if (data[point] == target) {
-				return { true, point };
+				return point;
 			}
 		}
-		return {};
+		return match::failed;
 	};
 
-	constexpr match<size_t> last_index (char_t target,
-		                                size_t point,
-		                                size_t end)
+	constexpr match_t<size_t> last_index (char_t target,
+		                                  size_t point,
+		                                  size_t end)
 		noexcept
 	{
-		for (const_pointer_t data = pointer(); point < end; point++) {
+		for (const_pointer_t data = pointer(); point < end; ++point) {
 			if (data[point] == target) {
-				return { true, point };
+				return point;
 			}
 		}
-		return {};
+		return match::failed;
 	}
 
 	constexpr bool index_string(size_t position) noexcept {
 		return position < string_length();
 	}
 
-	constexpr match<size_t> index_string (
+	constexpr match_t<size_t> index_string (
 		char_t target, size_t point, size_t end
 	) noexcept {
 		if (point > end) {
@@ -1010,7 +1047,7 @@ private:
 private:
 
 	template <typename CastType>
-	constexpr CastType to_cast()
+	constexpr CastType cast_to()
 		noexcept requires (
 		    requires {
 		        CastType{ pointer_t(), size_t() };
@@ -1021,7 +1058,7 @@ private:
 	}
 
 	template <typename CastType>
-	constexpr CastType to_cast(size_t offset)
+	constexpr CastType cast_to(size_t offset)
 		noexcept requires (
 		    requires {
 		        CastType{ pointer_t(), size_t() };
@@ -1167,13 +1204,13 @@ private:
 			return 0;
 		}
 		size_t count = 0;
-		for (size_t i = 0; i < strlen; i++) {
+		for (size_t i = 0; i < strlen; ++i) {
 			if (data[i] != char_value) {
 				break;
 			}
 			++count;
 		}
-		for (size_t i = strlen - 1; i > 0; i--) {
+		for (size_t i = strlen - 1; i > 0; --i) {
 			if (data[i] != char_value) {
 				break;
 			}
@@ -1188,14 +1225,14 @@ private:
 		struct cut_info_t {
 			size_t count, string_begin, end;
 		} result{};
-		for (size_t i = 0; i < strlen; i++) {
+		for (size_t i = 0; i < strlen; ++i) {
 			if (data[i] != char_value) {
 				result.string_begin = i;
 				break;
 			}
 			++result.count;
 		}
-		for (size_t i = strlen - 1; i > 0; i--) {
+		for (size_t i = strlen - 1; i > 0; --i) {
 			if (data[i] != char_value) {
 				result.end = i;
 				break;
@@ -1260,7 +1297,7 @@ public:
 		return pointer()[position];
 	}
 
-	constexpr const char_t operator[](size_t position) const noexcept {
+	constexpr char_t operator[](size_t position) const noexcept {
 		return pointer()[position];
 	}
 

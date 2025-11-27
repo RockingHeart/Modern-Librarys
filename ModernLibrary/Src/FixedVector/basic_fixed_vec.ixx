@@ -24,12 +24,12 @@ protected:
 	constexpr void construct_vector() noexcept {
 		if constexpr (!box_t::is_ordinary_type) {
 			pointer_t pointer = reinterpret_cast<pointer_t>(box_t::value.data);
-			for (size_t i = 0; i < box_t::size; i++) {
+			for (size_t i = 0; i < box_t::size; ++i) {
 				new (std::addressof(pointer[i])) value_t();
 			}
 		}
 		else {
-			for (size_t i = 0; i < box_t::size; i++) {
+			for (size_t i = 0; i < box_t::size; ++i) {
 				box_t::value.data[i] = value_t();
 			}
 		}
@@ -70,7 +70,7 @@ protected:
 		if (!box_t::is_ordinary_type) {
 			size_t    count   = box_t::size;
 			pointer_t pointer = reinterpret_cast<pointer_t>(box_t::value.data);
-			for (size_t i = 0; i < count; i++) {
+			for (size_t i = 0; i < count; ++i) {
 				pointer[i].~value_t();
 			}
 		}

@@ -69,7 +69,12 @@ struct string_box {
 			.count = static_cast<unsigned char>(size),
 			.cache = true
 		}
-	{};
+	{
+		if (size >= buffer_size) {
+			value.count  = size;
+			buffer.cache = false;
+		}
+	};
 
 	constexpr ~string_box() noexcept = default;
 };
