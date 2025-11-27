@@ -497,8 +497,7 @@ private:
 		if (std::addressof(object) == this) {
 			return *this;
 		}
-		size_t size = object.string_length();
-		return assignment(object.pointer(), size);
+		return assignment(object.pointer(), object.string_length());
 	}
 
 	constexpr basic_string& assignment(basic_string&& object) noexcept {
@@ -901,6 +900,7 @@ private:
 				data + (position + 1),
 				str, strlen
 			);
+			buffer.count = sumlen;
 		} else {
 			box_value_t& value   = core_t::value;
 			size_t curlen        = value.count;
@@ -911,7 +911,6 @@ private:
 			if (sumlen >= core_t::buffer_size) {
 				respace<false>(sumlen * 1.5);
 				value.pointer[sumlen] = char_t();
-				value.count           = sumlen;
 			}
 			const size_t con_size = curlen - position;
 			if (!con_size) {
@@ -932,6 +931,7 @@ private:
 				value.pointer + (position + 1),
 				str, strlen
 			);
+			value.count = sumlen;
 		}
 		return true;
 	}

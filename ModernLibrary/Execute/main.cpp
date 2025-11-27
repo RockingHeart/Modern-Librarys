@@ -5,16 +5,13 @@ import std;
 import utility;
 
 int main() {
-	dast::cstring str = "Hd";
-	str.insert("ello Worl", 0);
-	std::cout << str.const_string();
 	/*auto stime = GetTickCount64();
 	static std::string snop;
 	{
 
 		for (size_t i = 0; i < 500000000; ++i) {
-			std::string str("Hello");
-			str += "HHHHH";
+			std::string str = "Hd";
+			str.insert(1, "ello Worl");
 			snop = str;
 		}
 	}
@@ -26,8 +23,8 @@ int main() {
 	static dast::cstring dnop;
 	{
 		for (size_t i = 0; i < 500000000; ++i) {
-			dast::cstring str("Hello");
-			str += "HHHHH";
+			dast::cstring str = "Hd";
+			str.insert("ello Worl", 0);
 			dnop = str;
 		}
 	}
