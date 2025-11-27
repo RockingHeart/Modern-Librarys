@@ -5,8 +5,9 @@ import std;
 import utility;
 
 int main() {
-	constexpr dast::cstring str = "";
-	str.begin()[0] = '1';
+	dast::cstring str = "Hd";
+	str.insert("ello Worl", 0);
+	std::cout << str.const_string();
 	/*auto stime = GetTickCount64();
 	static std::string snop;
 	{

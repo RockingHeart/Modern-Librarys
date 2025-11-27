@@ -30,6 +30,7 @@
 | mode state | [mode_state] |
 | operator | [operator] |
 | replace | [replace] |
+| insert | [insert] |
 | residue | [residue] |
 | resize | [resize] |
 | reserve | [reserve] |
@@ -687,6 +688,26 @@
                         - 变量是大模式
                         - 调用resize更新变量为更大的动态字符串
                     函数返回值描述：若存有保留数据，则返回其保留数据
+
+            ## insert
+            - 返回值类型：bool 非静态成员函数名：insert
+            - 用于在指定位置插入字符串
+                - 参数列表：(const_pointer_t, size_t)
+                - bool insert(const_pointer_t str, size_t position) <br>
+                    **参数str为插入的字符串 <br> 参数position为插入位置位置**
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str = "Hd";
+                        str.insert("ello Worl", 0);
+                        std::cout << str.const_string();
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出："Hello World"
+                    函数返回值描述：此函数返回bool值，指告用户insert成功与否
             
             ## residue
             - 返回值类型：const residue_info 非静态成员函数名：residue 参数列表：(void)

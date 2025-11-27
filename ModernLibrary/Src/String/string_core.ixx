@@ -212,6 +212,17 @@ public:
 		return self.replace_string(std::forward<ArgsType>(args)...);
 	}
 
+	template <class SelfType, class... ArgsType>
+	[[nodiscard]] constexpr bool insert(this SelfType&& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.insert_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.insert_string(std::forward<ArgsType>(args)...);
+	}
+
 public:
 
 	template <class SelfType, class... ArgsType>

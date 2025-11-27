@@ -863,6 +863,79 @@ private:
 		return true;
 	}
 
+	constexpr bool insert_string (const_pointer_t str, size_t position)
+	    noexcept
+	{
+		size_t strlen = strutil::strlenof(str);
+		if (is_cache_mode()) {
+			box_buffer_t& buffer = core_t::buffer;
+			size_t buflen        = buffer.count;
+			if (position > buflen) {
+				return false;
+			}
+			size_t sumlen        = buflen + strlen;
+			pointer_t data       = buffer.pointer;
+			if (sumlen >= core_t::buffer_size) {
+				respace<true>(sumlen * 1.5);
+				box_value_t& value = core_t::value;
+				data               = value.pointer;
+				data[sumlen]       = char_t();
+				value.count        = sumlen;
+			}
+			const size_t con_size = buflen - position;
+			if (!con_size) {
+				strutil::strcopy (
+					data + position,
+					str,
+					strlen
+				);
+				return true;
+			}
+			size_t point = position + strlen;
+			strutil::strmove (
+				data + point,
+				data + position,
+				con_size
+			);
+			strutil::strcopy (
+				data + (position + 1),
+				str, strlen
+			);
+		} else {
+			box_value_t& value   = core_t::value;
+			size_t curlen        = value.count;
+			if (position > curlen) {
+				return false;
+			}
+			size_t sumlen = curlen + strlen;
+			if (sumlen >= core_t::buffer_size) {
+				respace<false>(sumlen * 1.5);
+				value.pointer[sumlen] = char_t();
+				value.count           = sumlen;
+			}
+			const size_t con_size = curlen - position;
+			if (!con_size) {
+				strutil::strcopy (
+					value.pointer + position,
+					str,
+					strlen
+				);
+				return true;
+			}
+			size_t point = position + strlen;
+			strutil::strmove (
+				value.pointer + point,
+				value.pointer + position,
+				con_size
+			);
+			strutil::strcopy (
+				value.pointer + (position + 1),
+				str, strlen
+			);
+		}
+		return true;
+	}
+
 private:
 
 	constexpr bool restore_string_cache_mode(size_t size) noexcept {
@@ -1070,7 +1143,7 @@ private:
 
 private:
 
-	constexpr basic_string& append_impl(char_t char_value) noexcept {
+	constexpr void append_impl(char_t char_value) noexcept {
 		if (is_cache_mode()) {
 			box_buffer_t& buffer = core_t::buffer;
 			size_t buf_size      =
@@ -1078,7 +1151,7 @@ private:
 			if (buf_size + 1 < core_t::buffer_size) {
 				buffer.pointer[buf_size] = char_value;
 				++buffer.count;
-				return *this;
+				return;
 			}
 			respace<true>((buf_size + 1) * 1.2);
 			box_value_t& value = core_t::value;
@@ -1097,10 +1170,9 @@ private:
 			value.count              += 1;
 			value.pointer[heap_count] = char_t();
 		}
-		return *this;
 	}
 
-	constexpr basic_string& append_impl(const_pointer_t pointer, size_t size) noexcept {
+	constexpr void append_impl(const_pointer_t pointer, size_t size) noexcept {
 		if (is_cache_mode()) {
 			box_buffer_t& buffer = core_t::buffer;
 			size_t buf_size      =
@@ -1108,7 +1180,7 @@ private:
 			size_t next_size     = buf_size + size;
 			if (next_size < core_t::buffer_size) {
 				copy_buffer(buffer, buf_size, pointer, size);
-				return *this;
+				return;
 			}
 			respace<true>(next_size * 1.2);
 			box_value_t& value = core_t::value;
@@ -1134,19 +1206,21 @@ private:
 			heap_count               += size;
 			value.pointer[heap_count] = char_t();
 		}
-		return *this;
 	}
 
 	constexpr basic_string& append(char_t char_value) noexcept {
-		return append_impl(char_value);
+		append_impl(char_value);
+		return *this;
 	}
 
 	constexpr basic_string& append(const_pointer_t pointer) noexcept {
-		return append_impl(pointer, strutil::strlenof(pointer));
+		append_impl(pointer, strutil::strlenof(pointer));
+		return *this;
 	}
 
 	constexpr basic_string& append(basic_string& string) noexcept {
-		return append_impl(string.pointer(), string.string_length());
+		append_impl(string.pointer(), string.string_length());
+		return *this;
 	}
 
 private:
