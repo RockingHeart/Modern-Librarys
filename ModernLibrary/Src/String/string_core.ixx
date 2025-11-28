@@ -48,17 +48,17 @@ private:
 public:
 
 	template <class SelfType>
-	constexpr size_t size(this SelfType&& self) noexcept {
+	constexpr auto size(this SelfType&& self) noexcept {
 		return self.string_length();
 	}
 
 	template <class SelfType>
-	constexpr size_t capacity(this SelfType&& self) noexcept {
+	constexpr auto capacity(this SelfType&& self) noexcept {
 		return self.string_capacity();
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr size_t max_size(this SelfType&& self, ArgsType&&... args)
+	constexpr auto max_size(this SelfType&& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.string_max_size(std::forward<ArgsType>(args)...);
@@ -71,7 +71,7 @@ public:
 public:
 
 	template <class SelfType>
-	constexpr mode_status mode_state(this SelfType&& self) {
+	constexpr auto mode_state(this SelfType&& self) {
 		if (self.is_cache_mode()) {
 			return mode_status::cache;
 		}
@@ -81,7 +81,7 @@ public:
 public:
 
 	template <class SelfType>
-	constexpr const_pointer_t const_string(this SelfType&& self) {
+	constexpr auto const_string(this SelfType&& self) {
 		return self.pointer();
 	}
 
@@ -132,7 +132,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr size_t trimmed(this SelfType&& self, ArgsType&&... args)
+	constexpr auto trimmed(this SelfType&& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.trimmed_string(std::forward<ArgsType>(args)...);
@@ -145,7 +145,7 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
-	constexpr basic_string lower(this SelfType&& self, ArgsType&&... args)
+	constexpr auto lower(this SelfType&& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.lower_string(std::forward<ArgsType>(args)...);
@@ -156,7 +156,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr basic_string upper(this SelfType&& self, ArgsType&&... args)
+	constexpr auto upper(this SelfType&& self, ArgsType&&... args)
 		noexcept requires(
 		    requires {
 		        self.upper_string(std::forward<ArgsType>(args)...);
@@ -169,7 +169,7 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
-	[[nodiscard]] constexpr bool resize(this SelfType&& self, ArgsType&&... args)
+	[[nodiscard]] constexpr auto resize(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.resize_string(std::forward<ArgsType>(args)...);
@@ -180,7 +180,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	[[nodiscard]] constexpr bool reserve(this SelfType&& self, ArgsType&&... args)
+	[[nodiscard]] constexpr auto reserve(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.reserve_string(std::forward<ArgsType>(args)...);
@@ -191,7 +191,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	[[nodiscard]] constexpr bool restore_cache_mode(this SelfType&& self, ArgsType&&... args)
+	[[nodiscard]] constexpr auto restore_cache_mode(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.restore_string_cache_mode(std::forward<ArgsType>(args)...);
@@ -202,7 +202,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	[[nodiscard]] constexpr bool replace(this SelfType&& self, ArgsType&&... args)
+	[[nodiscard]] constexpr auto replace(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.replace_string(std::forward<ArgsType>(args)...);
@@ -213,7 +213,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	[[nodiscard]] constexpr bool insert(this SelfType&& self, ArgsType&&... args)
+	[[nodiscard]] constexpr auto insert(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.insert_string(std::forward<ArgsType>(args)...);
@@ -237,7 +237,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr reference_t at(this SelfType&& self, ArgsType&&... args)
+	constexpr decltype(auto) at(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.at_string(std::forward<ArgsType>(args)...);
@@ -248,7 +248,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr reference_t element(this SelfType&& self, ArgsType&&... args)
+	constexpr decltype(auto) element(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.string_element(std::forward<ArgsType>(args)...);
@@ -261,7 +261,7 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
-	constexpr void swap(this SelfType&& self, ArgsType&&... args)
+	constexpr auto swap(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.exchange_string(std::forward<ArgsType>(args)...);
@@ -272,7 +272,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr void move(this SelfType&& self, ArgsType&&... args)
+	constexpr auto move(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.move_string(std::forward<ArgsType>(args)...);
@@ -285,7 +285,7 @@ public:
 public:
 
 	template <class SelfType, typename CastType, class... ArgsType>
-	constexpr CastType to(this SelfType&& self, ArgsType&&... args)
+	constexpr decltype(auto) to(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.template cast_to<CastType>(std::forward<ArgsType>(args)...);
@@ -320,7 +320,7 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
-	constexpr size_t tick(this SelfType&& self, ArgsType&&... args)
+	constexpr auto tick(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.count_string(std::forward<ArgsType>(args)...);
@@ -333,7 +333,7 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
-	constexpr basic_string extract(this SelfType&& self, ArgsType&&... args)
+	constexpr auto extract(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.extract_string(std::forward<ArgsType>(args)...);
@@ -357,7 +357,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr void left(this SelfType&& self, ArgsType&&... args)
+	constexpr auto left(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.left_string(std::forward<ArgsType>(args)...);
@@ -368,7 +368,7 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
-	constexpr void right(this SelfType&& self, ArgsType&&... args)
+	constexpr auto right(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.right_string(std::forward<ArgsType>(args)...);
@@ -381,12 +381,12 @@ public:
 public:
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool empty(this SelfType&& self) noexcept {
+	[[nodiscard]] constexpr auto empty(this SelfType&& self) noexcept {
 		return self.is_empty();
 	}
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool is_blank(this SelfType&& self) noexcept {
+	[[nodiscard]] constexpr auto is_blank(this SelfType&& self) noexcept {
 		return self.entrusted (
 			[](char_t value) constexpr noexcept {
 			    if (value == ' ') {
@@ -398,7 +398,7 @@ public:
 	}
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool is_digit(this SelfType&& self) noexcept {
+	[[nodiscard]] constexpr auto is_digit(this SelfType&& self) noexcept {
 		return self.entrusted (
 			[](char_t value) constexpr noexcept {
 			    if (value >= '0' && value <= '9') {
@@ -410,7 +410,7 @@ public:
 	}
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool is_lower(this SelfType&& self) noexcept {
+	[[nodiscard]] constexpr auto is_lower(this SelfType&& self) noexcept {
 		return self.entrusted (
 			[](char_t value) constexpr noexcept {
 			    if (value >= 'a' && value <= 'z') {
@@ -422,7 +422,7 @@ public:
 	}
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool is_upper(this SelfType&& self) noexcept {
+	[[nodiscard]] constexpr auto is_upper(this SelfType&& self) noexcept {
 		return self.entrusted (
 			[](char_t value) constexpr noexcept {
 			    if (value >= 'A' && value <= 'Z') {
@@ -434,7 +434,7 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr bool is_enstr() const noexcept {
+	constexpr auto is_enstr() const noexcept {
 		return is_lower() || is_upper();
 	}
 
@@ -456,7 +456,7 @@ public:
 	}
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool leave_residue(this SelfType&& self)
+	[[nodiscard]] constexpr auto leave_residue(this SelfType&& self)
 		noexcept requires (
 		    requires {
 		        self.value.before;
@@ -473,7 +473,7 @@ public:
 	}
 
 	template <class SelfType>
-	[[nodiscard]] constexpr bool clear_residue(this SelfType&& self)
+	[[nodiscard]] constexpr auto clear_residue(this SelfType&& self)
 		noexcept requires (
 		    requires {
 		        self.value.before;

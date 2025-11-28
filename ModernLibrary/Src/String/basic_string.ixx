@@ -862,78 +862,96 @@ private:
 		return true;
 	}
 
+private:
+
+	constexpr bool insert_buffer (const_pointer_t str,
+		                          size_t          strlen,
+		                          size_t          position)
+	    noexcept
+	{
+		box_buffer_t& buffer = core_t::buffer;
+		size_t buflen        = buffer.count;
+		if (position > buflen) {
+			return false;
+		}
+		size_t sumlen  = buflen + strlen;
+		pointer_t data = buffer.pointer;
+		if (sumlen >= core_t::buffer_size) {
+			respace<true>(sumlen * 1.5);
+			box_value_t& value = core_t::value;
+			data = value.pointer;
+			data[sumlen] = char_t();
+			value.count = sumlen;
+		}
+		const size_t con_size = buflen - position;
+		if (!con_size) {
+			strutil::strcopy (
+				data + position,
+				str,
+				strlen
+			);
+			return true;
+		}
+		size_t point = position + strlen;
+		strutil::strmove (
+			data + point,
+			data + position,
+			con_size
+		);
+		strutil::strcopy (
+			data + (position + 1),
+			str, strlen
+		);
+		buffer.count = sumlen;
+		return true;
+	}
+
+	constexpr bool insert_heap (const_pointer_t str,
+		                        size_t          strlen,
+		                        size_t          position)
+	    noexcept
+	{
+		box_value_t& value = core_t::value;
+		size_t curlen      = value.count;
+		if (position > curlen) {
+			return false;
+		}
+		size_t sumlen = curlen + strlen;
+		if (sumlen >= core_t::buffer_size) {
+			respace<false>(sumlen * 1.5);
+			value.pointer[sumlen] = char_t();
+		}
+		const size_t con_size = curlen - position;
+		if (!con_size) {
+			strutil::strcopy (
+				value.pointer + position,
+				str,
+				strlen
+			);
+			return true;
+		}
+		size_t point = position + strlen;
+		strutil::strmove (
+			value.pointer + point,
+			value.pointer + position,
+			con_size
+		);
+		strutil::strcopy (
+			value.pointer + (position + 1),
+			str, strlen
+		);
+		value.count = sumlen;
+		return true;
+	}
+
 	constexpr bool insert_string (const_pointer_t str, size_t position)
 	    noexcept
 	{
 		size_t strlen = strutil::strlenof(str);
 		if (is_cache_mode()) {
-			box_buffer_t& buffer = core_t::buffer;
-			size_t buflen        = buffer.count;
-			if (position > buflen) {
-				return false;
-			}
-			size_t sumlen        = buflen + strlen;
-			pointer_t data       = buffer.pointer;
-			if (sumlen >= core_t::buffer_size) {
-				respace<true>(sumlen * 1.5);
-				box_value_t& value = core_t::value;
-				data               = value.pointer;
-				data[sumlen]       = char_t();
-				value.count        = sumlen;
-			}
-			const size_t con_size = buflen - position;
-			if (!con_size) {
-				strutil::strcopy (
-					data + position,
-					str,
-					strlen
-				);
-				return true;
-			}
-			size_t point = position + strlen;
-			strutil::strmove (
-				data + point,
-				data + position,
-				con_size
-			);
-			strutil::strcopy (
-				data + (position + 1),
-				str, strlen
-			);
-			buffer.count = sumlen;
-		} else {
-			box_value_t& value   = core_t::value;
-			size_t curlen        = value.count;
-			if (position > curlen) {
-				return false;
-			}
-			size_t sumlen = curlen + strlen;
-			if (sumlen >= core_t::buffer_size) {
-				respace<false>(sumlen * 1.5);
-				value.pointer[sumlen] = char_t();
-			}
-			const size_t con_size = curlen - position;
-			if (!con_size) {
-				strutil::strcopy (
-					value.pointer + position,
-					str,
-					strlen
-				);
-				return true;
-			}
-			size_t point = position + strlen;
-			strutil::strmove (
-				value.pointer + point,
-				value.pointer + position,
-				con_size
-			);
-			strutil::strcopy (
-				value.pointer + (position + 1),
-				str, strlen
-			);
-			value.count = sumlen;
+			return insert_buffer(str, strlen, position);
 		}
-		return true;
+		return insert_heap(str, strlen, position);
 	}
 
 private:
