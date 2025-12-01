@@ -253,6 +253,7 @@ private:
 	}
 
 	constexpr void copy_buffer(box_buffer_t& object, box_buffer_t& self) noexcept {
+		[[assume(object.count <= bitsize<7>)]]
 		strutil::strcopy (
 			self.pointer,
 			object.pointer,
@@ -267,6 +268,7 @@ private:
 		                        size_t          size)
 		noexcept
 	{
+		[[assume(size <= bitsize<7>)]]
 		strutil::strcopy(
 			buffer.pointer + buf_size,
 			pointer, size
@@ -345,8 +347,7 @@ private:
 		if (sum_len < core_t::buffer_size) {
 			strutil::strcopy(buffer.pointer, object.pointer(), obj_size);
 			strutil::strcopy(buffer.pointer + obj_size, pointer, size);
-			buffer.count                 = sum_len;
-			buffer.pointer[buffer.count] = char_t();
+			buffer.count = sum_len;
 			return;
 		}
 		box_value_t& value = core_t::value;
@@ -360,11 +361,11 @@ private:
 	}
 
 	constexpr void assign_init(const_pointer_t str) noexcept {
-		box_buffer_t& buffer = core_t::buffer;
 		if (is_cache_mode()) {
-			size_t buf_size = buffer.count;
+			box_buffer_t& buffer = core_t::buffer;
+			size_t buf_size      = buffer.count;
+			[[assume(buf_size <= bitsize<7>)]]
 			strutil::strcopy(buffer.pointer, str, buf_size);
-			buffer.pointer[buf_size] = char_t();
 			return;
 		}
 		box_value_t& value = core_t::value;
@@ -381,13 +382,11 @@ private:
 	{
 		box_buffer_t& buffer = core_t::buffer;
 		pointer_t       data = buffer.pointer;
-		size_t size          = buffer.count;
 		if (is_large_mode()) {
-			box_value_t& value = core_t::value;
-			size               = value.count;
-			size_t alloc_size  = size * 1.5;
+			box_value_t& value   = core_t::value;
+			size_t alloc_size    = value.count * 1.5;
 			data = value.pointer = allocator().allocate(alloc_size);
-			value.alloc_size = alloc_size;
+			value.alloc_size     = alloc_size;
 		}
 		const auto* begin = list.begin();
 		const auto* end   = list.end() - 1;
@@ -405,21 +404,22 @@ private:
 	constexpr void assign_init(char_t char_value) noexcept {
 		if (is_cache_mode()) {
 			box_buffer_t& buffer = core_t::buffer;
+			size_t buf_size      = buffer.count;
+			[[assume(buf_size <= bitsize<7>)]]
 			strutil::strset (
 				buffer.pointer,
 				char_value,
-				buffer.count
+				buf_size
 			);
+			return;
 		}
-		else {
-			box_value_t& value = core_t::value;
-			size_t size        = value.count;
-			size_t alloc_size  = size * 1.5;
-			value.pointer      = allocator().allocate(alloc_size);
-			value.alloc_size   = alloc_size;
-			strutil::strset(value.pointer, char_value, size);
-			value.pointer[size] = char_t();
-		}
+		box_value_t& value = core_t::value;
+		size_t size        = value.count;
+		size_t alloc_size  = size * 1.5;
+		value.pointer      = allocator().allocate(alloc_size);
+		value.alloc_size   = alloc_size;
+		strutil::strset(value.pointer, char_value, size);
+		value.pointer[size] = char_t();
 	}
 
 	constexpr void assign_init(basic_string& object) noexcept {
@@ -664,6 +664,7 @@ private:
 	[[nodiscard]]
 	constexpr bool within_range(size_t string_begin, size_t end) const noexcept {
 		size_t size = string_length();
+		[[assume(size <= end)]]
 		return string_begin < size && (end - string_begin) <= size;
 	}
 
@@ -819,15 +820,6 @@ private:
 
 private:
 
-	constexpr pointer_t replace_impl (
-		size_t point, size_t end
-	) noexcept {
-		if (!within_range(point, end)) {
-			return nullptr;
-		}
-		return pointer();
-	}
-
 	constexpr bool replace_string (const_pointer_t str,
 		                           size_t          point,
 		                           size_t          end)
@@ -836,10 +828,10 @@ private:
 		if (std::strlen(str) > end) {
 			return false;
 		}
-		pointer_t data = replace_impl(point, end);
-		if (data == nullptr) {
+		if (!within_range(point, end)) {
 			return false;
 		}
+		pointer_t data = pointer();
 		size_t index = 0;
 		for (; point < end; ++point) {
 			data[point] = str[index++];
@@ -852,10 +844,10 @@ private:
 		                           size_t      end)
 		noexcept
 	{
-		pointer_t data = replace_impl(point, end);
-		if (data == nullptr) {
+		if (!within_range(point, end)) {
 			return false;
 		}
+		pointer_t data = pointer();
 		for (; point < end; ++point) {
 			data[point] = char_value;
 		}

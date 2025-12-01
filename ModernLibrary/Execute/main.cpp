@@ -1,17 +1,16 @@
-﻿import <windows.h>;
-
+﻿import std;
 import string;
-import std;
 import utility;
 
+import <windows.h>;
+
 int main() {
-	/*auto stime = GetTickCount64();
+	auto stime = GetTickCount64();
 	static std::string snop;
 	{
 
 		for (size_t i = 0; i < 500000000; ++i) {
-			std::string str = "Hd";
-			str.insert(1, "ello Worl");
+			std::string str = "Hello World";
 			snop = str;
 		}
 	}
@@ -23,13 +22,12 @@ int main() {
 	static dast::cstring dnop;
 	{
 		for (size_t i = 0; i < 500000000; ++i) {
-			dast::cstring str = "Hd";
-			str.insert("ello Worl", 0);
+			dast::cstring str = "Hello World";
 			dnop = str;
 		}
 	}
 
 	etime = GetTickCount64();
-	std::cout << "Mine: " << (etime - stime) << ' ' << dnop.const_string() << '\n';*/
+	std::cout << "Mine: " << (etime - stime) << ' ' << dnop.const_string() << '\n';
 	return 0;
 }

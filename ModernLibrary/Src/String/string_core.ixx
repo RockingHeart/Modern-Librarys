@@ -441,14 +441,14 @@ public:
 public:
 
 	template <class SelfType>
-	constexpr const auto residue(this SelfType&& self)
+	constexpr auto residue(this SelfType&& self)
 	    noexcept requires (
 		    requires {
 		        self.value.before;
 	        }
 		)
 	{
-		return typename box_t::value_type::residue_info {
+		return typename box_t::residue_info {
 			self.value.before,
 			self.value.before_count,
 			self.value.before_alloc_size

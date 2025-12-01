@@ -6,8 +6,9 @@ export template <class StringTraits>
 struct string_box {
 	using string_traits = StringTraits;
 
-	using char_t    = string_traits::char_t;
-	using pointer_t = string_traits::pointer_t;
+	using char_t          = string_traits::char_t;
+	using pointer_t       = string_traits::pointer_t;
+	using const_pointer_t = string_traits::const_pointer_t;
 
 	template <traits::value_traits>
 	struct box_value_t;
@@ -27,11 +28,12 @@ struct string_box {
 		pointer_t before;
 		size_t    before_count;
 		size_t    before_alloc_size;
-		struct residue_info {
-			pointer_t address;
-			size_t size;
-			size_t alloc_size;
-		};
+	};
+
+	struct residue_info {
+		const_pointer_t address;
+		const size_t    size;
+		const size_t    alloc_size;
 	};
 
 	template <>
@@ -45,8 +47,8 @@ struct string_box {
 
 	struct buffer_t {
 		char_t        pointer[buffer_size]{};
-		unsigned char count : 7;
-		bool          cache : 1;
+		unsigned char count [[indeterminate]] : 7;
+		bool          cache                   : 1;
 	};
 
 	union {
