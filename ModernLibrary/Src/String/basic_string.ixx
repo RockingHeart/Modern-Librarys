@@ -820,6 +820,64 @@ private:
 
 private:
 
+	constexpr void expand_buffer_prefix(const_pointer_t str, size_t size) noexcept {
+		box_buffer_t& buffer = core_t::buffer;
+		pointer_t data       = buffer.pointer;
+		size_t bufsize       = buffer.count;
+		size_t nextsize      = bufsize + size;
+		if (nextsize >= core_t::buffer_size) {
+			respace<true>(nextsize * 1.2);
+			box_value_t& value = core_t::value;
+			data               = value.pointer;
+			value.count        = nextsize;
+		}
+		else {
+			buffer.count = nextsize;
+		}
+		strutil::strmove (
+			data + size,
+			data,
+			bufsize
+		);
+		strutil::strcopy (
+			data,
+			str,
+			size
+		);
+		data[nextsize] = char_t();
+	}
+
+	constexpr void expand_heap_prefix(const_pointer_t str, size_t size) noexcept {
+		box_value_t& value = core_t::value;
+		size_t curlen      = value.count;
+		size_t nextlen     = curlen + size;
+		if (nextlen >= value.alloc_size) {
+			respace<false>(nextlen * 1.2);
+		}
+		strutil::strmove (
+			value.pointer + size,
+			value.pointer,
+			curlen
+		);
+		strutil::strcopy (
+			value.pointer,
+			str,
+			size
+		);
+		value.count = nextlen;
+		value.pointer[nextlen] = char_t();
+	}
+
+	constexpr void expand_prefix_string(const_pointer_t str) noexcept {
+		size_t size = strutil::strlenof(str);
+		if (is_cache_mode()) {
+			return expand_buffer_prefix(str, size);
+		}
+		return expand_heap_prefix(str, size);
+	}
+
+private:
+
 	constexpr bool replace_string (const_pointer_t str,
 		                           size_t          point,
 		                           size_t          end)
@@ -871,12 +929,15 @@ private:
 		if (sumlen >= core_t::buffer_size) {
 			respace<true>(sumlen * 1.5);
 			box_value_t& value = core_t::value;
-			data = value.pointer;
-			data[sumlen] = char_t();
-			value.count = sumlen;
+			data               = value.pointer;
+			value.count        = sumlen;
 		}
-		const size_t con_size = buflen - position;
-		if (!con_size) {
+		else {
+			buffer.count = sumlen;
+		}
+		data[sumlen] = char_t();
+		const size_t consize = buflen - position;
+		if (!consize) {
 			strutil::strcopy (
 				data + position,
 				str,
@@ -888,13 +949,12 @@ private:
 		strutil::strmove (
 			data + point,
 			data + position,
-			con_size
+			consize
 		);
 		strutil::strcopy (
-			data + (position + 1),
+			data + position,
 			str, strlen
 		);
-		buffer.count = sumlen;
 		return true;
 	}
 
@@ -911,10 +971,9 @@ private:
 		size_t sumlen = curlen + strlen;
 		if (sumlen >= core_t::buffer_size) {
 			respace<false>(sumlen * 1.5);
-			value.pointer[sumlen] = char_t();
 		}
-		const size_t con_size = curlen - position;
-		if (!con_size) {
+		const size_t consize = curlen - position;
+		if (!consize) {
 			strutil::strcopy (
 				value.pointer + position,
 				str,
@@ -926,17 +985,18 @@ private:
 		strutil::strmove (
 			value.pointer + point,
 			value.pointer + position,
-			con_size
+			consize
 		);
 		strutil::strcopy (
-			value.pointer + (position + 1),
+			value.pointer + position,
 			str, strlen
 		);
-		value.count = sumlen;
+		value.count           = sumlen;
+		value.pointer[sumlen] = char_t();
 		return true;
 	}
 
-	constexpr bool insert_string (const_pointer_t str, size_t position)
+	constexpr bool insert_string(const_pointer_t str, size_t position)
 	    noexcept
 	{
 		size_t strlen = strutil::strlenof(str);

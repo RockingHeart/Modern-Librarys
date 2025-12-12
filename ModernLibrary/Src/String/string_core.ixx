@@ -380,6 +380,19 @@ public:
 
 public:
 
+	template <class SelfType, class... ArgsType>
+	constexpr auto expand_prefix(this SelfType&& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.expand_prefix_string(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.expand_prefix_string(std::forward<ArgsType>(args)...);
+	}
+
+public:
+
 	template <class SelfType>
 	[[nodiscard]] constexpr auto empty(this SelfType&& self) noexcept {
 		return self.is_empty();

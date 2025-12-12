@@ -25,10 +25,10 @@ private:
 
 	template <>
 	struct compile<char> {
-		constexpr static int strcmp (
+		constexpr static bool strcmp (
 			const char* left, const char* src, size_t size
 		) noexcept {
-			return ::__builtin_memcmp(left, src, size);
+			return !::__builtin_memcmp(left, src, size);
 		}
 
 		constexpr static size_t strlen(const char* str) noexcept {
@@ -38,10 +38,10 @@ private:
 
 	template <>
 	struct compile<wchar_t> {
-		constexpr static int strcmp(
+		constexpr static bool strcmp(
 			const wchar_t* left, const wchar_t* src, size_t size
 		) noexcept {
-			return ::__builtin_wmemcmp(left, src, size);
+			return !::__builtin_wmemcmp(left, src, size);
 		}
 
 		constexpr static size_t strlen(const wchar_t* str) noexcept {
@@ -70,7 +70,7 @@ private:
 	) noexcept;
 
 	template <character_type CharacterType = char_t>
-	constexpr static int compare (
+	constexpr static bool compare (
 		const CharacterType* left, const CharacterType* src, size_t size
 	) noexcept;
 
@@ -81,9 +81,7 @@ public:
 		if consteval {
 			return compile<CharacterType>::strlen(str);
 		}
-		else {
-			return length<CharacterType>(str);
-		}
+		return length<CharacterType>(str);
 	}
 
 	template <character_type CharacterType = char_t>
@@ -109,9 +107,7 @@ public:
 			}
 			return dest;
 		}
-		else {
-			return copy<CharacterType>(dest, src, size);
-		}
+		return copy<CharacterType>(dest, src, size);
 		
 	}
 
@@ -146,7 +142,7 @@ public:
 	}
 
 	template <character_type CharacterType = char_t>
-	constexpr static int strcmp (const CharacterType* left,
+	constexpr static bool strcmp (const CharacterType* left,
 		                         const CharacterType* src,
 		                               size_t         size)
 		noexcept
@@ -154,40 +150,54 @@ public:
 		if consteval {
 			return compile<CharacterType>::strcmp(left, src, size);
 		}
-		else {
-			return compare<CharacterType>(left, src, size);
-		}
+		return compare<CharacterType>(left, src, size);
 	}
 
-	constexpr static size_t match (
+	constexpr static size_t strmatch (
 		const char* str, char target, size_t len
 	) noexcept {
 		const char* result = std::bit_cast<const char*>(memchr(str, target, len));
 		return static_cast<size_t>(result - str);
 	}
 
-	constexpr static size_t match (
+	constexpr static size_t strmatch (
 		const wchar_t* str, wchar_t target, size_t len
 	) noexcept {
 		const wchar_t* result = wmemchr(str, target, len);
 		return static_cast<size_t>(result - str);
 	}
 
-	constexpr static match_t<size_t> match (const char*  str,
-		                                    const char*  target,
-		                                          size_t strlen,
-	                                              size_t tarlen)
-		noexcept
+	template <character_type CharacterType = char_t>
+	constexpr static match_t<size_t> strmatch (const CharacterType* str, const CharacterType* target) noexcept
 	{
-		if (strlen <= 32) {
-			for (size_t i = 0; i < strlen; i += 1) {
+		size_t strlen = strlenof(str);
+		size_t tarlen = strlenof(target);
+		if consteval {
+			for (size_t i = 0; i < strlen; ++i, ++str) {
 				if (i + tarlen > strlen) {
 					return match::failed;
 				}
-				if (!compare<char>(str + i, target, tarlen)) {
+				if (strcmp<CharacterType>(str, target, tarlen)) {
 					return i;
 				}
 			}
+			return match::failed;
+		}
+		auto strcompare = native_compare;
+		if (strlen > 255) {
+			strcompare = long_compar;
+		}
+		for (size_t i = 0; i < strlen;) {
+			if (i + tarlen > strlen) {
+				return match::failed;
+			}
+			size_t resu = strcompare (
+				str + i, target, tarlen
+			);
+			if (!resu) {
+				return i;
+			}
+			i += resu;
 		}
 		return match::failed;
 	}
@@ -250,16 +260,49 @@ private:
 	}
 
 	template <>
-	constexpr static int compare<char> (
+	constexpr static bool compare<char> (
 		const char* left, const char* src, size_t size
 	) noexcept {
-		return ::memcmp(left, src, size);
+		return !::memcmp(left, src, size);
 	}
 
 	template <>
-	constexpr static int compare<wchar_t> (
+	constexpr static bool compare<wchar_t> (
 		const wchar_t* left, const wchar_t* src, size_t size
 	) noexcept {
-		return ::wmemcmp(left, src, size);
+		return !::wmemcmp(left, src, size);
+	}
+
+private:
+
+	constexpr static size_t native_compare(const_pointer_t str,
+		                                   const_pointer_t src,
+		                                   size_t          size)
+		noexcept
+	{
+		if (str[size] != src[size]) {
+			return size;
+		}
+		size_t cnt = 0;
+		for (size_t i = 0; i < size; ++i) {
+			if (str[i] == src[i]) {
+				++cnt;
+			}
+			else {
+				break;
+			}
+		}
+		if (cnt == size) {
+			return 0;
+		}
+		return 1;
+	}
+
+	constexpr static size_t long_compar(const_pointer_t str,
+		                                const_pointer_t src,
+		                                size_t          tarlen)
+		noexcept
+	{
+		return 0;
 	}
 };

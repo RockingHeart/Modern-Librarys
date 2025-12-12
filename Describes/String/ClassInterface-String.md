@@ -20,6 +20,10 @@
 | leave residue | [leave_residue] |
 | const string | [const_string] |
 | truncate | [truncate] |
+| center | [center] |
+| left | [left] |
+| right | [right] |
+| expand_prefix | [expand_prefix] |
 | empty | [empty] |
 | is_blank | [is_blank] |
 | is_digit | [is_digit] |
@@ -498,6 +502,26 @@
                         ```
                     #### 以上代码输出："Hello\*\*\*\*\*"
                     该函数强调的返回描述：无
+            
+            ## expand_prefix
+            - 返回值类型：void 非静态成员函数名：expand_prefix
+                - 参数列表：(const_pointer_t)
+                    - void expand_prefix(const_pointer_t str)
+                    - 用于在前缀位置使动态字符串扩展子字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            dast::cstring str = { " World", 5 };
+                            str.expand_prefix("Hello")
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："Hello World"
+                    该函数强调的返回描述：无
+
 
             
             ## empty
@@ -1197,6 +1221,10 @@
 [leave_residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#leave_residue
 [const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#const_string
 [truncate]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#truncate
+[center]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#center
+[left]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#left
+[right]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#right
+[expand_prefix]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#expand_prefix
 [empty]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#empty
 [is_blank]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_blank
 [is_digit]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_digit
