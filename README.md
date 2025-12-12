@@ -53,7 +53,7 @@
 - [x] 64位缓存大小为47字节（MSVC，char类型，且allocator无状态）
 
 ## CMake使用教程
-*下载*此项目至本地 <br>
+[*下载*](Download)此项目至本地 <br>
 ! 目前暂不支持跨平台
 **若未安装CMake，请安装[CMake](https://cmake.org/)，可在控制台输入CMake -V查看版本，侧面知晓CMake是否安装** <br>
 **在项目当前目录下使用控制台输入指令：CMake -B "/ML"，此指令用于指定生成目录，而-B命令参数之后的值是指定的目录，值类型为字符串** <br>
@@ -64,6 +64,8 @@
 
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
+
+[Download]: https://github.com/RockingHeart/Modern-Librarys/archive/refs/heads/main.zip
 
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
 [DevStandard]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/DevStandard.md
