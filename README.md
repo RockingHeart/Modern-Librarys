@@ -65,7 +65,7 @@
 该项目当前使用语言：中文以支持MD文件 <br>
 This project is currently using Chinese to support MD files.
 
-[Download]: https://github.com/RockingHeart/Modern-Librarys/archive/refs/heads/main.zip
+[Download]: https://github.com/RockingHeart/Modern-Librarys.git
 
 [Source]: https://github.com/RockingHeart/Modern-Librarys/tree/main/ModernLibrary/Src
 [DevStandard]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/DevStandard.md
