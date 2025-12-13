@@ -830,6 +830,7 @@ private:
 			box_value_t& value = core_t::value;
 			data               = value.pointer;
 			value.count        = nextsize;
+			data[nextsize]     = char_t();
 		}
 		else {
 			buffer.count = nextsize;
@@ -844,7 +845,6 @@ private:
 			str,
 			size
 		);
-		data[nextsize] = char_t();
 	}
 
 	constexpr void expand_heap_prefix(const_pointer_t str, size_t size) noexcept {
@@ -931,11 +931,11 @@ private:
 			box_value_t& value = core_t::value;
 			data               = value.pointer;
 			value.count        = sumlen;
+			data[sumlen]       = char_t();
 		}
 		else {
 			buffer.count = sumlen;
 		}
-		data[sumlen] = char_t();
 		const size_t consize = buflen - position;
 		if (!consize) {
 			strutil::strcopy (
@@ -1363,9 +1363,11 @@ private:
 		return count;
 	}
 
-	constexpr auto string_cut_info (
-		pointer_t data, size_t strlen, char_t char_value
-	) const noexcept {
+	constexpr auto string_cut_info (pointer_t data,
+		                            size_t    strlen,
+		                            char_t char_value)
+	    const noexcept
+	{
 		struct cut_info_t {
 			size_t count, string_begin, end;
 		} result{};
@@ -1431,8 +1433,13 @@ private:
 public:
 
 	[[nodiscard]]
-	constexpr operator bool() const noexcept {
+	constexpr bool operator!() const noexcept {
 		return !is_empty();
+	}
+
+	[[nodiscard]]
+	constexpr operator const_pointer_t() const noexcept {
+		return pointer();
 	}
 
 public:

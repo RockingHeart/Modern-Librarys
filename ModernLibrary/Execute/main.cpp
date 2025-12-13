@@ -1,16 +1,16 @@
 ﻿import std;
+import string;
+
+import <windows.h>;
 
 int main() {
-	std::optional<int> v;
-	std::basic_string<char> str = "Hello, My Name Is RC, Do you know";
-	str.insert(33, ", My baby is CPP");
-	std::cout << str.c_str();
+	dast::cstring str = "hELLO wROLD";
+	std::cout << str.swapcase();
 	/*auto stime = GetTickCount64();
 	{
-
 		for (size_t i = 0; i < 500000000; ++i) {
-			std::basic_string<char> str = "World";
-			str.insert(0, " Hello");
+			dast::cstring str = "World";
+			str.insert("Hello", 0);
 		}
 	}
 
@@ -21,7 +21,7 @@ int main() {
 	{
 		for (size_t i = 0; i < 500000000; ++i) {
 			dast::cstring str = "World";
-			str.insert("Hello", 0);
+			str.expand_prefix("Hello");
 		}
 	}
 

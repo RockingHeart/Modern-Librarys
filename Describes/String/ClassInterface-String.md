@@ -43,6 +43,7 @@
 | tick | [tick] |
 | to | [to] |
 | to_lower | [to_lower] |
+| swapcase | [swapcase] |
 | to_upper | [to_upper] |
 
 - String
@@ -923,6 +924,24 @@
                     ```
                     #### 以上代码输出： "hello"
                     函数返回值描述：返回修改后的自身对象
+            
+            ## swapcase
+            - 返回值类型：basic_string& 非静态模板成员函数名：swapcase
+                - 参数列表: (void)
+                - basic_string& swapcase(void)
+                    - 用于将自身动态字符串对象大小写英文单词元素转换为与之大小写相反的英文单词
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str = { "hELLO", 5 };
+                        std::cout << std_str.swapcase().const_string() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： "Hello"
+                    函数返回值描述：返回修改后的自身对象
 
             ## to_upper
             - 返回值类型：basic_string& 非静态模板成员函数名：to_upper
@@ -1121,10 +1140,10 @@
                         #### 以上代码输出：1
                         该函数强调的返回描述：无
                 
-            - operator bool
-            - 返回值类型：bool 非静态成员运算符重载函数符号：bool
+            - operator !
+            - 返回值类型：bool 非静态成员运算符重载函数符号：!
                 - 参数列表：(void)
-                - bool operator bool(void)
+                - bool operator !(void)
                     - 用于检测动态字符串是否不为空
                          ``` C++
                         import string;
@@ -1132,11 +1151,29 @@
 
                         int main() {
                             dast::cstring str = { "Hello", 5 };
-                            std::cout << bool(str) << '\n'
+                            std::cout << (!str) << '\n'
                             return 0;
                         }
                         ```
                         #### 以上代码输出：true
+                        该函数强调的返回描述：无
+                        
+            - operator const_pointer_t
+            - 返回值类型与非静态成员运算符重载函数类型：const_pointer_t
+                - 参数列表：(void)
+                - operator const_pointer_t(void)
+                    - 用于在合适的场景下转换为常量字符串指针
+                         ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            dast::cstring str = { "Hello", 5 };
+                            std::cout << str << '\n'
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出："Hello"
                         该函数强调的返回描述：无
             
             - operator =
@@ -1244,4 +1281,5 @@
 [tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#tick
 [to]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to
 [to_lower]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to_lower
+[swapcase]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#swapcase
 [to_upper]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to_upper

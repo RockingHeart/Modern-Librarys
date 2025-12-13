@@ -296,8 +296,23 @@ public:
 	}
 
 	template <class SelfType>
+	constexpr decltype(auto) swapcase(this SelfType&& self) noexcept {
+		return self.delivered (
+			[](reference_t value) constexpr noexcept {
+			    if (value >= 'A' && value <= 'Z') {
+				    value += 32;
+			    }
+				else
+				if (value >= 'a' && value <= 'z') {
+					value -= 32;
+				}
+		    }
+		);
+	}
+
+	template <class SelfType>
 	constexpr decltype(auto) to_lower(this SelfType&& self) noexcept {
-		return self.delivered(
+		return self.delivered (
 			[](reference_t value) constexpr noexcept {
 			    if (value >= 'A' && value <= 'Z') {
 				    value += 32;
@@ -308,7 +323,7 @@ public:
 
 	template <class SelfType>
 	constexpr decltype(auto) to_upper(this SelfType&& self) noexcept {
-		return self.delivered(
+		return self.delivered (
 			[](reference_t value) constexpr noexcept {
 			    if (value >= 'a' && value <= 'z') {
 				    value -= 32;
