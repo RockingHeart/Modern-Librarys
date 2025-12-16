@@ -8,7 +8,7 @@ int main() {
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
 			std::string str = "World";
-			str.insert(0, "Hello");
+			str.insert(5, "Hello");
 		}
 	}
 
@@ -19,7 +19,7 @@ int main() {
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
 			dast::cstring str = "World";
-			str.insert("Hello", 0);
+			str.insert("Hello", 5);
 		}
 	}
 
