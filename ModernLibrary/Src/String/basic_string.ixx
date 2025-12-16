@@ -101,8 +101,6 @@ private:
 		upper
 	};
 
-private:
-
 	enum class fill_action {
 		left,
 		center,
@@ -123,11 +121,6 @@ private:
 		assign_init(object, right_object.pointer(), right_object.string_length());
 	}
 
-	/*template <class OptionType>
-	constexpr basic_string(basic_string& object, OptionType&& option) noexcept {
-		assign_init(object);
-		for (auto& value : *this) { option(value); }
-	}*/
 
 	constexpr basic_string(basic_string& object, char_action act) noexcept {
 		assign_init(object);
@@ -343,15 +336,15 @@ private:
 	{
 		box_buffer_t& buffer = core_t::buffer;
 		size_t obj_size      = object.string_length();
-		size_t sum_len       = obj_size + size;
-		if (sum_len < core_t::buffer_size) {
+		size_t sumlen        = obj_size + size;
+		if (sumlen < core_t::buffer_size) {
 			strutil::strcopy(buffer.pointer, object.pointer(), obj_size);
 			strutil::strcopy(buffer.pointer + obj_size, pointer, size);
-			buffer.count = sum_len;
+			buffer.count = sumlen;
 			return;
 		}
 		box_value_t& value = core_t::value;
-		value.count        = sum_len;
+		value.count        = sumlen;
 		size_t alloc_size  = value.count * 1.5;
 		value.pointer      = allocator().allocate(alloc_size);
 		value.alloc_size   = alloc_size;
@@ -561,18 +554,35 @@ private:
 		box_value_t& object_value   = object.value;
 		if (is_cache_mode()) {
 			if (object.is_cache_mode()) {
-				swap_buffer(alloc, self_buffer, object_buffer);
+				swap_buffer (
+					alloc,
+					self_buffer,
+					object_buffer
+				);
 			}
 			else {
-				buffer_swap_value(self_buffer, object_buffer, self_value, object_value);
+				buffer_swap_value (
+					self_buffer,
+					object_buffer,
+					self_value,
+					object_value
+				);
 			}
 			return;
 		}
 		if (object.is_cache_mode()) {
-			swap_buffer(alloc, object_buffer, self_buffer);
+			swap_buffer (
+				alloc,
+				object_buffer,
+				self_buffer
+			);
 		}
 		else {
-			swap_value(alloc, object_value, self_value);
+			swap_value(
+				alloc,
+				object_value,
+				self_value
+			);
 		}
 	}
 
@@ -763,17 +773,17 @@ private:
 		size_t str_len       =
 			static_cast<size_t>(buffer.count);
 		pointer_t data = buffer.pointer;
-		size_t sum_len = fill_size;
+		size_t sumlen  = fill_size;
 		if constexpr (fill_act == fill_action::center) {
-			sum_len *= 2;
+			sumlen *= 2;
 		}
 		alloc_t alloc = allocator();
 		if (is_large_mode()) {
 			data     = value.pointer;
 			str_len  = value.count;
-			if ((sum_len += str_len) >= value.alloc_size) {
+			if ((sumlen += str_len) >= value.alloc_size) {
 				alloc.deallocate(value.pointer, value.alloc_size);
-				value.alloc_size     = sum_len * 1.5;
+				value.alloc_size     = sumlen * 1.5;
 				data = value.pointer = alloc.allocate(value.alloc_size);
 			}
 		}
@@ -790,8 +800,8 @@ private:
 			);
 		}
 		alloc.deallocate(old, str_len);
-		set_length(sum_len);
-		data[sum_len] = char_t();
+		set_length(sumlen);
+		data[sumlen] = char_t();
 	}
 
 	constexpr void center_string(char_t fill, size_t size = 1) noexcept {

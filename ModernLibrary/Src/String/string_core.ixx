@@ -42,7 +42,7 @@ private:
 
 	enum class mode_status {
 		cache,
-		big
+		storage
 	};
 
 public:
@@ -75,7 +75,7 @@ public:
 		if (self.is_cache_mode()) {
 			return mode_status::cache;
 		}
-		return mode_status::big;
+		return mode_status::storage;
 	}
 
 public:
