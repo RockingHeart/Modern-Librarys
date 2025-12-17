@@ -4,7 +4,10 @@ import string;
 import <windows.h>;
 
 int main() {
-	auto stime = GetTickCount64();
+	dast::cstring str = "Hello...........................";
+	str.center("World");
+	std::cout << str.size();
+	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
 			std::string str = "World";
@@ -24,6 +27,6 @@ int main() {
 	}
 
 	etime = GetTickCount64();
-	std::cout << "Mine: " << (etime - stime) << '\n';
+	std::cout << "Mine: " << (etime - stime) << '\n';*/
 	return 0;
 }

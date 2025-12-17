@@ -759,10 +759,10 @@ private:
 			strutil::strset(data + str_len, fill, fill_size);
 		}
 		if constexpr (fill_act == fill_action::center) {
-			fill_size += str_len;
-			strutil::strset(data + fill_size, fill, fill_size);
+			strutil::strset(data + (fill_size + str_len), fill, fill_size);
 		}
 	}
+
 	template <fill_action fill_act>
 	constexpr void multiple_fill (pointer_t data,
 		                          pointer_t old,
@@ -780,9 +780,35 @@ private:
 			strutil::strcopy(data + fill_size, fill, fill_size);
 		}
 		if constexpr (fill_act == fill_action::center) {
-			fill_size += str_len;
-			strutil::strcopy(data + fill_size, fill, fill_size);
+			strutil::strcopy(data + (fill_size + str_len), fill, fill_size);
 		}
+	}
+
+	constexpr pointer_t align_switch_data (pointer_t&   data,
+		                                   size_t&      strlen,
+		                                   size_t&      sumlen,
+		                                   alloc_t&     alloc,
+		                                   box_value_t& value)
+		noexcept
+	{
+		if (is_large_mode()) {
+			data    = value.pointer;
+			strlen  = value.count;
+			sumlen += strlen;
+			if (sumlen >= value.alloc_size) {
+				alloc.deallocate(value.pointer, value.alloc_size);
+				value.alloc_size = sumlen * 1.5;
+				data = value.pointer = alloc.allocate(value.alloc_size);
+			}
+			value.count = sumlen;
+		}
+		else {
+			strlen = sumlen;
+		}
+		pointer_t old = alloc.allocate(strlen + 1);
+		strutil::strcopy(old, data, strlen);
+		data[sumlen] = char_t();
+		return old;
 	}
 
 	template <fill_action fill_act, class FillType>
@@ -795,7 +821,7 @@ private:
 	{
 		box_buffer_t& buffer = core_t::buffer;
 		box_value_t& value   = core_t::value;
-		size_t str_len       =
+		size_t strlen        =
 			static_cast<size_t>(buffer.count);
 		pointer_t data = buffer.pointer;
 		size_t sumlen  = fill_size;
@@ -803,30 +829,19 @@ private:
 			sumlen *= 2;
 		}
 		alloc_t alloc = allocator();
-		if (is_large_mode()) {
-			data     = value.pointer;
-			str_len  = value.count;
-			if ((sumlen += str_len) >= value.alloc_size) {
-				alloc.deallocate(value.pointer, value.alloc_size);
-				value.alloc_size     = sumlen * 1.5;
-				data = value.pointer = alloc.allocate(value.alloc_size);
-			}
-		}
-		pointer_t old = alloc.allocate(str_len);
-		strutil::strcopy(old, data, str_len);
+		pointer_t old = align_switch_data (
+			data, strlen, sumlen, alloc, value
+		);
 		if constexpr (std::is_same_v<FillType, char_t>) {
 			single_fill<fill_act> (
-				data, old, fill, fill_size, str_len
+				data, old, fill, fill_size, strlen
 			);
 		}
 		else {
 			multiple_fill<fill_act> (
-				data, old, fill, fill_size, str_len
+				data, old, fill, fill_size, strlen
 			);
 		}
-		alloc.deallocate(old, str_len);
-		set_length(sumlen);
-		data[sumlen] = char_t();
 	}
 
 	constexpr void center_string(char_t fill, size_t size = 1) noexcept {
