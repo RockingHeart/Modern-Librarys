@@ -4,6 +4,11 @@ import string_box;
 
 import <type_traits>;
 
+export enum class mode_status {
+	cache,
+	storage
+};
+
 export template <class BasicString, class StringTraits>
 	requires (
 	    requires {
@@ -37,13 +42,6 @@ private:
 protected:
 	using box_t::buffer_size;
 	using box_t::value, box_t::buffer;
-
-private:
-
-	enum class mode_status {
-		cache,
-		storage
-	};
 
 public:
 

@@ -598,17 +598,16 @@ private:
 			object, allocator(),
 			core_t::buffer, core_t::value
 		);
-		/*box_buffer_t& self_buffer   = core_t::buffer;
-		box_value_t& self_value     = core_t::value;
-		if (is_cache_mode()) {
+		/*if (is_cache_mode()) {
 			return exchange_self (
-				object, alloc,
-				self_buffer, self_value
+				object, allocator(),
+				core_t::buffer, core_t::value
 			);
 		}
+
 		return exchange_object (
-			object, alloc,
-			self_buffer, self_value
+			object, allocator(),
+			core_t::buffer, core_t::value
 		);*/
 	}
 
@@ -905,11 +904,14 @@ private:
 	}
 
 	constexpr void expand_prefix_string(const_pointer_t str) noexcept {
-		size_t size = strutil::strlenof(str);
+		auto expand_prefix = is_cache_mode() ? expand_buffer_prefix
+			: expand_heap_prefix;
+		return expand_prefix(str, strutil::strlenof(str));
+		/*size_t size = strutil::strlenof(str);
 		if (is_cache_mode()) {
 			return expand_buffer_prefix(str, size);
 		}
-		return expand_heap_prefix(str, size);
+		return expand_heap_prefix(str, size);*/
 	}
 
 private:
