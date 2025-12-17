@@ -546,44 +546,70 @@ private:
 		self_buffer.cache = true;
 	}
 
-	constexpr void exchange_string(basic_string& object) noexcept {
-		alloc_t& alloc              = allocator();
-		box_buffer_t& self_buffer   = core_t::buffer;
-		box_buffer_t& object_buffer = object.buffer;
-		box_value_t& self_value     = core_t::value;
-		box_value_t& object_value   = object.value;
-		if (is_cache_mode()) {
-			if (object.is_cache_mode()) {
-				swap_buffer (
-					alloc,
-					self_buffer,
-					object_buffer
-				);
-			}
-			else {
-				buffer_swap_value (
-					self_buffer,
-					object_buffer,
-					self_value,
-					object_value
-				);
-			}
-			return;
-		}
+	constexpr void exchange_self (basic_string& object,
+								  alloc_t&      alloc,
+								  box_buffer_t& self_buffer,
+								  box_value_t&  self_value)
+		noexcept
+	{
 		if (object.is_cache_mode()) {
 			swap_buffer (
 				alloc,
-				object_buffer,
+				self_buffer,
+				object.buffer
+			);
+		}
+		else {
+			buffer_swap_value (
+				self_buffer,
+				object.buffer,
+				self_value,
+				object.value
+			);
+		}
+	}
+
+	constexpr void exchange_object (basic_string& object,
+									alloc_t&      alloc,
+									box_buffer_t& self_buffer,
+									box_value_t&  self_value)
+		noexcept
+	{
+		if (object.is_cache_mode()) {
+			swap_buffer (
+				alloc,
+				object.buffer,
 				self_buffer
 			);
 		}
 		else {
-			swap_value(
+			swap_value (
 				alloc,
-				object_value,
+				object.value,
 				self_value
 			);
 		}
+	}
+
+	constexpr void exchange_string(basic_string& object) noexcept {
+		auto execute = is_cache_mode() ? exchange_self
+			: exchange_object;
+		return execute (
+			object, allocator(),
+			core_t::buffer, core_t::value
+		);
+		/*box_buffer_t& self_buffer   = core_t::buffer;
+		box_value_t& self_value     = core_t::value;
+		if (is_cache_mode()) {
+			return exchange_self (
+				object, alloc,
+				self_buffer, self_value
+			);
+		}
+		return exchange_object (
+			object, alloc,
+			self_buffer, self_value
+		);*/
 	}
 
 private:
