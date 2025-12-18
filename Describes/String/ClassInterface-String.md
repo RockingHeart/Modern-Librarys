@@ -228,7 +228,7 @@
 
             ## trimmed
             - 返回值类型：size_t 非静态成员函数名：trimmed 参数列表：(char_t)
-            - basic_string::reverse_iterator trimmed(char_t char_value = ' ')
+            - size_t trimmed(char_t char_value = ' ')
                 - 用于裁剪头尾的char_value
                 ``` C++
                 import string;
@@ -243,7 +243,7 @@
                 ```
                 #### 以上代码第一次输出：2
                 #### 以上代码第二次输出："Hello"
-                该函数强调的返回描述：无
+                该函数强调的返回描述：返回裁剪数目
 
             ## lower
             - 返回值类型：basic_string 非静态成员函数名：lower 参数列表：(void)
