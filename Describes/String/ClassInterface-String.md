@@ -664,15 +664,15 @@
 
                     int main() {
                         dast::cstring str1 = { "Hello", 5 };
-                        std::cout << str.mode_state() << '\n'
+                        std::cout << static_cast<size_t>(str1.mode_state()) << '\n'
 
                         dast::cstring str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
-                        std::cout << str.mode_state() << '\n'
+                        std::cout << static_cast<size_t>(str2.mode_state()) << '\n'
                         return 0;
                     }
                     ```
                     #### 以上代码str1输出： 0（缓存模式）<br>以上代码str2输出：1（大模式）
-                    函数返回值类型描述：mode_status是枚举类型，内部有cache与big两种值，对应缓存模式与大模式。
+                    函数返回值类型描述：mode_status是枚举类型，内部有cache与storage两种值，对应缓存模式与大模式。
 
             ## replace
             - 返回值类型：bool 非静态成员函数名：replace
