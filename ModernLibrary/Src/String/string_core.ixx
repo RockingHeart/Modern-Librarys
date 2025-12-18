@@ -200,6 +200,17 @@ public:
 	}
 
 	template <class SelfType, class... ArgsType>
+	[[nodiscard]] constexpr auto toggle_large_mode(this SelfType&& self, ArgsType&&... args)
+		noexcept requires (
+		    requires {
+		        self.toggle_string_large_mode(std::forward<ArgsType>(args)...);
+	        }
+		)
+	{
+		return self.toggle_string_large_mode(std::forward<ArgsType>(args)...);
+	}
+
+	template <class SelfType, class... ArgsType>
 	[[nodiscard]] constexpr auto replace(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {

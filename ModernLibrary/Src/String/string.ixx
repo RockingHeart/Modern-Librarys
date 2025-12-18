@@ -8,6 +8,8 @@ import utility;
 
 import <xmemory>;
 
+export using ::mode_status;
+
 export namespace dast {
 	template <character_type CharType, traits::value_traits ValueTraits = traits::value_traits::no_residue, template<class, class> class StringCore = string_core>
 	using string = basic_string<traits::string_traits<CharType, ValueTraits, strutil, std::allocator<CharType>>, StringCore>;

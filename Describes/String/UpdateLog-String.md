@@ -1,5 +1,5 @@
 # 此为更新日志，记录每次更新内容，并以版本号为索引
-当前版本号：[1.9.10]
+当前版本号：[1.9.11]
 - String（自删除缺陷起）
     ## 添加
         [1.0.0] 添加拷贝构造函数
@@ -63,6 +63,7 @@
         [1.9.3] 添加非静态成员函数expand_prefix
         [1.9.4] 添加非静态成员函数swapcase
         [1.9.4] 添加非静态运算符重载成员函数const_pointer_t
+        [1.9.11] 添加非静态成员函数toggle_large_mode
 
     ## 删除
         [1.0.0] 将count成员删除
@@ -123,6 +124,7 @@
         [1.9.8] 更正并修改了align（center， left，right）的代码逻辑
         [1.9.9] 修改了trimmed方法的文档
         [1.9.10] 修改了mode_state方法的文档
+        [1.9.11] 将mode_status枚举类型通过“导出其它模块单元类型”（export using ::type）方法将mode_status在string.ixx导出
     
     ## 保留
         [1.1.6] 参数为(size_t, Option)的resize暂不纳入更新列表，因为日后可能会删除它

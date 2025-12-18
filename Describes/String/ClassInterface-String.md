@@ -23,13 +23,13 @@
 | center | [center] |
 | left | [left] |
 | right | [right] |
-| expand_prefix | [expand_prefix] |
+| expand prefix | [expand_prefix] |
 | empty | [empty] |
-| is_blank | [is_blank] |
-| is_digit | [is_digit] |
-| is_lower | [is_lower] |
-| is_upper | [is_upper] |
-| is_enstr | [is_enstr] |
+| is blank | [is_blank] |
+| is digit | [is_digit] |
+| is lower | [is_lower] |
+| is upper | [is_upper] |
+| is enstr | [is_enstr] |
 | max size | [max_size] |
 | mode state | [mode_state] |
 | operator | [operator] |
@@ -39,12 +39,13 @@
 | resize | [resize] |
 | reserve | [reserve] |
 | restore cache mode | [restore_cache_mode] |
+| toggle large mode | [toggle_large_mode] |
 | size | [size] |
 | tick | [tick] |
 | to | [to] |
-| to_lower | [to_lower] |
+| to lower | [to_lower] |
 | swapcase | [swapcase] |
-| to_upper | [to_upper] |
+| to upper | [to_upper] |
 
 - String
 
@@ -851,6 +852,25 @@
                      #### 以上代码输出："AAAAAAAAAAAA"
                     函数返回值描述：恢复成功则返回true，反之回false
 
+            ## toggle_large_mode
+            - 返回值类型：bool 非静态成员函数名：toggle_large_mode
+                - 参数列表：(void)
+                - bool toggle_large_mode(void)
+                    - 用于手动切换至大模式
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str = "Hello";
+                        str.toggle_large_mode();
+                        std::cout << (str.mode_state() == mode_status::storage) << '\n';
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：1
+                    函数返回值描述：若动态字符串对象不处于缓存模式，则该函数返回false，否则为true
+
             ## size
             - 返回值类型：size_t 非静态成员函数名：size 参数列表：(void)
             - size_t size(void)
@@ -1277,6 +1297,7 @@
 [resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#resize
 [reserve]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#reserve
 [restore_cache_mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#restore_cache_mode
+[toggle_large_mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#toggle_large_mode
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#size
 [tick]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#tick
 [to]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#to

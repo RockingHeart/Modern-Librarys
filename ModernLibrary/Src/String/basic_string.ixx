@@ -1102,6 +1102,26 @@ private:
 		);
 	}
 
+	constexpr bool toggle_string_large_mode() noexcept {
+		if (is_large_mode()) {
+			return false;
+		}
+		box_buffer_t& buffer = core_t::buffer;
+		size_t strlen        = buffer.count;
+		alloc_t alloc        = allocator();
+		pointer_t cache      = alloc.allocate(strlen);
+		strutil::strcopy(cache, buffer.pointer, strlen);
+		box_value_t& value = core_t::value;
+		size_t alloc_size  = strlen * 1.5;
+		value.pointer      = alloc.allocate(alloc_size);
+		strutil::strcopy(value.pointer, cache, strlen);
+		value.alloc_size      = alloc_size;
+		value.count           = strlen;
+		value.pointer[strlen] = char_t();
+		alloc.deallocate(cache, strlen);
+		return true;
+	}
+
 	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
 		if (is_cache_mode()) {
 			if (size < core_t::buffer_size) {
