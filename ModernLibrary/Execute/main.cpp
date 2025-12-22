@@ -4,9 +4,9 @@ import string;
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "Hello";
+	dast::cstring str = "HHHHHHHHHHHHHHHHHHHHHHHHHH";
 	str.toggle_large_mode();
-	std::cout << (str.mode_state() == mode_status::storage);
+	std::cout << (str.size());
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
