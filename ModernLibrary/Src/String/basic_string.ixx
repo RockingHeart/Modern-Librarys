@@ -1599,16 +1599,28 @@ public:
 
 public:
 
-	constexpr ~basic_string() noexcept {
-		if (is_large_mode()) {
-			auto& value = core_t::value;
-			auto& alloc = allocator();
-			if constexpr (trait_is_advanced_mode()) {
-				if (value.before) {
-					alloc.deallocate(value.before, value.before_alloc_size);
-				}
-			}
-			alloc.deallocate(value.pointer, value.alloc_size);
+	constexpr void release_before(alloc_t& alloc, box_value_t& value) noexcept {
+		if (!value.before) {
+			return;
 		}
+		alloc.deallocate (
+			value.before,
+			value.before_alloc_size
+		);
+	}
+
+	constexpr void release(alloc_t& alloc, box_value_t& value) noexcept {
+		if constexpr (!trait_is_advanced_mode()) {
+			return;
+		}
+		release_before(alloc, value);
+		alloc.deallocate(value.pointer,value.alloc_size);
+	}
+
+	constexpr ~basic_string() noexcept {
+		if (!is_large_mode()) {
+			return;
+		}
+		release(allocator(), core_t::value);
 	}
 };
