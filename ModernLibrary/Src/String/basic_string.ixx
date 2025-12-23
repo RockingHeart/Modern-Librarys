@@ -195,7 +195,11 @@ private:
 	}
 
 	template <class ValueType>
-	constexpr void heapify_cache(alloc_t& alloc, ValueType& value, size_t size) noexcept {
+	constexpr void heapify_cache (alloc_t&   alloc,
+		                          ValueType& value,
+		                          size_t     size)
+		noexcept
+	{
 		box_buffer_t& buffer = core_t::buffer;
 		size_t buf_size      = static_cast<size_t>(buffer.count);
 		pointer_t cache      = alloc.allocate(size);
@@ -208,7 +212,11 @@ private:
 	}
 
 	template <class ValueType>
-	constexpr void reserve_space(alloc_t& alloc, ValueType& value, size_t size) noexcept {
+	constexpr void reserve_space (alloc_t&   alloc,
+	                              ValueType& value,
+		                          size_t size)
+		noexcept
+	{
 		alloc.deallocate(value.before, value.before_alloc_size);
 		value.before            = value.pointer;
 		value.before_count      = value.count;
@@ -218,7 +226,11 @@ private:
 	}
 
 	template <class ValueType>
-	constexpr void new_space(alloc_t& alloc, ValueType& value, size_t size) noexcept {
+	constexpr void new_space (alloc_t&   alloc,
+		                      ValueType& value,
+		                      size_t     size)
+		noexcept
+	{
 		pointer_t old_ptr = value.pointer;
 		value.pointer     = alloc.allocate(size);
 		strutil::strcopy(value.pointer, old_ptr, value.count);
@@ -434,19 +446,34 @@ private:
 		value.pointer[size] = char_t();
 	}
 
-	constexpr void assign_init(basic_string& object) noexcept {
-		box_buffer_t& self_buffer   = core_t::buffer;
-		box_buffer_t& object_buffer = object.buffer;
-		if (object.is_cache_mode()) {
-			copy_buffer(object_buffer, self_buffer);
+	constexpr void assign_before (alloc_t&     alloc,
+		                          box_value_t& self_value,
+		                          box_value_t& object_value)
+		noexcept
+	{
+		if constexpr (!trait_is_advanced_mode()) {
 			return;
 		}
+		if (!object_value.before) {
+			return;
+		}
+		self_value.before = alloc.allocate (
+			object_value.before_alloc_size + 1
+		);
+		strutil::strcopy (
+			self_value.before,
+			object_value.before,
+			object_value.before_count
+		);
+		self_value.before_count = object_value.before_count;
+		self_value.before[self_value.before_count] = char_t();
+	}
+
+	constexpr void assign_data (box_value_t&  self_value, box_value_t&  object_value) noexcept {
 		alloc_t& alloc            = allocator();
-		box_value_t& self_value   = core_t::value;
-		box_value_t& object_value = object.value;
 		size_t object_size        = object_value.count;
 		size_t object_alloc_size  = object_value.alloc_size;
-		self_value.pointer = alloc.allocate (
+		self_value.pointer        = alloc.allocate (
 			object_alloc_size
 		);
 		strutil::strcopy (
@@ -454,23 +481,18 @@ private:
 			object_value.pointer,
 			object_size
 		);
-		self_value.count      = object_size;
-		self_value.alloc_size = object_alloc_size;
+		self_value.count                     = object_size;
+		self_value.alloc_size                = object_alloc_size;
 		self_value.pointer[self_value.count] = char_t();
-		if constexpr (trait_is_advanced_mode()) {
-			if (object_value.before) {
-				self_value.before = alloc.allocate (
-					object_value.before_alloc_size + 1
-				);
-				strutil::strcopy (
-					self_value.before,
-					object_value.before,
-					object_value.before_count
-				);
-				self_value.before_count = object_value.before_count;
-				self_value.before[self_value.before_count] = char_t();
-			}
+		assign_before(alloc, self_value, object_value);
+	}
+
+	constexpr void assign_init(basic_string& object) noexcept {
+		if (object.is_cache_mode()) {
+			return copy_buffer(object.buffer, core_t::buffer);
 		}
+
+		assign_data(core_t::value, object.value);
 	}
 
 private:
@@ -579,20 +601,19 @@ private:
 		noexcept
 	{
 		if (object.is_cache_mode()) {
-			swap_buffer (
+			return swap_buffer (
 				alloc,
 				self_buffer,
 				object.buffer
 			);
 		}
-		else {
-			buffer_swap_value (
-				self_buffer,
-				object.buffer,
-				self_value,
-				object.value
-			);
-		}
+		
+		buffer_swap_value (
+			self_buffer,
+			object.buffer,
+			self_value,
+			object.value
+		);
 	}
 
 	constexpr void exchange_object (basic_string& object,
@@ -602,39 +623,28 @@ private:
 		noexcept
 	{
 		if (object.is_cache_mode()) {
-			swap_buffer (
+			return swap_buffer (
 				alloc,
 				object.buffer,
 				self_buffer
 			);
 		}
-		else {
-			swap_value (
-				alloc,
-				object.value,
-				self_value
-			);
-		}
+		
+		swap_value (
+			alloc,
+			object.value,
+			self_value
+		);
 	}
 
 	constexpr void exchange_string(basic_string& object) noexcept {
 		auto execute = is_cache_mode() ? exchange_self
 			: exchange_object;
+
 		return execute (
 			object, allocator(),
 			core_t::buffer, core_t::value
 		);
-		/*if (is_cache_mode()) {
-			return exchange_self (
-				object, allocator(),
-				core_t::buffer, core_t::value
-			);
-		}
-
-		return exchange_object (
-			object, allocator(),
-			core_t::buffer, core_t::value
-		);*/
 	}
 
 private:
@@ -730,7 +740,7 @@ private:
 	}
 
 	[[nodiscard]]
-	constexpr bool in_range(size_t string_begin, size_t end) const noexcept {
+	constexpr bool inrange(size_t string_begin, size_t end) const noexcept {
 		if (string_begin > end) {
 			size_t old = string_begin;
 			string_begin = end;
@@ -947,12 +957,8 @@ private:
 	constexpr void expand_prefix_string(const_pointer_t str) noexcept {
 		auto expand_prefix = is_cache_mode() ? expand_buffer_prefix
 			: expand_heap_prefix;
+
 		return expand_prefix(str, strutil::strlenof(str));
-		/*size_t size = strutil::strlenof(str);
-		if (is_cache_mode()) {
-			return expand_buffer_prefix(str, size);
-		}
-		return expand_heap_prefix(str, size);*/
 	}
 
 private:
