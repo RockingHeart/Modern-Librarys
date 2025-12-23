@@ -469,7 +469,7 @@ private:
 		self_value.before[self_value.before_count] = char_t();
 	}
 
-	constexpr void assign_data (box_value_t&  self_value, box_value_t&  object_value) noexcept {
+	constexpr void assign_data(box_value_t&  self_value, box_value_t&  object_value) noexcept {
 		alloc_t& alloc            = allocator();
 		size_t object_size        = object_value.count;
 		size_t object_alloc_size  = object_value.alloc_size;
@@ -1609,6 +1609,7 @@ public:
 		if (!value.before) {
 			return;
 		}
+
 		alloc.deallocate (
 			value.before,
 			value.before_alloc_size
@@ -1616,17 +1617,17 @@ public:
 	}
 
 	constexpr void release(alloc_t& alloc, box_value_t& value) noexcept {
-		if constexpr (!trait_is_advanced_mode()) {
-			return;
+		if constexpr (trait_is_advanced_mode()) {
+			release_before(alloc, value);
+			alloc.deallocate(value.pointer, value.alloc_size);
 		}
-		release_before(alloc, value);
-		alloc.deallocate(value.pointer,value.alloc_size);
 	}
 
 	constexpr ~basic_string() noexcept {
 		if (!is_large_mode()) {
 			return;
 		}
+
 		release(allocator(), core_t::value);
 	}
 };
