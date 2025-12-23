@@ -1603,14 +1603,14 @@ public:
 		return compare(std::forward<ArgsType>(args)...);
 	}
 
-public:
+private:
 
 	constexpr void release_before(alloc_t& alloc, box_value_t& value) noexcept {
 		if (!value.before) {
 			return;
 		}
 
-		alloc.deallocate (
+		alloc.deallocate(
 			value.before,
 			value.before_alloc_size
 		);
@@ -1622,6 +1622,8 @@ public:
 			alloc.deallocate(value.pointer, value.alloc_size);
 		}
 	}
+
+public:
 
 	constexpr ~basic_string() noexcept {
 		if (!is_large_mode()) {
