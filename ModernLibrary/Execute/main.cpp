@@ -1,12 +1,16 @@
 ﻿import std;
 import string;
 
+import string_traits;
+import string_core;
+import basic_string;
+
+import utility;
+
+
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "HHHHHHHHHHHHHHHHHHHHHHHHHH";
-	str.toggle_large_mode();
-	std::cout << (str.size());
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {

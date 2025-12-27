@@ -9,6 +9,56 @@ import <bit>;
 import <cstddef>;
 import <initializer_list>;
 
+template <character_type CharacterType>
+struct compile {
+	using char_t          =       CharacterType;
+	using pointer_t       =       CharacterType*;
+	using const_pointer_t = const CharacterType*;
+
+	constexpr static bool strcmp (const char_t* left,
+		                          const char_t* src,
+		                                size_t size)
+		noexcept
+	{
+		if constexpr (std::is_same_v<char_t, char>) {
+			return !::__builtin_memcmp(left, src, size);
+		}
+		return !::__builtin_wmemcmp(left, src, size);
+	}
+
+	constexpr static size_t strlen(const char_t* str) noexcept {
+		if constexpr (std::is_same_v<char_t, char>) {
+			return ::__builtin_strlen(str);
+		}
+		return ::__builtin_wcslen(str);
+	}
+
+	constexpr static pointer_t strset(pointer_t dest,
+		                           char_t    value,
+		                           size_t    size)
+		noexcept
+	{
+		for (size_t i = 0; i < size; ++i) {
+			dest[i] = value;
+		}
+		return dest;
+	}
+
+	template <size_t strlen, size_t tarlen>
+	constexpr static match_t<size_t> strmatch(const char_t* str, const char_t* target) noexcept {
+		for (size_t i = 0; i < strlen; ++i, ++str) {
+			if (i + tarlen > strlen) {
+				return match::failed;
+			}
+			if (strcmp(str, target, tarlen)) {
+				return i;
+			}
+		}
+		return match::failed;
+	}
+	
+};
+
 export template <character_type CharType, class SizeType = std::size_t>
 struct strutil {
 public:
@@ -17,37 +67,6 @@ public:
 	using pointer_t       =       CharType*;
 	using const_pointer_t = const CharType*;
 	using size_t          =       SizeType;
-
-private:
-
-	template <character_type CharacterType = char_t>
-	struct compile;
-
-	template <>
-	struct compile<char> {
-		constexpr static bool strcmp (
-			const char* left, const char* src, size_t size
-		) noexcept {
-			return !::__builtin_memcmp(left, src, size);
-		}
-
-		constexpr static size_t strlen(const char* str) noexcept {
-			return ::__builtin_strlen(str);
-		}
-	};
-
-	template <>
-	struct compile<wchar_t> {
-		constexpr static bool strcmp(
-			const wchar_t* left, const wchar_t* src, size_t size
-		) noexcept {
-			return !::__builtin_wmemcmp(left, src, size);
-		}
-
-		constexpr static size_t strlen(const wchar_t* str) noexcept {
-			return ::__builtin_wcslen(str);
-		}
-	};
 
 private:
 
@@ -78,7 +97,8 @@ public:
 
 	template <character_type CharacterType = char_t>
 	constexpr static size_t strlenof(const CharacterType* str) noexcept {
-		if consteval {
+		if consteval
+		{
 			return compile<CharacterType>::strlen(str);
 		}
 		return length<CharacterType>(str);
@@ -101,7 +121,8 @@ public:
 		                                     size_t         size)
 		noexcept
 	{
-		if consteval {
+		if consteval
+		{
 			for (size_t i = 0; i != size; ++i) {
 				dest[i] = src[i];
 			}
@@ -124,19 +145,17 @@ public:
 		                                    size_t         size)
 		noexcept
 	{
-		if consteval {
-			for (size_t i = 0; i < size; ++i) {
-				dest[i] = value;
-			}
-			return dest;
+		if consteval
+		{
+			return compile<CharacterType>::strset (
+				dest, value, size
+			);
 		}
 		size_t i = 0;
 		if (size >= 5) {
-			for (; i < 5; i += 5) {
-				dest[i]      = value; dest[i + 1]  = value;
-				dest[i + 2]  = value; dest[i + 3]  = value;
-				dest[i + 4]  = value;
-			}
+			dest[i]     = value; dest[i + 1] = value;
+			dest[i + 2] = value; dest[i + 3] = value;
+			dest[i + 4] = value;
 		}
 		return set<CharacterType>(dest + i, value, size - i);
 	}
@@ -147,8 +166,11 @@ public:
 		                               size_t         size)
 		noexcept
 	{
-		if consteval {
-			return compile<CharacterType>::strcmp(left, src, size);
+		if consteval
+		{
+			return compile<CharacterType>::strcmp (
+				left, src, size
+			);
 		}
 		return compare<CharacterType>(left, src, size);
 	}
@@ -168,25 +190,16 @@ public:
 	}
 
 	template <character_type CharacterType = char_t>
-	constexpr static match_t<size_t> strmatch (const CharacterType* str, const CharacterType* target) noexcept
+	constexpr static match_t<size_t> strmatch(const CharacterType* str, const CharacterType* target) noexcept
 	{
 		size_t strlen = strlenof(str);
 		size_t tarlen = strlenof(target);
-		if consteval {
-			for (size_t i = 0; i < strlen; ++i, ++str) {
-				if (i + tarlen > strlen) {
-					return match::failed;
-				}
-				if (strcmp<CharacterType>(str, target, tarlen)) {
-					return i;
-				}
-			}
-			return match::failed;
+		if consteval
+		{
+			return compile<CharacterType>::strmatch<strlen, tarlen>(str, target);
 		}
-		auto strcompare = native_compare;
-		if (strlen > 255) {
-			strcompare = long_compar;
-		}
+		auto strcompare = strlen < 256 ? native_compare
+			: long_compar;
 		for (size_t i = 0; i < strlen;) {
 			if (i + tarlen > strlen) {
 				return match::failed;
@@ -285,17 +298,15 @@ private:
 		}
 		size_t cnt = 0;
 		for (size_t i = 0; i < size; ++i) {
-			if (str[i] == src[i]) {
-				++cnt;
-			}
-			else {
+			if (str[i] != src[i]) {
 				break;
 			}
+			++cnt;
 		}
-		if (cnt == size) {
-			return 0;
+		if (cnt != size) {
+			return 1;
 		}
-		return 1;
+		return 0;
 	}
 
 	constexpr static size_t long_compar(const_pointer_t str,
