@@ -778,6 +778,48 @@ private:
 
 private:
 
+	constexpr void fill_left(pointer_t data,
+							 pointer_t old,
+							 size_t    fill_size,
+							 size_t    str_len)
+		noexcept
+	{
+		if (old == nullptr) {
+			strutil::strmove (
+				data + fill_size, data, str_len
+			);
+			return;
+		}
+		strutil::strcopy(data + fill_size, old, str_len);
+	}
+
+	constexpr void fill_center(pointer_t data,
+							   pointer_t old,
+							   size_t    fill_size,
+							   size_t    str_len)
+		noexcept
+	{
+		if (old == nullptr) {
+			strutil::strmove (
+				data + fill_size, data, str_len
+			);
+			return;
+		}
+		strutil::strcopy(data + fill_size, old, str_len);
+	}
+
+	constexpr void fill_right(pointer_t data,
+							  pointer_t old,
+							  size_t    fill_size,
+							  size_t    str_len)
+		noexcept
+	{
+		if (old == nullptr) {
+			return;
+		}
+		strutil::strcopy(data, old, str_len);
+	}
+
 	template <fill_action fill_act>
 	constexpr void single_fill (pointer_t data,
 		                        pointer_t old,
@@ -794,8 +836,8 @@ private:
 												   size_t    str_len)
 		noexcept
 	{
+		fill_left(data, old, fill_size, str_len);
 		strutil::strset(data, fill, fill_size);
-		strutil::strcopy(data + fill_size, old, str_len);
 	}
 
 	template <>
@@ -806,7 +848,7 @@ private:
 													 size_t    str_len)
 		noexcept
 	{
-		strutil::strcopy(data + fill_size, old, str_len);
+		fill_center(data, old, fill_size, str_len);
 		strutil::strset(data, fill, fill_size);
 		strutil::strset(data + (fill_size + str_len), fill, fill_size);
 	}
@@ -819,7 +861,7 @@ private:
 													size_t    str_len)
 		noexcept
 	{
-		strutil::strcopy(data, old, str_len);
+		fill_right(data, old, fill_size, str_len);
 		strutil::strset(data + str_len, fill, fill_size);
 	}
 
@@ -839,7 +881,7 @@ private:
 													 size_t str_len)
 		noexcept
 	{
-		strutil::strcopy(data + fill_size, old, str_len);
+		fill_left(data, old, fill_size, str_len);
 		strutil::strcopy(data, fill, fill_size);
 	}
 
@@ -851,8 +893,8 @@ private:
 													   size_t str_len)
 		noexcept
 	{
+		fill_center(data, old, fill_size, str_len);
 		strutil::strcopy(data, fill, fill_size);
-		strutil::strcopy(data + fill_size, old, str_len);
 		strutil::strcopy(data + (fill_size + str_len), fill, fill_size);
 	}
 
@@ -864,8 +906,8 @@ private:
 													  size_t str_len)
 		noexcept
 	{
-		strutil::strcopy(data, old, str_len);
-		strutil::strcopy(data + fill_size, fill, fill_size);
+		fill_right(data, old, fill_size, str_len);
+		strutil::strcopy(data + str_len, fill, fill_size);
 	}
 
 	constexpr pointer_t align_switch_data (pointer_t&   data,
@@ -882,19 +924,20 @@ private:
 			value.count = sumlen;
 		}
 		sumlen += strlen;
-		pointer_t old = alloc.allocate(strlen);
-		strutil::strcopy(old, data, strlen);
 		size_t max_size = large_mode ? value.alloc_size
 			: core_t::buffer_size;
 		if (sumlen >= max_size) {
+			pointer_t old = alloc.allocate(strlen);
+			strutil::strcopy(old, data, strlen);
 			if (large_mode) {
 				alloc.deallocate(value.pointer, value.alloc_size);
 			}
-			value.alloc_size = sumlen * 1.5;
+			value.alloc_size     = sumlen * 1.5;
 			data = value.pointer = alloc.allocate(value.alloc_size);
-			data[sumlen] = char_t();
+			data[sumlen]         = char_t();
+			return old;
 		}
-		return old;
+		return nullptr;
 	}
 
 	template <fill_action fill_act, class FillType>
@@ -914,22 +957,24 @@ private:
 		if constexpr (fill_act == fill_action::center) {
 			sumlen *= 2;
 		}
-		alloc_t alloc = allocator();
-		pointer_t old = align_switch_data (
+		alloc_t alloc     = allocator();
+		pointer_t address = align_switch_data (
 			data, strlen, sumlen, alloc, value
 		);
 		if constexpr (std::is_same_v<FillType, char_t>) {
 			single_fill<fill_act> (
-				data, old, fill, fill_size, strlen
+				data, address, fill, fill_size, strlen
 			);
 		}
 		else {
 			multiple_fill<fill_act> (
-				data, old, fill, fill_size, strlen
+				data, address, fill, fill_size, strlen
 			);
 		}
+		if (address != nullptr) {
+			alloc.deallocate(address, strlen);
+		}
 		set_length(sumlen);
-		alloc.deallocate(old, strlen);
 	}
 
 	constexpr void center_string(char_t fill, size_t size = 1) noexcept {
@@ -1453,24 +1498,10 @@ private:
 private:
 
 	constexpr basic_string lower_string() noexcept {
-		/*constexpr static char_t diff = 'a' - 'A';
-		return { *this, [](reference_t value) {
-			if (value >= 'A' && value <= 'Z') {
-				value += diff;
-			}
-		} };*/
 		return { *this, char_action::lower };
 	}
 
 	constexpr basic_string upper_string() noexcept {
-		/*constexpr static char_t diff = 'a' - 'A';
-		return { *this,
-			[](reference_t value) constexpr noexcept {
-			    if (value >= 'a' && value <= 'z') {
-					value -= diff;
-				}
-		    }
-		};*/
 		return { *this, char_action::upper };
 	}
 
@@ -1670,7 +1701,7 @@ private:
 			return;
 		}
 
-		alloc.deallocate(
+		alloc.deallocate (
 			value.before,
 			value.before_alloc_size
 		);
