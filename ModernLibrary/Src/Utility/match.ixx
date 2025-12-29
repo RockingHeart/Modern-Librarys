@@ -51,7 +51,8 @@ protected:
 };
 
 export template <typename ResultType>
-class match_t : protected match_box_t<ResultType> {
+class match_t :
+    protected match_box_t<ResultType> {
 private:
 	using box_t = match_box_t<ResultType>;
 

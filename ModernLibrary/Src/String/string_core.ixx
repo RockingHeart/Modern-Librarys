@@ -16,8 +16,8 @@ export template <class BasicString, class StringTraits>
         }
 	)
 class string_core :
-	private        StringTraits::alloc_t,
-	protected      string_box<StringTraits> {
+	private       StringTraits::alloc_t,
+	protected     string_box<StringTraits> {
 public:
 	using string_traits = StringTraits;
 
@@ -111,11 +111,11 @@ public:
 	constexpr auto cut(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
-		        self.string_cut(std::forward<ArgsType>(args)...);
+		        self.strcut(std::forward<ArgsType>(args)...);
 	        }
 		)
 	{
-		return self.string_cut(std::forward<ArgsType>(args)...);
+		return self.strcut(std::forward<ArgsType>(args)...);
 	}
 
 	template <class SelfType, class... ArgsType>

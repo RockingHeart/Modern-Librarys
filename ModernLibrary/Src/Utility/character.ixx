@@ -23,14 +23,16 @@ struct compile {
 		if constexpr (std::is_same_v<char_t, char>) {
 			return !::__builtin_memcmp(left, src, size);
 		}
-		return !::__builtin_wmemcmp(left, src, size);
+		else 
+			return !::__builtin_wmemcmp(left, src, size);
 	}
 
 	constexpr static size_t strlen(const char_t* str) noexcept {
 		if constexpr (std::is_same_v<char_t, char>) {
 			return ::__builtin_strlen(str);
 		}
-		return ::__builtin_wcslen(str);
+		else
+			return ::__builtin_wcslen(str);
 	}
 
 	constexpr static pointer_t strset(pointer_t dest,

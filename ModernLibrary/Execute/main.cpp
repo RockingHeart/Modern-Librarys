@@ -1,16 +1,14 @@
 ﻿import std;
 import string;
-
-import string_traits;
-import string_core;
-import basic_string;
-
 import utility;
 
 
 import <windows.h>;
 
 int main() {
+	dast::cstring str = "Hello";
+	str.center("----------------------");
+	std::cout << str;
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {

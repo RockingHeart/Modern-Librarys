@@ -259,7 +259,7 @@ private:
 		core_t::buffer.count = size;
 	}
 
-	constexpr size_t sub_length(size_t size) noexcept {
+	constexpr size_t sublen(size_t size) noexcept {
 		if (is_large_mode()) {
 			core_t::value.count -= size;
 			return core_t::value.count;
@@ -784,19 +784,43 @@ private:
 		                        char_t    fill,
 		                        size_t    fill_size,
 		                        size_t    str_len)
+		noexcept;
+
+	template <>
+	constexpr void single_fill<fill_action::left> (pointer_t data,
+												   pointer_t old,
+												   char_t    fill,
+												   size_t    fill_size,
+												   size_t    str_len)
 		noexcept
 	{
-		if constexpr (fill_act == fill_action::left || fill_act == fill_action::center) {
-			strutil::strset(data, fill, fill_size);
-			strutil::strcopy(data + fill_size, old, str_len);
-		}
-		else if constexpr (fill_act == fill_action::right) {
-			strutil::strcopy(data, old, str_len);
-			strutil::strset(data + str_len, fill, fill_size);
-		}
-		if constexpr (fill_act == fill_action::center) {
-			strutil::strset(data + (fill_size + str_len), fill, fill_size);
-		}
+		strutil::strset(data, fill, fill_size);
+		strutil::strcopy(data + fill_size, old, str_len);
+	}
+
+	template <>
+	constexpr void single_fill<fill_action::center> (pointer_t data,
+													 pointer_t old,
+													 char_t    fill,
+													 size_t    fill_size,
+													 size_t    str_len)
+		noexcept
+	{
+		strutil::strcopy(data + fill_size, old, str_len);
+		strutil::strset(data, fill, fill_size);
+		strutil::strset(data + (fill_size + str_len), fill, fill_size);
+	}
+
+	template <>
+	constexpr void single_fill<fill_action::right> (pointer_t data,
+													pointer_t old,
+													char_t    fill,
+													size_t    fill_size,
+													size_t    str_len)
+		noexcept
+	{
+		strutil::strcopy(data, old, str_len);
+		strutil::strset(data + str_len, fill, fill_size);
 	}
 
 	template <fill_action fill_act>
@@ -805,19 +829,43 @@ private:
 		                          const_pointer_t fill,
 		                          size_t fill_size,
 		                          size_t str_len)
+		noexcept;
+
+	template <>
+	constexpr void multiple_fill<fill_action::left> (pointer_t data,
+													 pointer_t old,
+													 const_pointer_t fill,
+													 size_t fill_size,
+													 size_t str_len)
 		noexcept
 	{
-		if constexpr (fill_act == fill_action::left || fill_act == fill_action::center) {
-			strutil::strcopy(data + fill_size, old, str_len);
-			strutil::strcopy(data, fill, fill_size);
-		}
-		else if constexpr (fill_act == fill_action::right) {
-			strutil::strcopy(data, old, str_len);
-			strutil::strcopy(data + fill_size, fill, fill_size);
-		}
-		if constexpr (fill_act == fill_action::center) {
-			strutil::strcopy(data + (fill_size + str_len), fill, fill_size);
-		}
+		strutil::strcopy(data + fill_size, old, str_len);
+		strutil::strcopy(data, fill, fill_size);
+	}
+
+	template <>
+	constexpr void multiple_fill<fill_action::center> (pointer_t data,
+													   pointer_t old,
+													   const_pointer_t fill,
+													   size_t fill_size,
+													   size_t str_len)
+		noexcept
+	{
+		strutil::strcopy(data, fill, fill_size);
+		strutil::strcopy(data + fill_size, old, str_len);
+		strutil::strcopy(data + (fill_size + str_len), fill, fill_size);
+	}
+
+	template <>
+	constexpr void multiple_fill<fill_action::right> (pointer_t data,
+													  pointer_t old,
+													  const_pointer_t fill,
+													  size_t fill_size,
+													  size_t str_len)
+		noexcept
+	{
+		strutil::strcopy(data, old, str_len);
+		strutil::strcopy(data + fill_size, fill, fill_size);
 	}
 
 	constexpr pointer_t align_switch_data (pointer_t&   data,
@@ -827,23 +875,25 @@ private:
 		                                   box_value_t& value)
 		noexcept
 	{
-		if (is_large_mode()) {
+		bool large_mode = is_large_mode();
+		if (large_mode) {
 			data    = value.pointer;
 			strlen  = value.count;
-			sumlen += strlen;
-			if (sumlen >= value.alloc_size) {
-				alloc.deallocate(value.pointer, value.alloc_size);
-				value.alloc_size = sumlen * 1.5;
-				data = value.pointer = alloc.allocate(value.alloc_size);
-			}
 			value.count = sumlen;
 		}
-		else {
-			strlen = sumlen;
-		}
-		pointer_t old = alloc.allocate(strlen + 1);
+		sumlen += strlen;
+		pointer_t old = alloc.allocate(strlen);
 		strutil::strcopy(old, data, strlen);
-		data[sumlen] = char_t();
+		size_t max_size = large_mode ? value.alloc_size
+			: core_t::buffer_size;
+		if (sumlen >= max_size) {
+			if (large_mode) {
+				alloc.deallocate(value.pointer, value.alloc_size);
+			}
+			value.alloc_size = sumlen * 1.5;
+			data = value.pointer = alloc.allocate(value.alloc_size);
+			data[sumlen] = char_t();
+		}
 		return old;
 	}
 
@@ -878,6 +928,8 @@ private:
 				data, old, fill, fill_size, strlen
 			);
 		}
+		set_length(sumlen);
+		alloc.deallocate(old, strlen);
 	}
 
 	constexpr void center_string(char_t fill, size_t size = 1) noexcept {
@@ -1446,7 +1498,7 @@ private:
 
 private:
 
-	constexpr size_t string_cut(char_t char_value) noexcept {
+	constexpr size_t strcut(char_t char_value) noexcept {
 		pointer_t data = pointer();
 		size_t strlen  = string_length();
 		if (!strlen) {
@@ -1468,9 +1520,9 @@ private:
 		return count;
 	}
 
-	constexpr auto string_cut_info (pointer_t data,
-		                            size_t    strlen,
-		                            char_t char_value)
+	constexpr auto strcut_info (pointer_t data,
+		                        size_t    strlen,
+		                        char_t    char_value)
 	    const noexcept
 	{
 		struct cut_info_t {
@@ -1483,12 +1535,15 @@ private:
 			}
 			++result.count;
 		}
-		for (size_t i = strlen - 1; i > 0; --i) {
-			if (data[i] != char_value) {
-				result.end = i;
-				break;
+		if (result.count != strlen) {
+			size_t i = strlen - 1;
+			for (; i > 0; --i) {
+				if (data[i] != char_value) {
+					result.end = i;
+					break;
+				}
+				++result.count;
 			}
-			++result.count;
 		}
 		return result;
 	}
@@ -1499,10 +1554,15 @@ private:
 			return 0;
 		}
 		pointer_t data = pointer();
-		auto [count, string_begin, end] = string_cut_info(data, strlen, char_value);
-		size_t next = strlen - count;
-		strutil::strmove(data, data + string_begin, next);
-		data[sub_length(count)] = char_t();
+		auto [count, string_begin, end] = strcut_info (
+			data, strlen, char_value
+		);
+		data[sublen(count)] = char_t();
+		if (size_t next = strlen - count; next) {
+			strutil::strmove (
+				data, data + string_begin, next
+			);
+		}
 		return count;
 	}
 
