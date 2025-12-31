@@ -6,9 +6,9 @@ import utility;
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "Hello";
-	str.center("------");
-	std::cout << str.size();
+	dast::cstring str = "Hello........................";
+	str += "World";
+	std::cout << str;
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {

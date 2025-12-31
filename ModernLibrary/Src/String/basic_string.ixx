@@ -550,10 +550,10 @@ private:
 
 private:
 
-	constexpr void move_before(box_value_t& self, box_value_t& object) noexcept {
+	constexpr void move_before(alloc_t& alloc, box_value_t& self, box_value_t& object) noexcept {
 		if constexpr (trait_is_advanced_mode()) {
 			if (object.before) {
-				object.deallocate (
+				alloc.deallocate (
 					object.before,
 					object.before_alloc_size
 				);
@@ -580,7 +580,9 @@ private:
 		object_value.count      = self.count;
 		object_value.alloc_size = self.alloc_size;
 		self.pointer            = nullptr;
-		move_before(self, object_value);
+		move_before (
+			object_alloc, self, object_value
+		);
 	}
 
 	constexpr void move_string(basic_string& object) noexcept {
@@ -608,7 +610,7 @@ private:
 			);
 		}
 		
-		buffer_swap_value (
+		return buffer_swap_value (
 			self_buffer,
 			object.buffer,
 			self_value,
@@ -630,7 +632,7 @@ private:
 			);
 		}
 		
-		swap_value (
+		return swap_value (
 			alloc,
 			object.value,
 			self_value
@@ -638,10 +640,14 @@ private:
 	}
 
 	constexpr void exchange_string(basic_string& object) noexcept {
-		auto execute = is_cache_mode() ? exchange_self
-			: exchange_object;
+		if (is_cache_mode()) {
+			return exchange_self (
+				object, allocator(),
+				core_t::buffer, core_t::value
+			);;
+		}
 
-		return execute (
+		return exchange_object (
 			object, allocator(),
 			core_t::buffer, core_t::value
 		);
@@ -778,7 +784,7 @@ private:
 
 private:
 
-	constexpr void fill_left(pointer_t data,
+	constexpr void align_left(pointer_t data,
 							 pointer_t old,
 							 size_t    fill_size,
 							 size_t    str_len)
@@ -793,7 +799,7 @@ private:
 		strutil::strcopy(data + fill_size, old, str_len);
 	}
 
-	constexpr void fill_center(pointer_t data,
+	constexpr void align_center(pointer_t data,
 							   pointer_t old,
 							   size_t    fill_size,
 							   size_t    str_len)
@@ -808,9 +814,8 @@ private:
 		strutil::strcopy(data + fill_size, old, str_len);
 	}
 
-	constexpr void fill_right(pointer_t data,
+	constexpr void align_right(pointer_t data,
 							  pointer_t old,
-							  size_t    fill_size,
 							  size_t    str_len)
 		noexcept
 	{
@@ -836,7 +841,7 @@ private:
 												   size_t    str_len)
 		noexcept
 	{
-		fill_left(data, old, fill_size, str_len);
+		align_left(data, old, fill_size, str_len);
 		strutil::strset(data, fill, fill_size);
 	}
 
@@ -848,7 +853,7 @@ private:
 													 size_t    str_len)
 		noexcept
 	{
-		fill_center(data, old, fill_size, str_len);
+		align_center(data, old, fill_size, str_len);
 		strutil::strset(data, fill, fill_size);
 		strutil::strset(data + (fill_size + str_len), fill, fill_size);
 	}
@@ -861,7 +866,7 @@ private:
 													size_t    str_len)
 		noexcept
 	{
-		fill_right(data, old, fill_size, str_len);
+		align_right(data, old, fill_size, str_len);
 		strutil::strset(data + str_len, fill, fill_size);
 	}
 
@@ -874,39 +879,39 @@ private:
 		noexcept;
 
 	template <>
-	constexpr void multiple_fill<fill_action::left> (pointer_t data,
-													 pointer_t old,
+	constexpr void multiple_fill<fill_action::left> (pointer_t		 data,
+													 pointer_t		 old,
 													 const_pointer_t fill,
-													 size_t fill_size,
-													 size_t str_len)
+													 size_t			 fill_size,
+													 size_t			 str_len)
 		noexcept
 	{
-		fill_left(data, old, fill_size, str_len);
+		align_left(data, old, fill_size, str_len);
 		strutil::strcopy(data, fill, fill_size);
 	}
 
 	template <>
-	constexpr void multiple_fill<fill_action::center> (pointer_t data,
-													   pointer_t old,
+	constexpr void multiple_fill<fill_action::center> (pointer_t	   data,
+													   pointer_t	   old,
 													   const_pointer_t fill,
-													   size_t fill_size,
-													   size_t str_len)
+													   size_t		   fill_size,
+													   size_t		   str_len)
 		noexcept
 	{
-		fill_center(data, old, fill_size, str_len);
+		align_center(data, old, fill_size, str_len);
 		strutil::strcopy(data, fill, fill_size);
 		strutil::strcopy(data + (fill_size + str_len), fill, fill_size);
 	}
 
 	template <>
-	constexpr void multiple_fill<fill_action::right> (pointer_t data,
-													  pointer_t old,
+	constexpr void multiple_fill<fill_action::right> (pointer_t		  data,
+													  pointer_t		  old,
 													  const_pointer_t fill,
-													  size_t fill_size,
-													  size_t str_len)
+													  size_t		  fill_size,
+													  size_t		  str_len)
 		noexcept
 	{
-		fill_right(data, old, fill_size, str_len);
+		align_right(data, old, fill_size, str_len);
 		strutil::strcopy(data + str_len, fill, fill_size);
 	}
 
@@ -1444,40 +1449,60 @@ private:
 		}
 	}
 
+	constexpr void append_value (box_value_t&    value,
+								 const_pointer_t pointer,
+		                         size_t&         heap_count,
+								 size_t          offset,
+								 size_t          size,
+								 size_t          next_size)
+		noexcept
+	{
+		strutil::strcopy (
+			value.pointer + offset,
+			pointer, size
+		);
+		heap_count                = next_size;
+		value.pointer[heap_count] = char_t();
+	}
+
+	constexpr void append_buffer(const_pointer_t pointer, size_t size) noexcept {
+		box_buffer_t& buffer = core_t::buffer;
+		size_t buf_size      =
+			static_cast<size_t>(buffer.count);
+		size_t next_size = buf_size + size;
+		if (next_size < core_t::buffer_size) {
+			return copy_buffer (
+				buffer, buf_size, pointer, size
+			);
+		}
+		respace<true>(next_size * 1.2);
+		box_value_t& value = core_t::value;
+		size_t& heap_count = value.count;
+		return append_value (
+			value, pointer, heap_count,
+			buf_size, size, next_size
+		);
+	}
+
+	constexpr void append_storage(const_pointer_t pointer, size_t size) noexcept {
+		box_value_t& value = core_t::value;
+		size_t& heap_count = value.count;
+		size_t next_size   = heap_count + size;
+		if (next_size >= value.alloc_size) {
+			respace<false>(next_size * 1.2);
+		}
+		return append_value (
+			value, pointer,
+			heap_count, heap_count,
+			size, heap_count + size
+		);
+	}
+
 	constexpr void append_impl(const_pointer_t pointer, size_t size) noexcept {
 		if (is_cache_mode()) {
-			box_buffer_t& buffer = core_t::buffer;
-			size_t buf_size      =
-				static_cast<size_t>(buffer.count);
-			size_t next_size     = buf_size + size;
-			if (next_size < core_t::buffer_size) {
-				copy_buffer(buffer, buf_size, pointer, size);
-				return;
-			}
-			respace<true>(next_size * 1.2);
-			box_value_t& value = core_t::value;
-			strutil::strcopy(
-				value.pointer + buf_size,
-				pointer, size
-			);
-			size_t& heap_count = value.count;
-			heap_count         = next_size;
-			value.pointer[heap_count] = char_t();
+			return append_buffer(pointer, size);
 		}
-		else {
-			box_value_t& value = core_t::value;
-			size_t& heap_count = value.count;
-			size_t next_size   = heap_count + size;
-			if (next_size >= value.alloc_size) {
-				respace<false>(next_size * 1.2);
-			}
-			strutil::strcopy(
-				value.pointer + heap_count,
-				pointer, size
-			);
-			heap_count               += size;
-			value.pointer[heap_count] = char_t();
-		}
+		return append_storage(pointer, size);
 	}
 
 	constexpr basic_string& append(char_t char_value) noexcept {
