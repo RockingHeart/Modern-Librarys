@@ -30,6 +30,7 @@
 | is lower | [is_lower] |
 | is upper | [is_upper] |
 | is enstr | [is_enstr] |
+| is ascii | [is_ascii] |
 | max size | [max_size] |
 | mode state | [mode_state] |
 | operator | [operator] |
@@ -548,7 +549,7 @@
             - 返回值类型：bool 非静态成员函数名：is_blank
                 - 参数列表：(void)
                 - bool is_blank(void)
-                    - 用于检测动态字符串是否为空格字符
+                    - 用于检测动态字符串中各元素是否为空格字符
                     ``` C++
                     import string;
                     import std;
@@ -566,7 +567,7 @@
             - 返回值类型：bool 非静态成员函数名：is_digit
                 - 参数列表：(void)
                 - bool is_digit(void)
-                    - 用于检测动态字符串是否为数字
+                    - 用于检测动态字符串中各元素是否为数字
                     ``` C++
                     import string;
                     import std;
@@ -584,7 +585,7 @@
             - 返回值类型：bool 非静态成员函数名：is_lower
                 - 参数列表：(void)
                 - bool is_lower(void)
-                    - 用于检测动态字符串是否为小写的英文单词
+                    - 用于检测动态字符串中各元素是否为小写的英文单词
                     ``` C++
                     import string;
                     import std;
@@ -602,7 +603,7 @@
             - 返回值类型：bool 非静态成员函数名：is_upper
                 - 参数列表：(void)
                 - bool is_upper(void)
-                    - 用于检测动态字符串是否为大写的英文单词
+                    - 用于检测动态字符串中各元素是否为大写的英文单词
                     ``` C++
                     import string;
                     import std;
@@ -620,7 +621,7 @@
             - 返回值类型：bool 非静态成员函数名：is_enstr
                 - 参数列表：(void)
                 - bool is_enstr(void)
-                    - 用于检测动态字符串是否为英文单词
+                    - 用于检测动态字符串中各元素是否为英文单词
                     ``` C++
                     import string;
                     import std;
@@ -628,6 +629,24 @@
                     int main() {
                         dast::cstring str = { "ABCDEfg", 7 };
                         std::cout << str.is_enstr() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出：true
+                    该函数强调的返回描述：无
+
+            ## is_ascii
+            - 返回值类型：bool 非静态成员函数名：is_ascii
+                - 参数列表：(void)
+                - bool is_ascii(void)
+                    - 用于检测动态字符串中各元素是否为ascii码
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str = { "abc", 3 };
+                        std::cout << str.is_ascii() << '\n'
                         return 0;
                     }
                     ```

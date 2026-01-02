@@ -424,55 +424,62 @@ public:
 
 	template <class SelfType>
 	[[nodiscard]] constexpr auto is_blank(this SelfType&& self) noexcept {
-		return self.entrusted (
-			[](char_t value) constexpr noexcept {
-			    if (value == ' ') {
-				    return true;
-			    }
-			    return false;
-		    }
-		);
+		return self.entrusted([](char_t value) constexpr noexcept {
+			if (value == ' ') {
+				return true;
+			}
+			return false;
+		});
 	}
 
 	template <class SelfType>
 	[[nodiscard]] constexpr auto is_digit(this SelfType&& self) noexcept {
-		return self.entrusted (
-			[](char_t value) constexpr noexcept {
-			    if (value >= '0' && value <= '9') {
-				    return true;
-			    }
-			    return false;
-		    }
-		);
+		return self.entrusted([](char_t value) constexpr noexcept {
+			if (value >= '0' && value <= '9') {
+				return true;
+			}
+			return false;
+		});
 	}
 
 	template <class SelfType>
 	[[nodiscard]] constexpr auto is_lower(this SelfType&& self) noexcept {
-		return self.entrusted (
-			[](char_t value) constexpr noexcept {
-			    if (value >= 'a' && value <= 'z') {
-				    return true;
-			    }
-			    return false;
-		    }
-		);
+		return self.entrusted([](char_t value) constexpr noexcept {
+			if (value >= 'a' && value <= 'z') {
+				return true;
+			}
+			return false;
+		});
 	}
 
 	template <class SelfType>
 	[[nodiscard]] constexpr auto is_upper(this SelfType&& self) noexcept {
-		return self.entrusted (
-			[](char_t value) constexpr noexcept {
-			    if (value >= 'A' && value <= 'Z') {
-					return true;
-				}
-				return false;
-		    }
-		);
+		return self.entrusted([](char_t value) constexpr noexcept {
+			if (value >= 'A' && value <= 'Z') {
+				return true;
+			}
+			return false;
+		});
 	}
 
-	[[nodiscard]]
-	constexpr auto is_enstr() const noexcept {
-		return is_lower() || is_upper();
+	template <class SelfType>
+	[[nodiscard]] constexpr auto is_enstr(this SelfType&& self) noexcept {
+		return self.entrusted([](char_t value) constexpr noexcept {
+			if (value >= 'A' && value <= 'Z') {
+				return true;
+			}
+			if (value >= 'a' && value <= 'z') {
+				return true;
+			}
+			return false;
+		});
+	}
+
+	template <class SelfType>
+	[[nodiscard]] constexpr auto is_ascii(this SelfType&& self) noexcept {
+		return self.entrusted([](char_t value) constexpr noexcept {
+			return (value & 0x80) == 0;
+		});
 	}
 
 public:
