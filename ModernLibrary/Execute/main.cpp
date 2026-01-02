@@ -1,14 +1,14 @@
 ﻿import std;
-import string;
+import fixed_vector;
 import utility;
 
 
 import <windows.h>;
 
 int main() {
-	dast::cstring str = "Hello........................";
-	str += "World";
-	std::cout << str;
+	constexpr dast::fixed_vector<int, 21> vec(10);
+	constexpr auto first = vec[0];
+	constexpr auto size = vec.size();
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
