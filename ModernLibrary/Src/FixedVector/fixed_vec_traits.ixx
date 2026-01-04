@@ -1,6 +1,7 @@
 ﻿export module fixed_vec_traits;
 
 import <cstddef>;
+import <initializer_list>;
 
 export namespace traits {
 	template <
@@ -20,5 +21,6 @@ struct traits::fixed_vec_traits {
 	using pointer_t       =       ValueType*;
 	using const_pointer_t = const ValueType*;
 
-	using size_t = SizeType;
+	using size_t     =      SizeType;
+	using initlist_t = std::initializer_list<value_t>;
 };

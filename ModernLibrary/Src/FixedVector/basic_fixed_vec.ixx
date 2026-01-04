@@ -17,6 +17,7 @@ public:
 	using pointer_t       = typename core_t::pointer_t;
 	using const_pointer_t = typename core_t::const_pointer_t;
 	using size_t          = typename core_t::size_t;
+	using initlist_t      = typename core_t::initlist_t;
 
 public:
 
@@ -26,6 +27,12 @@ public:
 		noexcept : core_t(size)
 	{
 		core_t::construct_vector();
+	}
+
+	constexpr basic_fixed_vec(const initlist_t& list)
+		noexcept : core_t(list.size())
+	{
+		core_t::construct_vector(list);
 	}
 
 public:

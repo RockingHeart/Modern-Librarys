@@ -12,6 +12,7 @@ struct fixed_vec_box {
 	using pointer_t       = typename traits::pointer_t;
 	using const_pointer_t = typename traits::const_pointer_t;
 	using size_t          = typename traits::size_t;
+	using initlist_t      = typename traits::initlist_t;
 
 	template <bool>
 	struct box_value;

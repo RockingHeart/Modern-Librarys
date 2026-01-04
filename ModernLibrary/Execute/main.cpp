@@ -6,9 +6,11 @@ import utility;
 import <windows.h>;
 
 int main() {
-	constexpr dast::fixed_vector<int, 21> vec(10);
-	constexpr auto first = vec[0];
-	constexpr auto size = vec.size();
+	dast::fixed_vector<std::basic_string<char>, 21> vec = {
+		"Hello", "World"
+	};
+	std::cout << vec[0] << ' ' << vec[1] << '\n';
+	std::cout << vec.size() << '\n';
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {

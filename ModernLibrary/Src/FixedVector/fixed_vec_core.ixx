@@ -18,20 +18,62 @@ protected:
 	using pointer_t       = typename box_t::pointer_t;
 	using const_pointer_t = typename box_t::const_pointer_t;
 	using size_t          = typename box_t::size_t;
+	using initlist_t      = typename box_t::initlist_t;
+
+private:
+
+	constexpr void definit(size_t index) noexcept {
+		if constexpr (box_t::is_ordinary_type) {
+			for (; index < box_t::max_size; ++index) {
+				box_t::value.data[index] = value_t();
+			}
+		}
+		else {
+			pointer_t pointer = box_t::pointer();
+			for (; index < box_t::max_size; ++index) {
+				pointer[index] = value_t();
+			}
+		}
+	}
+
+	constexpr void construct_init() noexcept {
+		pointer_t pointer = box_t::pointer();
+		for (size_t i = 0; i < box_t::size; ++i) {
+			new (std::addressof(pointer[i])) value_t();
+		}
+	}
+
+	constexpr void construct_init(const_pointer_t data) noexcept {
+		pointer_t pointer = box_t::pointer();
+		for (size_t i = 0; i < box_t::size; ++i) {
+			new (std::addressof(pointer[i])) value_t (
+				std::move(data[i])
+			);
+		}
+	}
 
 protected:
 
 	constexpr void construct_vector() noexcept {
 		if constexpr (box_t::is_ordinary_type) {
-			for (size_t i = 0; i < box_t::max_size; ++i) {
-				box_t::value.data[i] = value_t();
-			}
+			definit(0);
 		}
 		else {
-			pointer_t pointer = box_t::pointer();
-			for (size_t i = 0; i < box_t::size; ++i) {
-				new (std::addressof(pointer[i])) value_t();
+			construct_init();
+		}
+	}
+
+	constexpr void construct_vector(const initlist_t& list) noexcept {
+		const_pointer_t data = list.begin();
+		if constexpr (box_t::is_ordinary_type) {
+			size_t i = 0;
+			for (; i < box_t::size; ++i) {
+				box_t::value.data[i] = data[i];
 			}
+			definit(i);
+		}
+		else {
+			construct_init(data);
 		}
 	}
 

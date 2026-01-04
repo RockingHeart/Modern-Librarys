@@ -24,10 +24,13 @@
             - 返回值类型：fixed_vector 构造函数名：fixed_vector
                 - 参数列表：(void)
                 - fixed_vector(void)
-                    - 用于构造空状态动态字符串 <br>
+                    - 用于构造空状态定长向量 <br>
                 - 参数列表：(size_t)
                 - fixed_vector(size_t size)
                     - 以默认值类型的构造方法构造定长度的元素 <br>
+                - 参数列表：(initlist_t)
+                - fixed_vector(const initlist_t& list)
+                    - 以列表中的全部元素构造定长向量
             
             ## push_back
             - 返回值类型：bool
