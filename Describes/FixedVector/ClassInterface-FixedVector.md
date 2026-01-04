@@ -5,11 +5,12 @@
 | Interfaces | Shoots |
 | :---: | :---: |
 | construct | [construct] |
-| push_back | [push_back] |
-| pop_back | [pop_back] |
-| begin_and_end | [begin_and_end] |
+| push back | [push_back] |
+| pop back | [pop_back] |
+| begin and end | [begin_and_end] |
 | size | [size] |
-| max_size | [max_size] |
+| capacity | [capacity] |
+| max size | [max_size] |
 | operator | [operator] |
 
 - FixedVector
@@ -111,6 +112,23 @@
                     #### 以上代码输出： 0
                     函数返回描述：无
 
+            ## capacity
+            - 返回值类型：size_t 非静态成员函数名：capacity 参数列表：(void)
+            - size_t capacity(void)
+                - 用于获取剩余未使用的大小
+                    ``` C++
+                    import fixed_vector;
+                    import std;
+
+                    int main() {
+                        dast::fixed_vector<int, 5> vec(1);
+                        std::cout << vec.capacity() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： 4
+                    函数返回描述：无
+
             ## max_size
             - 返回值类型：size_t 非静态成员函数名：size 参数列表：(void)
             - size_t max_size(void)
@@ -151,5 +169,6 @@
 [pop_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#pop_back
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#begin-and-end
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#size
+[capacity]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#capacity
 [max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#max_size
 [operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#operator

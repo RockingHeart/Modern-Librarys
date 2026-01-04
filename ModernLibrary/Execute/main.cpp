@@ -11,6 +11,7 @@ int main() {
 	};
 	std::cout << vec[0] << ' ' << vec[1] << '\n';
 	std::cout << vec.size() << '\n';
+	std::cout << vec.capacity() << '\n';
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {

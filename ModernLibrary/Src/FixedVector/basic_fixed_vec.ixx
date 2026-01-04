@@ -73,7 +73,11 @@ public:
 		return core_t::size;
 	}
 
-	constexpr size_t max_size() const noexcept {
+	constexpr size_t capacity() const noexcept {
+		return core_t::max_size - core_t::size;
+	}
+
+	constexpr static size_t max_size() noexcept {
 		return Size;
 	}
 
