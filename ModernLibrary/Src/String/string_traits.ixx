@@ -15,7 +15,7 @@ export namespace traits {
 	enum class value_traits;
 
 	template <
-		character_type CharType, traits::value_traits ValueTrait,
+		character_type CharType, value_traits ValueTrait,
 		template <character_type, class> class StringUtility,
 		allocator_type AllocatorType, class SizeType
 	> requires (

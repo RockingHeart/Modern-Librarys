@@ -111,7 +111,7 @@ public:
 		auto* data    = list.begin();
 		auto* end     = list.end();
 		size_t sumlen = 0;
-		for (; data != end; data++) {
+		for (; data != end; ++data) {
 			sumlen += strutil::strlenof(*data);
 		}
 		return sumlen;
@@ -164,8 +164,8 @@ public:
 
 	template <character_type CharacterType = char_t>
 	constexpr static bool strcmp (const CharacterType* left,
-		                         const CharacterType* src,
-		                               size_t         size)
+		                          const CharacterType* src,
+		                               size_t          size)
 		noexcept
 	{
 		if consteval
@@ -191,8 +191,17 @@ public:
 		return static_cast<size_t>(result - str);
 	}
 
+	constexpr decltype(auto) compare_function(size_t strlen) noexcept {
+		if (strlen < 256) {
+			return native_compare;
+		}
+		return long_compar;
+	}
+
 	template <character_type CharacterType = char_t>
-	constexpr static match_t<size_t> strmatch(const CharacterType* str, const CharacterType* target) noexcept
+	constexpr static match_t<size_t> strmatch (const CharacterType* str,
+		                                       const CharacterType* target)
+		noexcept
 	{
 		size_t strlen = strlenof(str);
 		size_t tarlen = strlenof(target);
@@ -200,8 +209,9 @@ public:
 		{
 			return compile<CharacterType>::strmatch<strlen, tarlen>(str, target);
 		}
-		auto strcompare = strlen < 256 ? native_compare
-			: long_compar;
+		/*auto strcompare = strlen < 256 ? native_compare
+			: long_compar;*/
+		auto strcompare = compare_function(strlen);
 		for (size_t i = 0; i < strlen;) {
 			if (i + tarlen > strlen) {
 				return match::failed;
@@ -298,12 +308,12 @@ private:
 		if (str[size] != src[size]) {
 			return size;
 		}
+		size      -= 1;
 		size_t cnt = 0;
-		for (size_t i = 0; i < size; ++i) {
+		for (size_t i = 0; i < size; ++i, ++cnt) {
 			if (str[i] != src[i]) {
 				break;
 			}
-			++cnt;
 		}
 		if (cnt != size) {
 			return 1;

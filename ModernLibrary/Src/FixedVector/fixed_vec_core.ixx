@@ -13,11 +13,11 @@ protected:
 	using box_t::box_t;
 
 protected:
-	using value_t = typename box_t::value_t;
-	using reference_t = typename box_t::reference_t;
-	using pointer_t = typename box_t::pointer_t;
+	using value_t         = typename box_t::value_t;
+	using reference_t     = typename box_t::reference_t;
+	using pointer_t       = typename box_t::pointer_t;
 	using const_pointer_t = typename box_t::const_pointer_t;
-	using size_t = typename box_t::size_t;
+	using size_t          = typename box_t::size_t;
 
 protected:
 
