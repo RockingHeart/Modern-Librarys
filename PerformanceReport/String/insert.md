@@ -1,6 +1,15 @@
 # 此为根据测试结果得出insert对比标准库的性能报告
 循环：200000000次
 
+| Info | Detailed |
+| :---: | :---: |
+| System | Win11 25H2 |
+| Compiler | MSVC |
+| CPU | R5 5600 |
+| CPP Std | Std Latest |
+| Win SDK | 10.0 |
+| Toolkit | VS2022 v143 |
+
 原始字符串："World" <br>
 插入字符串："Hello"
 
