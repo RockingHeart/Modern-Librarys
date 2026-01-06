@@ -1183,7 +1183,8 @@ private:
 		return true;
 	}
 
-	constexpr bool insert_string(const_pointer_t str, size_t position)
+	constexpr bool insert_string (const_pointer_t str,
+		                          size_t          position)
 	    noexcept
 	{
 		size_t strlen = strutil::strlenof(str);
@@ -1191,6 +1192,26 @@ private:
 			return insert_buffer(str, strlen, position);
 		}
 		return insert_heap(str, strlen, position);
+	}
+
+private:
+
+	constexpr basic_string& xor_impl (basic_string& string,
+									  char_t        key)
+		noexcept
+	{
+		for (size_t i = 0; i < string.string_length(); ++i) {
+			string[i] ^= key;
+		}
+		return string;
+	}
+
+	constexpr basic_string& xor_string(char_t key) noexcept {
+		return xor_impl(*this, key);
+	}
+
+	constexpr basic_string xor_string(char_t key) const noexcept {
+		return xor_impl(basic_string{ *this }, key);
 	}
 
 private:
@@ -1706,6 +1727,17 @@ public:
 		)
 	{
 		return append(std::forward<ArgsType>(args)...);
+	}
+
+	template <class... ArgsType>
+	constexpr basic_string& operator^=(ArgsType&&... args)
+		noexcept requires (
+			requires {
+				xor_string(std::forward<ArgsType>(args)...);
+			}
+		)
+	{
+		return xor_string(std::forward<ArgsType>(args)...);
 	}
 
 	template <class... ArgsType>

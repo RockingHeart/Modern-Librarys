@@ -235,6 +235,19 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
+	constexpr decltype(auto) exclusive_or(this SelfType&& self, ArgsType&&... args)
+		noexcept requires (
+			requires {
+				self.xor_string(std::forward<ArgsType>(args)...);
+			}
+		)
+	{
+		return self.xor_string(std::forward<ArgsType>(args)...);
+	}
+
+public:
+
+	template <class SelfType, class... ArgsType>
 	[[nodiscard]] constexpr auto index(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {

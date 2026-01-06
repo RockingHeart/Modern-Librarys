@@ -36,6 +36,7 @@
 | operator | [operator] |
 | replace | [replace] |
 | insert | [insert] |
+| exclusive or | [exclusive_or] |
 | residue | [residue] |
 | resize | [resize] |
 | reserve | [reserve] |
@@ -753,6 +754,26 @@
                     ```
                     #### 以上代码输出："Hello World"
                     函数返回值描述：此函数返回bool值，指告用户insert成功与否
+
+            ## exclusive_or
+            - 返回值类型：basic_string 非静态成员函数名：exclusive_or
+                - 用于异或动态字符串对象
+                    - 参数列表：(char_t)
+                    - bool exclusive_or(char_t key) <br>
+                    **参数key为异或的值**
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str = "Hello";
+                        str.exclusive_or('.');
+                        std::cout << str.const_string();
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出："fKBBA"
+                    函数返回值描述：const下复制一份动态字符串对象自身，并异或其复制体，非cosnt下异或动态字符串对象自身
             
             ## residue
             - 返回值类型：const residue_info 非静态成员函数名：residue 参数列表：(void)
@@ -1312,6 +1333,7 @@
 [operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#operator
 [replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#replace
 [insert]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#insert
+[exclusive_or]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#exclusive_or
 [residue]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#residue
 [resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#resize
 [reserve]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#reserve

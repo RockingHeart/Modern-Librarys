@@ -1,17 +1,14 @@
 ﻿import std;
 import fixed_vector;
+import string;
 import utility;
-
 
 import <windows.h>;
 
 int main() {
-	dast::fixed_vector<std::basic_string<char>, 21> vec = {
-		"Hello", "World"
-	};
-	std::cout << vec[0] << ' ' << vec[1] << '\n';
-	std::cout << vec.size() << '\n';
-	std::cout << vec.capacity() << '\n';
+	dast::cstring str = "Hello";
+	str.exclusive_or('.');
+	std::cout << str.const_string();
 	/*auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
