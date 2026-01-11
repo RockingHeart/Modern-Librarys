@@ -46,8 +46,8 @@ struct string_box {
 	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / sizeof(char_t);
 
 	struct buffer_t {
-		char_t        pointer[buffer_size]{};
-		unsigned char count [[indeterminate]] : 7;
+		char_t        pointer[buffer_size];
+		size_t        count [[indeterminate]] : 7;
 		bool          cache                   : 1;
 	};
 
@@ -57,18 +57,26 @@ struct string_box {
 	};
 
 	constexpr  string_box()
-		noexcept : buffer{ .count = 0, .cache = true }
+		noexcept : buffer {
+			.pointer {},
+			.count = 0,
+			.cache = true
+		}
 	{};
 
 	constexpr  string_box(char_t char_value)
-		noexcept : buffer{ .count = 1, .cache = true }
+		noexcept : buffer {
+			.pointer {},
+			.count = 1,
+			.cache = true
+		}
 	{
 		buffer.pointer[0] = char_value;
 	};
 
 	constexpr  string_box(size_t size)
 		noexcept : buffer {
-			.count = static_cast<unsigned char>(size),
+			.count = size,
 			.cache = true
 		}
 	{

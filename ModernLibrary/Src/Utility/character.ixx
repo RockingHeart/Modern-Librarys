@@ -3,7 +3,8 @@
 import :type_restion;
 import :match;
 
-import <wchar.h>;
+import <cstring>;
+import <cwchar>;
 import <memory.h>;
 import <bit>;
 import <cstddef>;
@@ -47,7 +48,10 @@ struct compile {
 	}
 
 	template <size_t strlen, size_t tarlen>
-	constexpr static match_t<size_t> strmatch(const char_t* str, const char_t* target) noexcept {
+	constexpr static match_t<size_t> strmatch (const char_t* str,
+		                                       const char_t* target)
+		noexcept
+	{
 		for (size_t i = 0; i < strlen; ++i, ++str) {
 			if (i + tarlen > strlen) {
 				return match::failed;
@@ -180,7 +184,9 @@ public:
 	constexpr static size_t strmatch (
 		const char* str, char target, size_t len
 	) noexcept {
-		const char* result = std::bit_cast<const char*>(memchr(str, target, len));
+		const char* result = std::bit_cast<const char*> (
+			memchr(str, target, len)
+		);
 		return static_cast<size_t>(result - str);
 	}
 
@@ -207,7 +213,9 @@ public:
 		size_t tarlen = strlenof(target);
 		if consteval
 		{
-			return compile<CharacterType>::strmatch<strlen, tarlen>(str, target);
+			return compile<CharacterType>::strmatch<strlen, tarlen> (
+				str, target
+			);
 		}
 		/*auto strcompare = strlen < 256 ? native_compare
 			: long_compar;*/
@@ -231,19 +239,19 @@ private:
 
 	template <>
 	constexpr static size_t length<char>(const char* str) noexcept {
-		return ::strlen(str);
+		return std::strlen(str);
 	};
 
 	template <>
 	constexpr static size_t length<wchar_t>(const wchar_t* str) noexcept {
-		return ::wcslen(str);
+		return std::wcslen(str);
 	};
 
 	template <>
 	constexpr static char* copy<char> (
 		char* dest, const char* src, size_t size
 	) noexcept {
-		::memcpy(dest, src, size);
+		void(::memcpy(dest, src, size));
 		return dest;
 	}
 
@@ -258,7 +266,7 @@ private:
 	constexpr static char* move<char> (
 		char* dest, const char* src, size_t size
 	) noexcept {
-		::memmove(dest, src, size);
+		void(::memmove(dest, src, size));
 		return dest;
 	}
 
@@ -273,7 +281,7 @@ private:
 	constexpr static char* set<char> (
 		char* dest, char value, size_t size
 	) noexcept {
-		::memset(dest, value, size);
+		void(::memset(dest, value, size));
 		return dest;
 	}
 

@@ -541,7 +541,9 @@ public:
 			return false;
 		}
 		auto& value = self.value;
-		self.allocator().deallocate(value.before, value.before_alloc_size);
+		self.allocator().deallocate (
+			value.before, value.before_alloc_size
+		);
 		value.before = nullptr;
 		return true;
 	}
