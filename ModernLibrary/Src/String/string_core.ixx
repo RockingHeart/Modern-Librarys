@@ -131,7 +131,7 @@ public:
 
 	template <class SelfType, class... ArgsType>
 	constexpr auto trimmed(this SelfType&& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
 		        self.trimmed_string(std::forward<ArgsType>(args)...);
 	        }
@@ -144,7 +144,7 @@ public:
 
 	template <class SelfType, class... ArgsType>
 	constexpr auto lower(this SelfType&& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
 		        self.lower_string(std::forward<ArgsType>(args)...);
 	        }
@@ -155,7 +155,7 @@ public:
 
 	template <class SelfType, class... ArgsType>
 	constexpr auto upper(this SelfType&& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
 		        self.upper_string(std::forward<ArgsType>(args)...);
 	        }

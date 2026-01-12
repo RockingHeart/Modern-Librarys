@@ -21,12 +21,13 @@ struct fixed_vec_box {
 
 	template <>
 	struct box_value<false> {
-		constexpr static size_t max_size = Size;
+		alignas(value_t)
 		char data[max_size * sizeof(value_t)];
 	};
 
 	template <>
 	struct box_value<true> {
+		alignas(value_t)
 		value_t data[max_size];
 	};
 
