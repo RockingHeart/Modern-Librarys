@@ -24,7 +24,7 @@ public:
 protected:
 	using box_t        =          string_box<StringTraits>;
 	using box_value_t  = typename box_t::box_value_type;
-	using box_buffer_t = typename box_t::buffer_t;
+	using box_cache_t  = typename box_t::cache_t;
 	using box_t::box_t;
 
 public:
@@ -40,8 +40,9 @@ private:
 	using alloc_t      = typename string_traits::alloc_t;
 
 protected:
+	using box_t::value;
+	using box_t::cache;
 	using box_t::buffer_size;
-	using box_t::value, box_t::buffer;
 
 public:
 
