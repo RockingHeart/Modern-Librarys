@@ -70,7 +70,7 @@ public:
 public:
 
 	template <class SelfType>
-	constexpr auto mode_state(this SelfType&& self) {
+	constexpr auto mode(this SelfType&& self) {
 		if (self.is_cache_mode()) {
 			return mode_status::cache;
 		}

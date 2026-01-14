@@ -32,7 +32,7 @@
 | is enstr | [is_enstr] |
 | is ascii | [is_ascii] |
 | max size | [max_size] |
-| mode state | [mode_state] |
+| mode | [mode] |
 | operator | [operator] |
 | replace | [replace] |
 | insert | [insert] |
@@ -675,9 +675,9 @@
                     #### 以上代码str1输出24（缓存阈值大小）<br> 以上代码str2输出60（成员堆大小阈值。请注意：当前该阈值使用构造的字符串大小乘以2以计算，此算法待更改）
                     该函数强调的返回描述：无
             
-            ## mode_state
-            - 返回值类型：mode_status 非静态成员函数名：mode_state 参数列表：(void)
-            - mode_status mode_state(void)
+            ## mode
+            - 返回值类型：mode_status 非静态成员函数名：mode 参数列表：(void)
+            - mode_status mode(void)
                 - 用于获取模式
                     ``` C++
                     import string;
@@ -685,10 +685,10 @@
 
                     int main() {
                         dast::cstring str1 = { "Hello", 5 };
-                        std::cout << static_cast<size_t>(str1.mode_state()) << '\n'
+                        std::cout << static_cast<size_t>(str1.mode()) << '\n'
 
                         dast::cstring str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
-                        std::cout << static_cast<size_t>(str2.mode_state()) << '\n'
+                        std::cout << static_cast<size_t>(str2.mode()) << '\n'
                         return 0;
                     }
                     ```
@@ -810,7 +810,7 @@
 
                         auto print_str = [&]() {
                             std::cout << str.const_string() << ' '
-                            std::cout << static_cast<size_t>(str.mode_state()) << ' '
+                            std::cout << static_cast<size_t>(str.mode()) << ' '
                             std::cout << str.max_size() << '\n'
                         };
 
@@ -904,7 +904,7 @@
                     int main() {
                         dast::cstring str = "Hello";
                         str.toggle_large_mode();
-                        std::cout << (str.mode_state() == mode_status::storage) << '\n';
+                        std::cout << (str.mode() == mode_status::storage) << '\n';
                         return 0;
                     }
                     ```
@@ -1329,7 +1329,7 @@
 [is_upper]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_upper
 [is_enstr]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_enstr
 [max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#max_size
-[mode_state]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#mode_state
+[mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#mode
 [operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#operator
 [replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#replace
 [insert]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#insert
