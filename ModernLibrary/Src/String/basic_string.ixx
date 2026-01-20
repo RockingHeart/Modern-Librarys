@@ -14,7 +14,7 @@ concept string_traits_type = requires {
 	typename Traits::pointer_t;
 	typename Traits::const_pointer_t;
 
-	Traits::value_traits;
+	Traits::string_value_trait;
 };
 
 template <class Core>
@@ -142,11 +142,11 @@ private:
 private:
 
 	consteval static bool trait_is_remain_mode() noexcept {
-		return string_traits::value_traits == traits::value_traits::remain;
+		return string_traits::string_value_trait == traits::string_value_trait::remain;
 	}
 
 	consteval static bool trait_is_enhance_mode() noexcept {
-		return string_traits::value_traits == traits::value_traits::enhance;
+		return string_traits::string_value_trait == traits::string_value_trait::enhance;
 	}
 
 	consteval static bool trait_is_advanced_mode() noexcept {

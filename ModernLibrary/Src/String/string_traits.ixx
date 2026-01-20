@@ -12,36 +12,36 @@ concept string_utility_type = requires(Utility util) {
 };
 
 export namespace traits {
-	enum class value_traits;
+
+	enum class string_value_trait;
 
 	template <
-		character_type CharType, value_traits ValueTrait,
+		character_type CharType, string_value_trait StringValueTrait,
 		template <character_type, class> class StringUtility,
 		allocator_type AllocatorType, class SizeType
 	> requires (
 		is_character_type<typename AllocatorType::value_type>
 		&&
 		string_utility_type<StringUtility<CharType, SizeType>>
-	)
-	struct string_traits;
+	) struct string_traits;
+
 };
 
-enum class traits::value_traits {
+enum class traits::string_value_trait {
 	no_residue,
 	remain,
 	enhance
 };
 
 template <
-	character_type CharType, traits::value_traits ValueTrait,
+	character_type CharType, traits::string_value_trait StringValueTrait,
 	template <character_type, class> class StringUtility,
 	allocator_type AllocatorType, class SizeType = std::size_t
 > requires (
 	is_character_type<typename AllocatorType::value_type>
 	&&
 	string_utility_type<StringUtility<CharType, SizeType>>
-)
-struct traits::string_traits {
+) struct traits::string_traits {
 	using char_t          =       CharType;
 	using reference_t     =       CharType&;
 	using pointer_t       =       CharType*;
@@ -49,8 +49,9 @@ struct traits::string_traits {
 
 	using size_t = SizeType;
 
-	using alloc_t = AllocatorType;
-	using strutil = StringUtility<CharType, SizeType>;
+	using alloc_t	  = AllocatorType;
+	using strutil	  = StringUtility<CharType, SizeType>;
+	using value_trait = string_value_trait;
 
-	constexpr static value_traits value_traits = ValueTrait;
+	constexpr static value_trait string_value_trait = StringValueTrait;
 };

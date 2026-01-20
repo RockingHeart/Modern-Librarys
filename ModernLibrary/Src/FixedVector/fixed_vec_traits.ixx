@@ -7,8 +7,7 @@ export namespace traits {
 	template <
 		class ValueType,
 		class SizeType
-	>
-	struct fixed_vec_traits;
+	> struct fixed_vec_traits;
 }
 
 template <

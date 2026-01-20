@@ -15,6 +15,7 @@ endif()
 
 file(GLOB StringPath "ModernLibrary/Src/String/*.ixx")
 file(GLOB FixedVectorPath "ModernLibrary/Src/FixedVector/*.ixx")
+file(GLOB VectorPath "ModernLibrary/Src/Vector/*.ixx")
 file(GLOB WrapPath "ModernLibrary/Src/Wrap/*.ixx")
 file(GLOB UtilityPath "ModernLibrary/Src/Utility/*.ixx")
 
@@ -28,10 +29,12 @@ target_sources(ModernLibrary
     FILES ${UtilityPath}
     FILES ${WrapPath}
     FILES ${StringPath}
+    FILES ${VectorPath}
     FILES ${FixedVectorPath}
 )
 
 source_group("String" FILES ${StringPath})
+source_group("Vector" FILES ${VectorPath})
 source_group("FixedVector" FILES ${FixedVectorPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})

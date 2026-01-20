@@ -1,8 +1,7 @@
 Vector规划在此雕刻
 
-- struct vector_traits<class ValueType, SizeType Size>
-    - 该类用于为ValueType与Size制定别名
-    - 其Size作于vector内部使用
+- deleted
+    vector_traits
 
 - class vector_box<vector_traits VectorTraits, std::size_t BufSize>
     - 该类型用于实现vector内部存储
