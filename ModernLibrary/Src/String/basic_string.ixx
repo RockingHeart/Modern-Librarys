@@ -14,7 +14,7 @@ concept string_traits_type = requires {
 	typename Traits::pointer_t;
 	typename Traits::const_pointer_t;
 
-	Traits::string_value_trait;
+	Traits::value_trait;
 };
 
 template <class Core>
@@ -141,12 +141,16 @@ private:
 
 private:
 
+	consteval static bool trait_is_noresidue_mode() noexcept {
+		return string_traits::value_trait == traits::string_value_traits::no_residue;
+	}
+
 	consteval static bool trait_is_remain_mode() noexcept {
-		return string_traits::string_value_trait == traits::string_value_trait::remain;
+		return string_traits::value_trait == traits::string_value_traits::remain;
 	}
 
 	consteval static bool trait_is_enhance_mode() noexcept {
-		return string_traits::string_value_trait == traits::string_value_trait::enhance;
+		return string_traits::value_trait == traits::string_value_traits::enhance;
 	}
 
 	consteval static bool trait_is_advanced_mode() noexcept {
@@ -712,12 +716,12 @@ private:
 
 	[[nodiscard]]
 	constexpr bool is_large_mode() const noexcept {
-		return !core_t::cache.cache;
+		return core_t::cache.modes == string_mode::storage;
 	}
 
 	[[nodiscard]]
 	constexpr bool is_cache_mode() const noexcept {
-		return core_t::cache.cache;
+		return core_t::cache.modes == string_mode::cache;
 	}
 
 private:
@@ -1521,19 +1525,58 @@ private:
 		return append_storage(pointer, size);
 	}
 
-	constexpr basic_string& append(char_t char_value) noexcept {
+	constexpr void append_impl(const_pointer_t pointer) noexcept {
+		size_t size = strutil::strlenof(pointer);
+		return append_impl(pointer, size);
+	}
+
+	constexpr void append_impl(basic_string& object) noexcept {
+		return append_impl(object.pointer(), object.string_length());
+	}
+
+	template <bool is_enhance_mode = trait_is_enhance_mode()>
+	constexpr decltype(auto) string_append(char_t char_value) noexcept;
+
+	template <>
+	constexpr decltype(auto) string_append<false>(char_t char_value) noexcept {
 		append_impl(char_value);
 		return *this;
 	}
 
-	constexpr basic_string& append(const_pointer_t pointer) noexcept {
-		append_impl(pointer, strutil::strlenof(pointer));
+	template <>
+	constexpr decltype(auto) string_append<true>(char_t char_value) noexcept {
+		append_impl(char_value);
+		return adder<basic_string>(*this);
+	}
+
+	template <bool is_enhance_mode = trait_is_enhance_mode()>
+	constexpr decltype(auto) string_append(const_pointer_t pointer) noexcept;
+
+	template <>
+	constexpr decltype(auto) string_append<false>(const_pointer_t pointer) noexcept {
+		append_impl(pointer);
 		return *this;
 	}
 
-	constexpr basic_string& append(basic_string& string) noexcept {
-		append_impl(string.pointer(), string.string_length());
+	template <>
+	constexpr decltype(auto) string_append<true>(const_pointer_t pointer) noexcept {
+		append_impl(pointer);
+		return adder<basic_string>(*this);
+	}
+
+	template <bool is_enhance_mode = trait_is_enhance_mode()>
+	constexpr decltype(auto) string_append(basic_string& string) noexcept;
+
+	template <>
+	constexpr decltype(auto) string_append<false>(basic_string& string) noexcept {
+		append_impl(string);
 		return *this;
+	}
+
+	template <>
+	constexpr decltype(auto) string_append<true>(basic_string& string) noexcept {
+		append_impl(string);
+		return adder<basic_string>(*this);
 	}
 
 private:
@@ -1714,14 +1757,14 @@ public:
 	}
 
 	template <class... ArgsType>
-	constexpr basic_string& operator+=(ArgsType&&... args)
+	constexpr decltype(auto) operator+=(ArgsType&&... args)
 		noexcept requires (
 		    requires {
-		        append(std::forward<ArgsType>(args)...);
+		        string_append(std::forward<ArgsType>(args)...);
 	        }
 		)
 	{
-		return append(std::forward<ArgsType>(args)...);
+		return string_append(std::forward<ArgsType>(args)...);
 	}
 
 	template <class... ArgsType>

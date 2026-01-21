@@ -37,7 +37,7 @@ template <
 
 	using alloc_t	  =		 AllocatorType;
 	using initlist_t  = std::initializer_list<value_t>;
-	using value_trait =		 vector_value_trait;
+	using value_traits =		 vector_value_trait;
 
-	constexpr static value_trait vector_value_trait = VectorValueTrait;
+	constexpr static value_traits vector_value_trait = VectorValueTrait;
 };

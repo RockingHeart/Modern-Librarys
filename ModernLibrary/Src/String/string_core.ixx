@@ -4,10 +4,7 @@ import string_box;
 
 import <type_traits>;
 
-export enum class mode_status {
-	cache,
-	storage
-};
+export using ::string_mode;
 
 export template <class BasicString, class StringTraits>
 	requires (
@@ -58,7 +55,7 @@ public:
 
 	template <class SelfType, class... ArgsType>
 	constexpr auto max_size(this SelfType&& self, ArgsType&&... args)
-		noexcept requires(
+		noexcept requires (
 		    requires {
 		        self.string_max_size(std::forward<ArgsType>(args)...);
 	        }
@@ -70,11 +67,8 @@ public:
 public:
 
 	template <class SelfType>
-	constexpr auto mode(this SelfType&& self) {
-		if (self.is_cache_mode()) {
-			return mode_status::cache;
-		}
-		return mode_status::storage;
+	constexpr string_mode mode(this SelfType&& self) {
+		return self.cache.modes;
 	}
 
 public:
@@ -382,6 +376,17 @@ public:
 	}
 
 public:
+
+	template <class SelfType, class... ArgsType>
+	constexpr void append(this SelfType&& self, ArgsType&&... args)
+		noexcept requires (
+			requires {
+				(self.append_impl(std::forward<ArgsType>(args)), ...);
+			}
+		)
+	{
+		(self.append_impl(std::forward<ArgsType>(args)), ...);
+	}
 
 	template <class SelfType, class... ArgsType>
 	constexpr void center(this SelfType&& self, ArgsType&&... args)

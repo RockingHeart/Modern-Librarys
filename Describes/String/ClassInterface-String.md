@@ -20,6 +20,7 @@
 | leave residue | [leave_residue] |
 | const string | [const_string] |
 | truncate | [truncate] |
+| append | [append] |
 | center | [center] |
 | left | [left] |
 | right | [right] |
@@ -433,6 +434,25 @@
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
+                    该函数强调的返回描述：无
+
+            ## append
+            - 返回值类型：void 非静态成员函数名：append
+                - 参数为模板形参包
+                    - void append(ArgsType...)
+                    - 用于在末尾添加多个参数的子字符的串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            dast::cstring str = { "Hello", 5 };
+                            str.append('.', "Hello", '.', str)
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："Hello.Hello.Hello.Hello"
                     该函数强调的返回描述：无
 
             ## left
@@ -1096,6 +1116,7 @@
 
             - operator+=
             - 返回值类型：basic_string& 非静态成员运算符重载函数符号：+=
+            - 注：于enhance模式中，其返回值类型为adder
                 - 参数列表：(char_t)
                 - basic_string& operator+=(char_t char_value)
                     - 用于扩展动态字符串
@@ -1319,6 +1340,7 @@
 [const_string]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#const_string
 [truncate]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#truncate
 [center]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#center
+[append]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#append
 [left]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#left
 [right]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#right
 [expand_prefix]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#expand_prefix
