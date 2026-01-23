@@ -1534,49 +1534,28 @@ private:
 		return append_impl(object.pointer(), object.string_length());
 	}
 
-	template <bool is_enhance_mode = trait_is_enhance_mode()>
-	constexpr decltype(auto) string_append(char_t char_value) noexcept;
-
-	template <>
-	constexpr decltype(auto) string_append<false>(char_t char_value) noexcept {
+	constexpr std::conditional_t <
+		trait_is_enhance_mode(),
+		adder<basic_string&>, basic_string&
+	> string_append(char_t char_value) noexcept {
 		append_impl(char_value);
 		return *this;
 	}
 
-	template <>
-	constexpr decltype(auto) string_append<true>(char_t char_value) noexcept {
-		append_impl(char_value);
-		return adder<basic_string>(*this);
-	}
-
-	template <bool is_enhance_mode = trait_is_enhance_mode()>
-	constexpr decltype(auto) string_append(const_pointer_t pointer) noexcept;
-
-	template <>
-	constexpr decltype(auto) string_append<false>(const_pointer_t pointer) noexcept {
+	constexpr std::conditional_t <
+		trait_is_enhance_mode(),
+		adder<basic_string&>, basic_string&
+	> string_append(const_pointer_t pointer) noexcept {
 		append_impl(pointer);
 		return *this;
 	}
 
-	template <>
-	constexpr decltype(auto) string_append<true>(const_pointer_t pointer) noexcept {
-		append_impl(pointer);
-		return adder<basic_string>(*this);
-	}
-
-	template <bool is_enhance_mode = trait_is_enhance_mode()>
-	constexpr decltype(auto) string_append(basic_string& string) noexcept;
-
-	template <>
-	constexpr decltype(auto) string_append<false>(basic_string& string) noexcept {
+	constexpr std::conditional_t <
+		trait_is_enhance_mode(),
+		adder<basic_string&>, basic_string&
+	> string_append(basic_string& string) noexcept {
 		append_impl(string);
 		return *this;
-	}
-
-	template <>
-	constexpr decltype(auto) string_append<true>(basic_string& string) noexcept {
-		append_impl(string);
-		return adder<basic_string>(*this);
 	}
 
 private:

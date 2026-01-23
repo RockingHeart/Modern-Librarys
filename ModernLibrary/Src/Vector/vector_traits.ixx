@@ -7,22 +7,22 @@ import <initializer_list>;
 
 export namespace traits {
 
-	enum class vector_value_trait;
+	enum class vector_value_traits;
 
 	template <
-		class ValueType, vector_value_trait VectorValueTrait,
+		class ValueType, vector_value_traits VectorValueTrait,
 		allocator_type AllocatorType, class SizeType
 	> struct vector_traits;
 
 }
 
-enum class traits::vector_value_trait {
+enum class traits::vector_value_traits {
 	disable_cache,
 	enable_cache
 };
 
 template <
-	class ValueType, traits::vector_value_trait VectorValueTrait,
+	class ValueType, traits::vector_value_traits VectorValueTrait,
 	allocator_type AllocatorType, class SizeType = std::size_t
 > struct traits::vector_traits {
 	using value_t			=		ValueType;
@@ -35,9 +35,9 @@ template <
 	using size_t    = SizeType;
 	using sizeref_t = SizeType&;
 
-	using alloc_t	  =		 AllocatorType;
-	using initlist_t  = std::initializer_list<value_t>;
-	using value_traits =		 vector_value_trait;
+	using alloc_t	   =	  AllocatorType;
+	using initlist_t   = std::initializer_list<value_t>;
+	using value_traits =	  vector_value_traits;
 
-	constexpr static value_traits vector_value_trait = VectorValueTrait;
+	constexpr static value_traits value_trait = VectorValueTrait;
 };

@@ -7,7 +7,9 @@ using namespace traits;
 export using ::string_mode;
 
 export template <class StringTraits>
-struct string_box {
+class string_box {
+public:
+
 	using string_traits = StringTraits;
 
 	using char_t          = typename string_traits::char_t;
@@ -15,6 +17,8 @@ struct string_box {
 	using const_pointer_t = typename string_traits::const_pointer_t;
 	using size_t		  = typename string_traits::size_t;
 	using value_traits	  = typename string_traits::value_traits;
+
+private:
 
 	template <value_traits>
 	struct box_value_t;
@@ -49,9 +53,13 @@ struct string_box {
 		const size_t    alloc_size;
 	};
 
+public:
+
 	using box_value_type = box_value_t<string_traits::value_trait>;
 
 	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / sizeof(char_t);
+
+protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
@@ -63,6 +71,8 @@ struct string_box {
 		box_value_type value;
 		cache_t        cache;
 	};
+
+public:
 
 	constexpr  string_box()
 		noexcept : cache {

@@ -5,6 +5,8 @@ import <type_traits>;
 
 export template <class Traits, std::size_t Size>
 struct fixed_vec_box {
+public:
+
 	using traits = Traits;
 
 	using value_t         = typename traits::value_t;
@@ -14,10 +16,14 @@ struct fixed_vec_box {
 	using size_t          = typename traits::size_t;
 	using initlist_t      = typename traits::initlist_t;
 
-	template <bool>
-	struct box_value;
+public:
 
 	constexpr static size_t max_size = Size;
+
+private:
+
+	template <bool>
+	struct box_value;
 
 	template <>
 	struct box_value<false> {
@@ -30,10 +36,16 @@ struct fixed_vec_box {
 		value_t data[max_size];
 	};
 
+public:
+
 	constexpr static bool is_ordinary_type = std::is_trivially_copyable_v<value_t>;
+
+protected:
 
 	box_value<is_ordinary_type> value;
 	size_t                      size;
+
+public:
 
 	constexpr pointer_t pointer() noexcept {
 		if constexpr (is_ordinary_type) {

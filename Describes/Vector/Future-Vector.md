@@ -2,11 +2,7 @@ Vector规划在此雕刻
 
 - deleted
     vector_traits
-
-- class vector_box<vector_traits VectorTraits, std::size_t BufSize>
-    - 该类型用于实现vector内部存储
-    - VectorTraits用于规范内部类型
-    - BufSize用于设定内部缓冲区大小
+    vector_box
 
 - class vector_core<vector_box VectorBox>
     - 该类型用于实现内部非开放接口

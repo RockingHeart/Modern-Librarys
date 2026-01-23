@@ -1,4 +1,6 @@
 ﻿import std;
+import vector_traits;
+import vector_box;
 import fixed_vector;
 import string;
 import utility;
@@ -6,13 +8,12 @@ import utility;
 import <windows.h>;
 
 int main() {
-	dast::string<char, traits::string_value_traits::enhance> str = "Hello";
-	str += " World", '.', str;
-	std::cout << str << '\n';
-	/*auto stime = GetTickCount64();
+	vector_box<traits::vector_traits<int, traits::vector_value_traits::enable_cache, std::allocator<int>>, 23> box;
+	dast::fixed_vector<int, 23> vec;
+	auto stime = GetTickCount64();
 	{
 		for (size_t i = 0; i < 200000000; ++i) {
-			advanced::String str = "Hello";
+			std::basic_string<char> str = "Hello";
 			str += " World";
 		}
 	}
@@ -30,6 +31,6 @@ int main() {
 	}
 
 	etime = GetTickCount64();
-	std::cout << "Mine: " << (etime - stime) << '\n';*/
+	std::cout << "Mine: " << (etime - stime) << '\n';
 	return 0;
 }
