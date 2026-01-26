@@ -31,10 +31,11 @@ public:
 	using const_pointer_t = typename string_traits::const_pointer_t;
 	using size_t          = typename string_traits::size_t;
 
+	using alloc_t = typename string_traits::alloc_t;
+
 private:
 	using basic_string =          BasicString;
 	using strutil      = typename string_traits::strutil;
-	using alloc_t      = typename string_traits::alloc_t;
 
 protected:
 	using box_t::value;
