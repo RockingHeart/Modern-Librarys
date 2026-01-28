@@ -10,18 +10,18 @@ import <xmemory>;
 
 export using ::string_mode;
 
-template <character_type CharType>
+template <rest::character CharType>
 using string_traits = traits::string_traits<CharType, traits::string_value_traits::no_residue, strutil, std::allocator<CharType>>;
 
 export namespace dast {
-	template <character_type CharType, template<class, class> class StringCore = string_core>
+	template <rest::character CharType, template<class, class> class StringCore = string_core>
 	using string = basic_string<string_traits<CharType>, StringCore>;
 
 	using cstring = basic_string<string_traits<char>,    string_core>;
 	using wstring = basic_string<string_traits<wchar_t>, string_core>;
 }
 
-template <character_type CharType, template<class, class> class StringCore = string_core>
+template <rest::character CharType, template<class, class> class StringCore = string_core>
 basic_string(const CharType*) -> basic_string<string_traits<CharType>, StringCore>;
 
 export dast::cstring operator ""_cs(const char* str, std::size_t size) {

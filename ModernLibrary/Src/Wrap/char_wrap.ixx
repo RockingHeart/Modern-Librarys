@@ -3,11 +3,11 @@
 import utility;
 
 export namespace wrap {
-	template <character_type CharType, size_t Size>
+	template <rest::character CharType, size_t Size>
 	struct char_wrap;
 }
 
-template <character_type CharType, size_t Size>
+template <rest::character CharType, size_t Size>
 struct wrap::char_wrap {
 	using char_t = CharType;
 	char_t data[Size];

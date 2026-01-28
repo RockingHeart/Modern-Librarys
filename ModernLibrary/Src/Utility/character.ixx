@@ -10,7 +10,7 @@ import <bit>;
 import <cstddef>;
 import <initializer_list>;
 
-template <character_type CharacterType>
+template <rest::character CharacterType>
 struct compile {
 	using char_t          =       CharacterType;
 	using pointer_t       =       CharacterType*;
@@ -65,7 +65,7 @@ struct compile {
 	
 };
 
-export template <character_type CharType, class SizeType = std::size_t>
+export template <rest::character CharType, class SizeType = std::size_t>
 struct strutil {
 public:
 	using char_t          =       CharType;
@@ -76,32 +76,32 @@ public:
 
 private:
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static size_t length(const CharacterType* str) noexcept;
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static CharacterType* copy (
 		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept;
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static CharacterType* move (
 		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept;
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static CharacterType* set (
 		CharacterType* dest, CharacterType value, size_t size
 	) noexcept;
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static bool compare (
 		const CharacterType* left, const CharacterType* src, size_t size
 	) noexcept;
 
 public:
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static size_t strlenof(const CharacterType* str) noexcept {
 		if consteval
 		{
@@ -110,7 +110,7 @@ public:
 		return length<CharacterType>(str);
 	}
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static size_t strlenof(const std::initializer_list<const CharacterType*>& list) noexcept {
 		auto* data    = list.begin();
 		auto* end     = list.end();
@@ -121,7 +121,7 @@ public:
 		return sumlen;
 	}
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static CharacterType* strcopy (CharacterType* dest,
 		                               const CharacterType* src,
 		                                     size_t         size)
@@ -138,14 +138,14 @@ public:
 		
 	}
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static CharacterType* strmove (
 		CharacterType* dest, const CharacterType* src, size_t size
 	) noexcept {
 		return move<CharacterType>(dest, src, size);
 	}
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static CharacterType* strset (CharacterType* dest,
 		                                    CharacterType  value,
 		                                    size_t         size)
@@ -166,7 +166,7 @@ public:
 		return set<CharacterType>(dest + i, value, size - i);
 	}
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static bool strcmp (const CharacterType* left,
 		                          const CharacterType* src,
 		                               size_t          size)
@@ -204,7 +204,7 @@ public:
 		return long_compar;
 	}
 
-	template <character_type CharacterType = char_t>
+	template <rest::character CharacterType = char_t>
 	constexpr static match_t<size_t> strmatch (const CharacterType* str,
 		                                       const CharacterType* target)
 		noexcept

@@ -20,11 +20,11 @@ export namespace traits {
 	enum class string_value_traits;
 
 	template <
-		character_type CharType, string_value_traits StringValueTrait,
-		template <character_type, class> class StringUtility,
-		allocator_type AllocatorType, class SizeType
+		rest::character CharType, string_value_traits StringValueTrait,
+		template <rest::character, class> class StringUtility,
+		rest::allocator AllocatorType, class SizeType
 	> requires (
-		is_character_type<typename AllocatorType::value_type>
+		is_character_v<typename AllocatorType::value_type>
 		&&
 		string_utility_type<StringUtility<CharType, SizeType>>
 	) struct string_traits;
@@ -38,11 +38,11 @@ enum class traits::string_value_traits {
 };
 
 template <
-	character_type CharType, traits::string_value_traits StringValueTrait,
-	template <character_type, class> class StringUtility,
-	allocator_type AllocatorType, class SizeType = std::size_t
+	rest::character CharType, traits::string_value_traits StringValueTrait,
+	template <rest::character, class> class StringUtility,
+	rest::allocator AllocatorType, class SizeType = std::size_t
 > requires (
-	is_character_type<typename AllocatorType::value_type>
+	is_character_v<typename AllocatorType::value_type>
 	&&
 	string_utility_type<StringUtility<CharType, SizeType>>
 ) struct traits::string_traits {

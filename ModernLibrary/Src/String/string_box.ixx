@@ -63,7 +63,7 @@ protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
-		unsigned char count [[indeterminate]] : 7;
+		unsigned char specs [[indeterminate]] : 7;
 		string_mode   modes                   : 1;
 	};
 
@@ -77,7 +77,7 @@ public:
 	constexpr  string_box()
 		noexcept : cache {
 			.pointer {},
-			.count = 0,
+			.specs = 0,
 			.modes = string_mode::cache
 		}
 	{};
@@ -85,7 +85,7 @@ public:
 	constexpr  string_box(char_t char_value)
 		noexcept : cache {
 			.pointer {},
-			.count = 1,
+			.specs = 1,
 			.modes = string_mode::cache
 		}
 	{
@@ -94,7 +94,7 @@ public:
 
 	constexpr  string_box(size_t size)
 		noexcept : cache {
-			.count = static_cast<unsigned char>(size),
+			.specs = static_cast<unsigned char>(size),
 			.modes = string_mode::cache
 		}
 	{
