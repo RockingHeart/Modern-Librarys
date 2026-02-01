@@ -59,14 +59,30 @@ public:
 
 	using box_value_type = box_value_t<string_traits::value_trait>;
 
-	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / sizeof(char_t);
+	constexpr static size_t type_size   = sizeof(char_t);
+	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / type_size;
+
+private:
+
+	static constexpr size_t occupied_of_specs() noexcept {
+		switch (type_size) {
+			case 0:
+				return 5;
+			case 2:
+				return 4;
+			case 4:
+				return 3;
+		}
+		return 7;
+	}
 
 protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
+		static constexpr auto resu = occupied_of_specs();
 		struct {
-			cache_size_t specs [[indeterminate]] : 7;
+			cache_size_t specs [[indeterminate]] : resu;
 			string_mode  modes					 : 1;
 		};
 	};
