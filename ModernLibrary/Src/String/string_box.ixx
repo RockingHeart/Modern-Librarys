@@ -18,6 +18,8 @@ public:
 	using size_t		  = typename string_traits::size_t;
 	using value_traits	  = typename string_traits::value_traits;
 
+	using cache_size_t = unsigned char;
+
 private:
 
 	template <value_traits>
@@ -63,13 +65,15 @@ protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
-		unsigned char specs [[indeterminate]] : 7;
-		string_mode   modes                   : 1;
+		cache_size_t specs [[indeterminate]] : 7;
 	};
 
 	union {
+		struct {
+			cache_t     cache;
+			string_mode modes : 1;
+		};
 		box_value_type value;
-		cache_t        cache;
 	};
 
 public:
@@ -77,30 +81,27 @@ public:
 	constexpr  string_box()
 		noexcept : cache {
 			.pointer {},
-			.specs = 0,
-			.modes = string_mode::cache
-		}
+			.specs = 0
+		}, modes(string_mode::cache)
 	{};
 
 	constexpr  string_box(char_t char_value)
 		noexcept : cache {
 			.pointer {},
-			.specs = 1,
-			.modes = string_mode::cache
-		}
+			.specs = 1
+		}, modes(string_mode::cache)
 	{
 		cache.pointer[0] = char_value;
 	};
 
 	constexpr  string_box(size_t size)
 		noexcept : cache {
-			.specs = static_cast<unsigned char>(size),
-			.modes = string_mode::cache
-		}
+			.specs = static_cast<cache_size_t>(size)
+		}, modes(string_mode::cache)
 	{
 		if (size >= buffer_size) {
 			value.count = size;
-			cache.modes = string_mode::storage;
+			modes = string_mode::storage;
 		}
 	};
 
