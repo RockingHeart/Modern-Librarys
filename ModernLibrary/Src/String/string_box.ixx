@@ -64,7 +64,7 @@ public:
 
 private:
 
-	static constexpr size_t occupied_of_specs() noexcept {
+	static constexpr size_t bandwidth_of_specs() noexcept {
 		switch (type_size) {
 			case 0:
 				return 5;
@@ -80,7 +80,7 @@ protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
-		static constexpr auto resu = occupied_of_specs();
+		static constexpr auto resu = bandwidth_of_specs();
 		struct {
 			cache_size_t specs [[indeterminate]] : resu;
 			string_mode  modes					 : 1;
