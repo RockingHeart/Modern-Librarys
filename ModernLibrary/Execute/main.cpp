@@ -7,6 +7,7 @@ import utility;
 import <windows.h>;
 
 int main() {
+	std::cout << sizeof(dast::cstring) << '\n';
 	dast::cstring str = "Hello";
 	size_t i = 0;
 	bitinfo::set<0>(i, true);

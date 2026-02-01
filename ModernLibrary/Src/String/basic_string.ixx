@@ -716,12 +716,12 @@ private:
 
 	[[nodiscard]]
 	constexpr bool is_large_mode() const noexcept {
-		return core_t::modes == string_mode::storage;
+		return core_t::cache.modes == string_mode::storage;
 	}
 
 	[[nodiscard]]
 	constexpr bool is_cache_mode() const noexcept {
-		return core_t::modes == string_mode::cache;
+		return core_t::cache.modes == string_mode::cache;
 	}
 
 private:

@@ -65,14 +65,14 @@ protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
-		cache_size_t specs [[indeterminate]] : 7;
+		struct {
+			cache_size_t specs [[indeterminate]] : 7;
+			string_mode  modes					 : 1;
+		};
 	};
 
 	union {
-		struct {
-			cache_t     cache;
-			string_mode modes : 1;
-		};
+		cache_t        cache;
 		box_value_type value;
 	};
 
@@ -81,27 +81,30 @@ public:
 	constexpr  string_box()
 		noexcept : cache {
 			.pointer {},
-			.specs = 0
-		}, modes(string_mode::cache)
+			.specs = 0,
+			.modes = string_mode::cache
+		}
 	{};
 
 	constexpr  string_box(char_t char_value)
 		noexcept : cache {
 			.pointer {},
-			.specs = 1
-		}, modes(string_mode::cache)
+			.specs = 1,
+			.modes = string_mode::cache
+		}
 	{
 		cache.pointer[0] = char_value;
 	};
 
 	constexpr  string_box(size_t size)
 		noexcept : cache {
-			.specs = static_cast<cache_size_t>(size)
-		}, modes(string_mode::cache)
+			.specs = static_cast<cache_size_t>(size),
+			.modes = string_mode::cache
+		}
 	{
 		if (size >= buffer_size) {
 			value.count = size;
-			modes = string_mode::storage;
+			cache.modes = string_mode::storage;
 		}
 	};
 
