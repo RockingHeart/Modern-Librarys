@@ -5,6 +5,7 @@ import string_box;
 import <type_traits>;
 
 export using ::string_mode;
+export using ::string_info;
 
 export template <class BasicString, class StringTraits>
 	requires (
@@ -23,6 +24,8 @@ protected:
 	using box_value_t  = typename box_t::box_value_type;
 	using box_cache_t  = typename box_t::cache_t;
 	using box_t::box_t;
+
+	using string_info = ::string_info;
 
 public:
 	using char_t          = typename string_traits::char_t;
@@ -68,11 +71,9 @@ public:
 public:
 
 	template <class SelfType>
-	constexpr string_mode mode(this SelfType&& self) {
-		return self.cache.modes;
+	constexpr auto info(this SelfType&& self) {
+		return self.curr_info();
 	}
-
-public:
 
 	template <class SelfType>
 	constexpr auto const_string(this SelfType&& self) {

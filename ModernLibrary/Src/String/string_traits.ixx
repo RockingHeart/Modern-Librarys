@@ -57,5 +57,7 @@ template <
 	using strutil	   = StringUtility<CharType, SizeType>;
 	using value_traits = string_value_traits;
 
+	using cache_size_t = unsigned char;
+
 	constexpr static value_traits value_trait = StringValueTrait;
 };

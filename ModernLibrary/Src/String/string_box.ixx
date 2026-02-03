@@ -6,6 +6,11 @@ using namespace traits;
 
 export using ::string_mode;
 
+export struct string_info {
+	string_mode modes : 1;
+	bool	 is_xored : 1;
+};
+
 export template <class StringTraits>
 class string_box {
 public:
@@ -18,7 +23,7 @@ public:
 	using size_t		  = typename string_traits::size_t;
 	using value_traits	  = typename string_traits::value_traits;
 
-	using cache_size_t = unsigned char;
+	using cache_size_t = typename string_traits::cache_size_t;
 
 private:
 
@@ -55,18 +60,11 @@ private:
 		const size_t    alloc_size;
 	};
 
-public:
-
-	using box_value_type = box_value_t<string_traits::value_trait>;
-
-	constexpr static size_t type_size   = sizeof(char_t);
-	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / type_size;
-
 private:
 
 	static constexpr size_t bandwidth_of_specs() noexcept {
 		switch (type_size) {
-			case 0:
+			case 1:
 				return 5;
 			case 2:
 				return 4;
@@ -76,20 +74,33 @@ private:
 		return 7;
 	}
 
+public:
+
+	using box_value_type = box_value_t<string_traits::value_trait>;
+
+	constexpr static size_t type_size   = sizeof(char_t);
+	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / type_size;
+	static constexpr size_t bandwidth	= bandwidth_of_specs();
+
 protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
-		static constexpr auto resu = bandwidth_of_specs();
-		struct {
-			cache_size_t specs [[indeterminate]] : resu;
-			string_mode  modes					 : 1;
-		};
+		cache_size_t specs [[indeterminate]] : bandwidth;
+	};
+
+	class status {
+		char_t fill_buffer[buffer_size];
+		char_t fill_specs : bandwidth;
+	public:
+		string_mode modes : 1 = string_mode::cache;
+		bool	 is_xored : 1 = false;
 	};
 
 	union {
 		cache_t        cache;
 		box_value_type value;
+		status		   state;
 	};
 
 public:
@@ -97,16 +108,14 @@ public:
 	constexpr  string_box()
 		noexcept : cache {
 			.pointer {},
-			.specs = 0,
-			.modes = string_mode::cache
+			.specs = 0
 		}
 	{};
 
 	constexpr  string_box(char_t char_value)
 		noexcept : cache {
 			.pointer {},
-			.specs = 1,
-			.modes = string_mode::cache
+			.specs = 1
 		}
 	{
 		cache.pointer[0] = char_value;
@@ -115,12 +124,11 @@ public:
 	constexpr  string_box(size_t size)
 		noexcept : cache {
 			.specs = static_cast<cache_size_t>(size),
-			.modes = string_mode::cache
 		}
 	{
 		if (size >= buffer_size) {
 			value.count = size;
-			cache.modes = string_mode::storage;
+			state.modes = string_mode::storage;
 		}
 	};
 

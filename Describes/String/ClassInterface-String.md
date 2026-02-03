@@ -33,7 +33,7 @@
 | is enstr | [is_enstr] |
 | is ascii | [is_ascii] |
 | max size | [max_size] |
-| mode | [mode] |
+| info | [info] |
 | operator | [operator] |
 | replace | [replace] |
 | insert | [insert] |
@@ -695,25 +695,27 @@
                     #### 以上代码str1输出24（缓存阈值大小）<br> 以上代码str2输出60（成员堆大小阈值。请注意：当前该阈值使用构造的字符串大小乘以2以计算，此算法待更改）
                     该函数强调的返回描述：无
             
-            ## mode
-            - 返回值类型：mode_status 非静态成员函数名：mode 参数列表：(void)
-            - mode_status mode(void)
-                - 用于获取模式
+            ## info
+            - 返回值类型：string_info 非静态成员函数名：info 参数列表：(void)
+            - string_info info(void)
+                - 用于获取字符串的信息
                     ``` C++
                     import string;
                     import std;
 
                     int main() {
-                        dast::cstring str1 = { "Hello", 5 };
-                        std::cout << static_cast<size_t>(str1.mode()) << '\n'
-
-                        dast::cstring str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
-                        std::cout << static_cast<size_t>(str2.mode()) << '\n'
+                        dast::cstring str = "Hello";
+                        str.exclusive_or('k');
+                        string_info info = str.info();
+                        string_mode mode = info.modes;
+                        bool is_xored = info.is_xored;
+                        std::cout << (mode == string_mode::cache) << '\n';
+                        std::cout << is_xored << '\n';
                         return 0;
                     }
                     ```
-                    #### 以上代码str1输出： 0（缓存模式）<br>以上代码str2输出：1（大模式）
-                    函数返回值类型描述：mode_status是枚举类型，内部有cache与storage两种值，对应缓存模式与大模式。
+                    #### 以上代码依次输出：1 -> 1
+                    函数返回值类型描述：string_info内部的modes是mode_status枚举类型，其内部有cache与storage两种值，对应缓存模式与大模式。
 
             ## replace
             - 返回值类型：bool 非静态成员函数名：replace
@@ -1351,7 +1353,7 @@
 [is_upper]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_upper
 [is_enstr]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#is_enstr
 [max_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#max_size
-[mode]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#mode
+[info]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#info
 [operator]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#operator
 [replace]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#replace
 [insert]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/String/ClassInterface-String.md#insert

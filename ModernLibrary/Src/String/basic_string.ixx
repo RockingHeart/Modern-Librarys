@@ -37,6 +37,9 @@ private:
 	using box_value_t  = typename core_t::box_value_type;
 	using box_cache_t  = typename core_t::cache_t;
 
+private:
+	using string_info = typename core_t::string_info;
+
 public:
 	using string_traits =          StringTraits;
 	using strutil       = typename string_traits::strutil;
@@ -394,13 +397,15 @@ private:
 			strutil::strcopy(cache.pointer, str, buf_size);
 			return;
 		}
-		box_value_t& value = core_t::value;
-		size_t size        = value.count;
-		size_t alloc_size  = size * 1.5;
-		value.pointer      = allocator().allocate(alloc_size);
-		value.alloc_size   = alloc_size;
-		strutil::strcopy(value.pointer, str, size);
-		value.pointer[size]  = char_t();
+		[&] constexpr noexcept {
+			box_value_t& value = core_t::value;
+			size_t size = value.count;
+			size_t alloc_size = size * 1.5;
+			value.pointer = allocator().allocate(alloc_size);
+			value.alloc_size = alloc_size;
+			strutil::strcopy(value.pointer, str, size);
+			value.pointer[size] = char_t();
+		} ();
 	}
 
 	constexpr void assign_init(const std::initializer_list<const char_t*>& list, char_t fill)
@@ -716,15 +721,22 @@ private:
 
 	[[nodiscard]]
 	constexpr bool is_large_mode() const noexcept {
-		return core_t::cache.modes == string_mode::storage;
+		return core_t::state.modes == string_mode::storage;
 	}
 
 	[[nodiscard]]
 	constexpr bool is_cache_mode() const noexcept {
-		return core_t::cache.modes == string_mode::cache;
+		return core_t::state.modes == string_mode::cache;
 	}
 
 private:
+
+	constexpr string_info curr_info() const noexcept {
+		return string_info {
+			core_t::state.modes,
+			core_t::state.is_xored
+		};
+	}
 
 	constexpr pointer_t pointer() noexcept {
 		pointer_t data[] = {
@@ -1207,6 +1219,7 @@ private:
 		for (size_t i = 0; i < string.string_length(); ++i) {
 			string[i] ^= key;
 		}
+		core_t::state.is_xored = true;
 		return string;
 	}
 
@@ -1279,28 +1292,26 @@ private:
 		return true;
 	}
 
-	constexpr bool resize_string(size_t size, char_t fill = char_t()) noexcept {
+	constexpr void resize_string(size_t size, char_t fill = char_t()) noexcept {
 		if (is_cache_mode()) {
 			if (size < core_t::buffer_size) {
 				core_t::cache.pointer[size] = fill;
-				return true;
+				return;
 			}
 			box_cache_t& cache = core_t::cache;
 			size_t strlen      = cache.specs;
 			respace<true>(size);
 			reset_value(core_t::value, fill, size, strlen);
+			return;
 		}
-		else {
-			box_value_t& value = core_t::value;
-			if (size < value.alloc_size) {
-				value.pointer[size] = fill;
-				return true;
-			}
-			size_t strlen = value.count;
-			respace<false>(size);
-			reset_value(value, fill, size, strlen);
+		box_value_t& value = core_t::value;
+		if (size < value.alloc_size) {
+			value.pointer[size] = fill;
+			return;
 		}
-		return true;
+		size_t strlen = value.count;
+		respace<false>(size);
+		reset_value(value, fill, size, strlen);
 	}
 
 	constexpr bool reserve_string(size_t size) noexcept {

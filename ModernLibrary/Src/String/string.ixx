@@ -9,6 +9,7 @@ import utility;
 import <xmemory>;
 
 export using ::string_mode;
+export using ::string_info;
 
 template <rest::character CharType>
 using string_traits = traits::string_traits<CharType, traits::string_value_traits::no_residue, strutil, std::allocator<CharType>>;
