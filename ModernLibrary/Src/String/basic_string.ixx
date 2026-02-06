@@ -1530,21 +1530,10 @@ private:
 	}
 
 	constexpr void append_impl(const_pointer_t pointer, size_t size) noexcept {
-		/*if (is_cache_mode()) {
+		if (is_cache_mode()) {
 			return append_cache(pointer, size);
 		}
-		return append_storage(pointer, size);*/
-		size_t len = string_length();
-		size_t next_size = len + size;
-		if (next_size > string_max_size()) {
-			if (is_cache_mode()) {
-				respace<false>(next_size * 1.5);
-			}
-			else {
-				respace<true>(next_size * 1.5);
-			}
-		}
-		strutil::strcopy(this->pointer() + len, pointer, size);
+		return append_storage(pointer, size);
 	}
 
 	constexpr void append_impl(const_pointer_t pointer) noexcept {
