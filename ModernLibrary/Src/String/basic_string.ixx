@@ -291,7 +291,7 @@ private:
 		noexcept
 	{
 		[[assume(size <= bitinfo::size<7>)]]
-		strutil::strcopy(
+		strutil::strcopy (
 			cache.pointer + buf_size,
 			pointer, size
 		);
@@ -1500,13 +1500,13 @@ private:
 	constexpr void append_cache(const_pointer_t pointer, size_t size) noexcept {
 		box_cache_t& cache = core_t::cache;
 		size_t buf_size    = cache.specs;
-		size_t next_size = buf_size + size;
+		size_t next_size   = buf_size + size;
 		if (next_size < core_t::buffer_size) {
 			return copy_cache (
 				cache, buf_size, pointer, size
 			);
 		}
-		respace<true>(next_size * 1.2);
+		respace<true>(next_size * 1.5);
 		box_value_t& value = core_t::value;
 		size_t& heap_count = value.count;
 		return append_value (
@@ -1520,7 +1520,7 @@ private:
 		size_t& heap_count = value.count;
 		size_t next_size   = heap_count + size;
 		if (next_size >= value.alloc_size) {
-			respace<false>(next_size * 1.2);
+			respace<false>(next_size * 1.5);
 		}
 		return append_value (
 			value, pointer,
@@ -1530,15 +1530,24 @@ private:
 	}
 
 	constexpr void append_impl(const_pointer_t pointer, size_t size) noexcept {
-		if (is_cache_mode()) {
+		/*if (is_cache_mode()) {
 			return append_cache(pointer, size);
 		}
-		return append_storage(pointer, size);
+		return append_storage(pointer, size);*/
+		size_t next_size = string_length() + size;
+		if (next_size > string_max_size()) {
+			if (is_cache_mode()) {
+				respace<false>(next_size * 1.5);
+			}
+			else {
+				respace<true>(next_size * 1.5);
+			}
+		}
+		strutil::strcopy(this->pointer(), pointer, size);
 	}
 
 	constexpr void append_impl(const_pointer_t pointer) noexcept {
-		size_t size = strutil::strlenof(pointer);
-		return append_impl(pointer, size);
+		return append_impl(pointer, strutil::strlenof(pointer));
 	}
 
 	constexpr void append_impl(basic_string& object) noexcept {
