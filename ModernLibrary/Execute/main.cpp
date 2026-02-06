@@ -11,9 +11,11 @@ int main() {
     auto stime = GetTickCount64();
 
     {
-        for (size_t i = 0; i < 1000000000; i++) {
+        for (size_t i = 0; i < 50000; i++) {
             dast::cstring str = "Hello";
-            str.append(" World");
+            for (size_t j = 0; j < 50000; j++) {
+                str += " World";
+            }
         }
     }
 
@@ -25,9 +27,11 @@ int main() {
 
     {
         
-        for (size_t i = 0; i < 1000000000; i++) {
+        for (size_t i = 0; i < 50000; i++) {
             std::string str = "Hello";
-            str.append(" World");
+            for (size_t j = 0; j < 50000; j++) {
+                str += " World";
+            }
         }
     }
 
