@@ -7,8 +7,6 @@ import utility;
 import <windows.h>;
 
 int main() {
-
-    size_t r = 0;
     
     auto stime = GetTickCount64();
 
@@ -22,7 +20,6 @@ int main() {
     auto etime = GetTickCount64();
 
     std::cout << "Mine: " << (etime - stime) << '\n';
-    std::cout << r << '\n';
 
 	stime = GetTickCount64();
 
@@ -37,6 +34,5 @@ int main() {
 	etime = GetTickCount64();
 
     std::cout << "Std: " << (etime - stime) << '\n';
-    std::cout << r << '\n';
 	return 0;
 }
