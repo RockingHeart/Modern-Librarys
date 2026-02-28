@@ -7,36 +7,35 @@ import utility;
 import <windows.h>;
 
 int main() {
-    
+    auto sstr = new char[] {"Hello"};
     auto stime = GetTickCount64();
 
     {
-        for (size_t i = 0; i < 50000; i++) {
-            dast::cstring str = "Hello";
-            for (size_t j = 0; j < 50000; j++) {
-                str += " World";
+        for (size_t i = 0; i < 10000; i++) {
+            std::string str = sstr;
+            for (size_t j = 0; j < 10000; j++) {
+                str.append(" World");
             }
         }
     }
 
     auto etime = GetTickCount64();
 
-    std::cout << "Mine: " << (etime - stime) << '\n';
+    std::cout << "Std: " << (etime - stime) << '\n';
 
-	stime = GetTickCount64();
+    stime = GetTickCount64();
 
     {
-        
-        for (size_t i = 0; i < 50000; i++) {
-            std::string str = "Hello";
-            for (size_t j = 0; j < 50000; j++) {
+        for (size_t i = 0; i < 10000; i++) {
+            dast::cstring str = sstr;
+            for (size_t j = 0; j < 10000; j++) {
                 str += " World";
             }
         }
     }
 
-	etime = GetTickCount64();
+    etime = GetTickCount64();
 
-    std::cout << "Std: " << (etime - stime) << '\n';
-	return 0;
+    std::cout << "Mine: " << (etime - stime) << '\n';
+    return 0;
 }

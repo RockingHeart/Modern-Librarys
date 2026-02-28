@@ -91,7 +91,7 @@ protected:
 
 	class status {
 		char_t fill_buffer[buffer_size];
-		char_t fill_specs : bandwidth;
+		cache_size_t fill_specs : bandwidth;
 	public:
 		string_mode modes : 1 = string_mode::cache;
 		bool	 is_xored : 1 = false;
