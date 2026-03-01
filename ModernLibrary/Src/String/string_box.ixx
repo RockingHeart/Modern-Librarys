@@ -86,15 +86,15 @@ protected:
 
 	struct cache_t {
 		char_t pointer[buffer_size];
-		cache_size_t specs [[indeterminate]] : bandwidth;
+		cache_size_t specs [[indeterminate]] : 7;
 	};
 
 	class status {
-		char_t fill_buffer[buffer_size];
-		cache_size_t fill_specs : bandwidth;
+		char_t fill_buffer[sizeof(pointer_t) + sizeof(size_t)];
+		size_t __;
+		cache_size_t fill_specs : 7;
 	public:
 		string_mode modes : 1 = string_mode::cache;
-		bool	 is_xored : 1 = false;
 	};
 
 	union {
@@ -123,9 +123,10 @@ public:
 
 	constexpr  string_box(size_t size)
 		noexcept : cache {
-			.specs = static_cast<cache_size_t>(size),
+			.specs = static_cast<cache_size_t>(size)
 		}
 	{
+		state.modes = string_mode::cache;
 		if (size >= buffer_size) {
 			value.count = size;
 			state.modes = string_mode::storage;

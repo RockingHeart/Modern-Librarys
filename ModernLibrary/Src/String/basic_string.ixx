@@ -210,8 +210,9 @@ private:
 		size_t buf_size    = cache.specs;
 		pointer_t buffer   = alloc.allocate(size);
 		strutil::strcopy(buffer, cache.pointer, buf_size);
-		buffer[buf_size] = char_t();
-		value.pointer   = buffer;
+		buffer[buf_size]	= char_t();
+		value.pointer		= buffer;
+		core_t::state.modes = string_mode::storage;
 		if constexpr (trait_is_advanced_mode()) {
 			value.before = nullptr;
 		}
@@ -244,17 +245,19 @@ private:
 	}
 
 	template <bool init_heap>
-	constexpr void respace(size_t size) {
+	constexpr void respace(size_t size) noexcept {
 		box_value_t& value = core_t::value;
 		alloc_t& alloc     = allocator();
-		value.alloc_size   = size;
-		if constexpr (init_heap) {
-			return heapify_cache(alloc, value, size);
-		}
 		if constexpr (trait_is_advanced_mode()) {
 			return reserve_space(alloc, value, size);
 		}
-		return new_space(alloc, value, size);
+		if constexpr (init_heap) {
+			heapify_cache(alloc, value, size);
+		}
+		else {
+			new_space(alloc, value, size);
+		}
+		value.alloc_size = size;
 	}
 
 	constexpr void set_length(size_t size) noexcept {
@@ -397,15 +400,13 @@ private:
 			strutil::strcopy(cache.pointer, str, buf_size);
 			return;
 		}
-		[&] constexpr noexcept {
-			box_value_t& value = core_t::value;
-			size_t size = value.count;
-			size_t alloc_size = size * 1.5;
-			value.pointer = allocator().allocate(alloc_size);
-			value.alloc_size = alloc_size;
-			strutil::strcopy(value.pointer, str, size);
-			value.pointer[size] = char_t();
-		} ();
+		box_value_t& value = core_t::value;
+		size_t size = value.count;
+		size_t alloc_size = size * 1.5;
+		value.pointer = allocator().allocate(alloc_size);
+		value.alloc_size = alloc_size;
+		strutil::strcopy(value.pointer, str, size);
+		value.pointer[size] = char_t();
 	}
 
 	constexpr void assign_init(const std::initializer_list<const char_t*>& list, char_t fill)
@@ -1525,7 +1526,7 @@ private:
 		return append_value (
 			value, pointer,
 			heap_count, heap_count,
-			size, heap_count + size
+			size, next_size
 		);
 	}
 

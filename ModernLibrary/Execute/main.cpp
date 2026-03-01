@@ -9,19 +9,23 @@ import <windows.h>;
 int main() {
     auto sstr = new char[] {"Hello"};
     auto stime = GetTickCount64();
-
+    size_t max = 0;
     {
         for (size_t i = 0; i < 10000; i++) {
             std::string str = sstr;
             for (size_t j = 0; j < 10000; j++) {
                 str.append(" World");
             }
+            max = (str.capacity());
         }
     }
 
     auto etime = GetTickCount64();
 
     std::cout << "Std: " << (etime - stime) << '\n';
+
+    std::cout << max << '\n';
+    max = 0;
 
     stime = GetTickCount64();
 
@@ -31,11 +35,13 @@ int main() {
             for (size_t j = 0; j < 10000; j++) {
                 str += " World";
             }
+            max = str.max_size();
         }
     }
 
     etime = GetTickCount64();
 
     std::cout << "Mine: " << (etime - stime) << '\n';
+    std::cout << max << '\n';
     return 0;
 }
