@@ -11,9 +11,10 @@ int main() {
     auto stime = GetTickCount64();
     size_t max = 0;
     {
-        for (size_t i = 0; i < 10000; i++) {
+        for (size_t i = 0; i < 100000; i++) {
             std::string str = sstr;
-            for (size_t j = 0; j < 10000; j++) {
+            str.resize(100000);
+            for (size_t j = 0; j < 100000; j++) {
                 str.append(" World");
             }
             max = (str.capacity());
@@ -30,9 +31,10 @@ int main() {
     stime = GetTickCount64();
 
     {
-        for (size_t i = 0; i < 10000; i++) {
+        for (size_t i = 0; i < 100000; i++) {
             dast::cstring str = sstr;
-            for (size_t j = 0; j < 10000; j++) {
+            str.resize(100000);
+            for (size_t j = 0; j < 100000; j++) {
                 str += " World";
             }
             max = str.max_size();
