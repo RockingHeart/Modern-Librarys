@@ -1,4 +1,4 @@
-﻿export module string_core;
+export module string_core;
 
 import string_box;
 import string_context;

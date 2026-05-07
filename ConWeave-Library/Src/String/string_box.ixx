@@ -25,7 +25,7 @@ private:
 	struct base_value {
 		pointer_t pointer;
 		size_t    count;
-		size_t    alloc_size;
+		size_t    left;
 	};
 
 	template <value_traits>
@@ -42,7 +42,7 @@ private:
 	{
 		pointer_t before;
 		size_t    before_count;
-		size_t    before_alloc_size;
+		size_t    before_left;
 	};
 
 	template <>
@@ -51,9 +51,9 @@ private:
 	{};
 
 	struct residue_info {
-		const_pointer_t address;
-		const size_t    size;
-		const size_t    alloc_size;
+		const_pointer_t const address;
+		const size_t		  size;
+		const size_t		  left;
 	};
 
 private:
