@@ -1,6 +1,7 @@
-﻿export module basic_string;
+export module basic_string;
 
 import string_traits;
+import string_context;
 import char_wrap;
 
 import utility;
@@ -38,7 +39,7 @@ private:
 	using box_cache_t  = typename core_t::cache_t;
 
 private:
-	using string_info = typename core_t::string_info;
+	using string_info   = typename string_info<::string_mode>;
 
 public:
 	using string_traits =          StringTraits;
@@ -55,7 +56,17 @@ public:
 public:
 	using self_t = basic_string;
 
-public:
+private:
+
+	template <assoptions AssignOption>
+	using option_t = std::conditional_t <
+		AssignOption == assoptions::pull,
+		char_t,
+		void
+	>;
+
+	template <assoptions AssignOption>
+	using assign_option_t = assign_operation_t<AssignOption, option_t<AssignOption>>;
 
 public:
 
@@ -473,20 +484,18 @@ private:
 		value.pointer[size] = char_t();
 	}
 
-	constexpr void shift(basic_string& object, char_action act) noexcept {
-		if (act == char_action::upper) {
-			for (auto& value : object) {
-				if (value >= 'a' && value <= 'z') {
-					value -= 32;
-				}
-			}
-			return;
-		}
-		else {
-			for (auto& value : object) {
-				if (value >= 'A' && value <= 'Z') {
-					value += 32;
-				}
+	template <assoptions Option>
+	assign_option_t<Option> assign_string(const char_t* pointer)
+		noexcept (
+			noexcept(append_impl(char_t()))
+		)
+	{
+		std::size_t size = strutil::strlenof(pointer);
+		for (std::size_t i = 0; i < size; i++) {
+			char_t current = pointer[i];
+			append_impl(current);
+			if constexpr (Option == assoptions::pull) {
+				co_yield current;
 			}
 		}
 	}
@@ -1500,24 +1509,26 @@ private:
 private:
 
 	constexpr match_t<size_t> front_index (char_t target,
-		                                   size_t point,
-		                                   size_t end)
+		                                  size_t point,
+		                                  size_t end)
 		noexcept
 	{
-		for (const_pointer_t data = pointer(); point > 0; --point) {
+		const_pointer_t data = pointer();
+		for (; point < end; ++point) {
 			if (data[point] == target) {
 				return point;
 			}
 		}
 		return match::failed;
-	};
+	}
 
 	constexpr match_t<size_t> last_index (char_t target,
-		                                  size_t point,
-		                                  size_t end)
+										  size_t point,
+										  size_t end)
 		noexcept
 	{
-		for (const_pointer_t data = pointer(); point < end; ++point) {
+		const_pointer_t data = pointer();
+		for (; point != static_cast<size_t>(-1) && point >= end; --point, --end) {
 			if (data[point] == target) {
 				return point;
 			}
@@ -1533,9 +1544,9 @@ private:
 		char_t target, size_t point, size_t end
 	) noexcept {
 		if (point > end) {
-			return front_index(target, point, end);
+			return last_index(target, point, end);
 		}
-		return last_index(target, point, end);
+		return front_index(target, point, end);
 	}
 
 	constexpr reference_t at_string(size_t position) {

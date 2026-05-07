@@ -1,11 +1,11 @@
 ﻿export module string_core;
 
 import string_box;
+import string_context;
 
 import <type_traits>;
 
 export using ::string_mode;
-export using ::string_info;
 
 export template <class BasicString, class StringTraits>
 	requires (
@@ -25,8 +25,6 @@ protected:
 	using box_cache_t  = typename box_t::cache_t;
 	using box_t::box_t;
 
-	using string_info = ::string_info;
-
 public:
 	using char_t          = typename string_traits::char_t;
 	using reference_t     = typename string_traits::reference_t;
@@ -44,6 +42,15 @@ protected:
 	using box_t::value;
 	using box_t::cache;
 	using box_t::buffer_size;
+
+public:
+
+	// Beta function
+	template <assoptions Option, class SelfType, class... ArgsType>
+	auto assign(this SelfType&& self, ArgsType&&... args) noexcept {
+		static_assert(Option != assoptions::async, "Waiting for C++26 of std::exec");
+		return self.template assign_string<Option>(std::forward<ArgsType>(args)...);
+	};
 
 public:
 

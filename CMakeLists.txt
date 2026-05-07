@@ -13,14 +13,14 @@ else()
     add_compile_options(-fmodules)
 endif()
 
-file(GLOB StringPath "ConWeaveLib/Src/String/*.ixx")
-file(GLOB FixedVectorPath "ConWeaveLib/Src/FixedVector/*.ixx")
-file(GLOB VectorPath "ConWeaveLib/Src/Vector/*.ixx")
-file(GLOB WrapPath "ConWeaveLib/Src/Wrap/*.ixx")
-file(GLOB UtilityPath "ConWeaveLib/Src/Utility/*.ixx")
+file(GLOB StringPath "ConWeave-Library/Src/String/*.ixx")
+file(GLOB FixedVectorPath "ConWeave-Library/Src/FixedVector/*.ixx")
+file(GLOB VectorPath "ConWeave-Library/Src/Vector/*.ixx")
+file(GLOB WrapPath "ConWeave-Library/Src/Wrap/*.ixx")
+file(GLOB UtilityPath "ConWeave-Library/Src/Utility/*.ixx")
 
 add_executable(ConWeaveLib
-    ConWeaveLib/Execute/main.cpp
+    ConWeave-Library/Execute/main.cpp
 )
 
 target_sources(ConWeaveLib
@@ -39,4 +39,4 @@ source_group("FixedVector" FILES ${FixedVectorPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
 
-source_group("Execute" ConWeaveLib/Execute/main.cpp)
+source_group("Execute" ConWeave-Library/Execute/main.cpp)

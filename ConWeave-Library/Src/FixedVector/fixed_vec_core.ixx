@@ -1,4 +1,4 @@
-﻿export module fixed_vec_core;
+export module fixed_vec_core;
 
 import fixed_vec_box;
 
@@ -101,18 +101,15 @@ protected:
 protected:
 
 	template <class ArgType>
-	constexpr bool push_element(ArgType&& arg)
+	constexpr void unchcked_push_element(ArgType&& arg)
 		noexcept (
-			box_t::is_ordinary_type || 
+			box_t::is_ordinary_type ||
 			noexcept (
 				new (std::addressof(box_t::pointer()[box_t::size++]))
 					ArgType(std::forward<ArgType>(arg))
 			)
 		)
 	{
-		if (box_t::size >= Size) {
-			return false;
-		}
 		if constexpr (box_t::is_ordinary_type) {
 			box_t::value.data[box_t::size++] = std::forward<ArgType>(arg);
 		}
@@ -121,23 +118,47 @@ protected:
 			new (std::addressof(pointer[box_t::size++]))
 				ArgType(std::forward<ArgType>(arg));
 		}
+	}
+
+	template <class ArgType>
+	constexpr bool push_element(ArgType&& arg)
+		noexcept (
+			box_t::is_ordinary_type || 
+			noexcept (
+				unchcked_push_element(std::forward<ArgType>(arg))
+			)
+		)
+	{
+		if (box_t::size >= Size) {
+			return false;
+		}
+		unchcked_push_element(std::forward<ArgType>(arg));
 		return true;
 	}
 
-	constexpr bool pop_element()
+	constexpr void unchcked_pop_element()
 		noexcept (
 			box_t::is_ordinary_type ||
 			std::is_nothrow_destructible_v<value_t>
 		)
 	{
-		if (!box_t::size) {
-			return false;
-		}
 		box_t::size -= 1;
 		if constexpr (!box_t::is_ordinary_type) {
 			pointer_t pointer = box_t::pointer();
 			pointer[box_t::size].~value_t();
 		}
+	}
+
+	constexpr bool pop_element()
+		noexcept (
+			box_t::is_ordinary_type ||
+			unchcked_pop_element()
+		)
+	{
+		if (!box_t::size) {
+			return false;
+		}
+		unchcked_pop_element();
 		return true;
 	}
 

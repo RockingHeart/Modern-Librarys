@@ -7,6 +7,8 @@
 | construct | [construct] |
 | push back | [push_back] |
 | pop back | [pop_back] |
+| unchcked push back | [unchcked_push_back] |
+| unchcked pop back | [unchcked_pop_back] |
 | begin and end | [begin_and_end] |
 | size | [size] |
 | capacity | [capacity] |
@@ -51,6 +53,12 @@
                     ```
                     #### 以上代码输出：true (1)
                     函数返回值描述：若无剩余空间，则返回false，否则返回true
+
+            # unchcked_push_back
+            - 同push_back的核心功能，区别是不做检查，在某种情况下是不安全的
+
+            # unchcked_pop_back
+            - 同pop_back的核心功能，区别是不做检查，在某种情况下是不安全的
 
              ## pop_back
             - 返回值类型：bool
@@ -188,6 +196,8 @@
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#construct
 [push_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#push_back
 [pop_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#pop_back
+[unchcked_push_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#unchcked_push_back
+[unchcked_pop_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#unchcked_pop_back
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#begin-and-end
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#size
 [capacity]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#capacity

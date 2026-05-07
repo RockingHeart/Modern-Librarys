@@ -1,15 +1,10 @@
-﻿export module string_box;
+export module string_box;
 
 import string_traits;
 
 using namespace traits;
 
 export using ::string_mode;
-
-export struct string_info {
-	string_mode modes : 1;
-	bool	 is_xored : 1;
-};
 
 export template <class StringTraits>
 class string_box {
@@ -27,31 +22,32 @@ public:
 
 private:
 
-	template <value_traits>
-	struct box_value_t;
-
-	template <>
-	struct box_value_t<value_traits::no_residue>
-	{
+	struct base_value {
 		pointer_t pointer;
 		size_t    count;
 		size_t    alloc_size;
 	};
 
+	template <value_traits>
+	struct box_value {};
+
 	template <>
-	struct box_value_t<value_traits::remain>
+	struct box_value<value_traits::no_residue>
+		: base_value
+	{};
+
+	template <>
+	struct box_value<value_traits::remain>
+		: base_value
 	{
-		pointer_t pointer;
-		size_t    count;
-		size_t    alloc_size;
 		pointer_t before;
 		size_t    before_count;
 		size_t    before_alloc_size;
 	};
 
 	template <>
-	struct box_value_t<value_traits::enhance>
-		:  box_value_t<value_traits::remain>
+	struct box_value<value_traits::enhance>
+		:  box_value<value_traits::remain>
 	{};
 
 	struct residue_info {
@@ -76,7 +72,7 @@ private:
 
 public:
 
-	using box_value_type = box_value_t<string_traits::value_trait>;
+	using box_value_type = box_value<string_traits::value_trait>;
 
 	constexpr static size_t type_size   = sizeof(char_t);
 	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / type_size;

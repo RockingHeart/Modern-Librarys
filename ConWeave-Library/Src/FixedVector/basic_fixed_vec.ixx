@@ -1,4 +1,4 @@
-﻿export module basic_fixed_vec;
+export module basic_fixed_vec;
 
 import fixed_vec_core;
 
@@ -46,7 +46,7 @@ public:
 	}
 
 	constexpr bool push_back(value_t&& value)
-		noexcept(noexcept(core_t::push_element(std::forward<value_t&&>(value))))
+		noexcept(noexcept(core_t::push_element(std::forward<value_t>(value))))
 	{
 		return core_t::push_element(std::forward<value_t&&>(value));
 	}
@@ -54,6 +54,18 @@ public:
 	constexpr bool pop_back() noexcept(core_t::pop_element())
 	{
 		return core_t::pop_element();
+	}
+
+	constexpr bool unchcked_push_back(value_t&& value)
+		noexcept(noexcept(core_t::unchcked_push_element(std::forward<value_t>(value))))
+	{
+		return core_t::unchcked_push_element(std::forward<value_t&&>(value));
+	}
+
+	constexpr bool unchcked_pop_back()
+		noexcept(noexcept(core_t::unchcked_pop_element()))
+	{
+		return core_t::unchcked_pop_element();
 	}
 
 public:
@@ -80,12 +92,16 @@ public:
 		return core_t::size;
 	}
 
-	constexpr size_t capacity() const noexcept {
+	static constexpr size_t max_byte_size() noexcept {
+		return core_t::max_size * sizeof(value_t);
+	}
+
+	static constexpr size_t capacity() noexcept {
 		return core_t::max_size - core_t::size;
 	}
 
 	constexpr static size_t max_size() noexcept {
-		return Size;
+		return core_t::max_size;
 	}
 
 public:

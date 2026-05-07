@@ -4,12 +4,13 @@ import string_traits;
 import string_core;
 import basic_string;
 
+export import string_context;
+
 import utility;
 
 import <xmemory>;
 
 export using ::string_mode;
-export using ::string_info;
 
 template <rest::character CharType>
 using primary_traits = traits::string_traits <
