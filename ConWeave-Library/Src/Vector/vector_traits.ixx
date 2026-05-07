@@ -4,7 +4,7 @@ import utility;
 
 import <cstddef>;
 
-namespace traits {
+export namespace traits {
 	
 	template <
 		class ValueType,

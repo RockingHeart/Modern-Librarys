@@ -772,7 +772,7 @@ private:
 	constexpr basic_string& delivered(OptionType&& option)
 		noexcept requires (
 		    requires {
-				option(char_t());
+				option(this->operator[](0));
 	        }
 		)
 	{

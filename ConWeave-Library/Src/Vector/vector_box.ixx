@@ -5,7 +5,7 @@ import vector_traits;
 import <cstddef>;
 import fixed_vector;
 
-template <class VectorTraits, typename VectorTraits::size_t BuferSize>
+export template <class VectorTraits, typename VectorTraits::size_t BuferSize>
 class vector_box {
 public:
 
@@ -38,4 +38,12 @@ protected:
 		fixed_vector<buffer_size> buffer;
 		box_value				  data;
 	};
+
+public:
+
+	constexpr vector_box() : buffer() {};
+
+public:
+
+	constexpr ~vector_box() {};
 };

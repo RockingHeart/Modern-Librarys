@@ -130,7 +130,7 @@ public:
 public:
 
 	constexpr ~basic_fixed_vec()
-		noexcept(core_t::destroy_vector())
+		noexcept(noexcept(core_t::destroy_vector()))
 	{
 		core_t::destroy_vector();
 	}
