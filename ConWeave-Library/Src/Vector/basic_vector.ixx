@@ -69,8 +69,10 @@ public:
 	}
 
 	constexpr size_t size() const noexcept {
-		if (core_t::mode == vector_mode::cache) {
-			return core_t::buffer.size();
+		if constexpr (core_t::buffer_size) {
+			if (core_t::mode == vector_mode::cache) {
+				return core_t::buffer.size();
+			}
 		}
 		return data_size();
 	}
@@ -82,15 +84,19 @@ public:
 public:
 
 	constexpr pointer_t begin() noexcept {
-		if (core_t::mode == vector_mode::cache) {
-			return core_t::buffer.begin();
+		if constexpr (core_t::buffer_size) {
+			if (core_t::mode == vector_mode::cache) {
+				return core_t::buffer.begin();
+			}
 		}
 		return core_t::data.origin;
 	}
 
 	constexpr pointer_t end() noexcept {
-		if (core_t::mode == vector_mode::cache) {
-			return core_t::buffer.end();
+		if constexpr (core_t::buffer_size) {
+			if (core_t::mode == vector_mode::cache) {
+				return core_t::buffer.end();
+			}
 		}
 		return core_t::data.curent;
 	}
@@ -115,8 +121,10 @@ public:
 			return;
 		}
 
-		if (core_t::mode == vector_mode::cache) {
-			return;
+		if constexpr (core_t::buffer_size) {
+			if (core_t::mode == vector_mode::cache) {
+				return;
+			}
 		}
 
 		size_t size = data_size();

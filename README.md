@@ -21,7 +21,10 @@
         - 更新：[UpdateLog-FixedVector]
         - 文介：[ImplationFile-FixedVector]
     - Vector
+        - 接文：[ClassInterface-Vector]
         - 未来：[Future-Vector]
+        - 更新：[UpdateLog-Vector]
+        - 文介：[ImplationFile-Vector]
     - Utility
         - 文介：[ImplationFile-Utility]
 
@@ -31,8 +34,8 @@
 | 项目实现 | 实现状态 | 实现时间 | 版本号 |
 | :---: | :---: | :---: | :---: |
 | string | 已实现 | 实现基础有效时间为2025年11月份之前 | 1.11.0 |
-| fixed_vector | 已实现 | 将于2025年11月份开始实现 | 1.3.4 |
-| vector | 待实现 | 待定 | 0.0.0 |
+| fixed_vector | 已实现 | 将于2025年11月份开始实现 | 1.3.5 |
+| vector | 已实现 | 待2026.5.16 | 0.0.2 |
 
 ## 性能评估
 ### 根据MSVC下的综合性能测试结果：它比标准库慢约一个速度级（设S为速度，速度级即S的N次方）；
@@ -42,7 +45,7 @@
 <br>
 
 > [!TIP]
-> 接口调用采用C++23的显式This与模板可变参数
+> String接口调用采用C++23的显式This与模板可变参数
 >
 > 若不知晓接口如何使用，请阅读指定文档
 
@@ -61,6 +64,20 @@
 - [x] 双重数据
 - [x] 64位占用大小为48字节（MSVC，char类型，且allocator无状态）
 - [x] 64位缓存大小为47字节（MSVC，char类型，且allocator无状态）
+
+<dl>
+    <dt>关于fixed_vector的特性</dt>
+</dl>
+
+- [x] 若为基础类型，则支持编译期
+
+<dl>
+    <dt>关于vector的特性</dt>
+</dl>
+
+- [x] 缓冲区为0时无缓冲区
+- [x] 缓冲区太小时内部设定缓冲区
+- [x] 缓冲区若非过小则依用户设定
 
 ## CMake使用教程
 [*下载*][Download]此项目至本地 <br>
@@ -98,7 +115,10 @@ This project is currently using Chinese to support MD files.
 [ImplationFile-FixedVector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/FixedVector/ImplationFile-FixedVector.md
 
 <!-- Vector -->
+[ClassInterface-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/ClassInterface-Vector.md
 [Future-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/Future-Vector.md
+[UpdateLog-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/UpdateLog-Vector.md
+[ImplationFile-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/ImplationFile-Vector.md
 
 <!-- Utility -->
 [ImplationFile-Utility]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Utility/ImplationFile.md

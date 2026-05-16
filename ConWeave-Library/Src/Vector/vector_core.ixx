@@ -96,6 +96,7 @@ protected:
 			);
 			data.curent = data.origin;
 			data.remain = 5;
+			return;
 		}
 		size_t old_size   = data.curent - old_ptr;
 		size_t alloc_size = static_cast<size_t> (
@@ -140,8 +141,8 @@ protected:
 		}
 		else {
 			new (data.curent) value_t(std::move(value));
-			data.curent += 1; data.remain -= 1;
 		}
+		data.curent += 1; data.remain -= 1;
 	}
 
 protected:
@@ -160,5 +161,6 @@ protected:
 			data.curent->~value_t();
 		}
 		data.curent -= 1; data.remain += 1;
+		return true;
 	}
 };
