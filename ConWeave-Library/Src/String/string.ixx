@@ -1,4 +1,4 @@
-﻿export module string;
+export module string;
 
 import string_traits;
 import string_core;
@@ -15,7 +15,7 @@ export using ::string_mode;
 template <rest::character CharType>
 using primary_traits = traits::string_traits <
 	CharType, traits::string_value_traits::no_residue,
-	strutil, std::allocator<CharType>
+	strutil, std::allocator
 >;
 
 export namespace dast {

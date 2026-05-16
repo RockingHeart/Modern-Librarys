@@ -18,6 +18,7 @@ public:
 	using size_t		  = typename string_traits::size_t;
 	using value_traits	  = typename string_traits::value_traits;
 
+	using alloc_t	   = typename string_traits::alloc_t;
 	using cache_size_t = typename string_traits::cache_size_t;
 
 private:

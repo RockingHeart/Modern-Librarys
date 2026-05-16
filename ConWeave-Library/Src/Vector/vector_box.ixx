@@ -3,16 +3,22 @@ export module vector_box;
 import vector_traits;
 
 import <cstddef>;
+import <type_traits>;
+
 import fixed_vector;
 
-export template <class VectorTraits, typename VectorTraits::size_t BuferSize>
-class vector_box {
+export using ::vector_mode;
+
+export template <
+	class VectorTraits,
+	typename VectorTraits::size_t BuferSize
+> class vector_box {
 public:
 
 	using vector_traits = VectorTraits;
 
 	using value_t		  = typename vector_traits::value_t;
-	using referce_t		  = typename vector_traits::referce_t;
+	using reference_t	  = typename vector_traits::reference_t;
 	using pointer_t		  = typename vector_traits::pointer_t;
 	using const_pointer_t = typename vector_traits::const_pointer_t;
 
@@ -26,12 +32,12 @@ public:
 protected:
 
 	struct box_value {
-		sequence_t pointer;
-		size_t size;
-		size_t remain;
+		pointer_t origin;
+		pointer_t curent;
+		size_t	  remain;
 	};
 
-	static constexpr size_t buffer_size = BuferSize * sizeof(value_t)
+	static constexpr size_t buffer_size = BuferSize == 0 ? 0 : BuferSize * sizeof(value_t)
 		<= sizeof(box_value) ? sizeof(box_value) / sizeof(value_t) : BuferSize;
 
 	union {
@@ -39,9 +45,17 @@ protected:
 		box_value				  data;
 	};
 
+	vector_mode mode;
+
 public:
 
-	constexpr vector_box() : buffer() {};
+	constexpr static bool can_memcpy = std::is_trivially_copyable_v<value_t>;
+
+public:
+
+	constexpr vector_box()
+		: data(), mode(vector_mode::cache)
+	{}
 
 public:
 

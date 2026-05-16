@@ -1,4 +1,4 @@
-﻿export module string_traits;
+export module string_traits;
 
 import utility;
 import <cstddef>;
@@ -22,9 +22,10 @@ export namespace traits {
 	template <
 		rest::character CharType, string_value_traits StringValueTrait,
 		template <rest::character, class> class StringUtility,
-		rest::allocator AllocatorType, class SizeType
+		template <class> class AllocatorType, class SizeType
 	> requires (
-		is_character_v<typename AllocatorType::value_type>
+		rest::allocator<AllocatorType<CharType>> &&
+		is_character_v<typename AllocatorType<CharType>::value_type>
 		&&
 		string_utility_type<StringUtility<CharType, SizeType>>
 	) struct string_traits;
@@ -40,10 +41,10 @@ enum class traits::string_value_traits {
 template <
 	rest::character CharType, traits::string_value_traits StringValueTrait,
 	template <rest::character, class> class StringUtility,
-	rest::allocator AllocatorType, class SizeType = std::size_t
+	template <class> class AllocatorType, class SizeType = std::size_t
 > requires (
-	is_character_v<typename AllocatorType::value_type>
-	&&
+	rest::allocator<AllocatorType<CharType>> &&
+	is_character_v<typename AllocatorType<CharType>::value_type> &&
 	string_utility_type<StringUtility<CharType, SizeType>>
 ) struct traits::string_traits {
 	using char_t          =       CharType;
@@ -53,7 +54,7 @@ template <
 
 	using size_t = SizeType;
 
-	using alloc_t	   = AllocatorType;
+	using alloc_t	   = AllocatorType<CharType>;
 	using strutil	   = StringUtility<CharType, SizeType>;
 	using value_traits = string_value_traits;
 

@@ -10,12 +10,12 @@ export using ::string_mode;
 export template <class BasicString, class StringTraits>
 	requires (
 	    requires {
-	        typename StringTraits::alloc_t;
+	        typename string_box<StringTraits>::alloc_t;
         }
 	)
 class string_core :
-	private       StringTraits::alloc_t,
-	protected     string_box<StringTraits> {
+	protected     string_box<StringTraits>,
+	private       string_box<StringTraits>::alloc_t {
 public:
 	using string_traits = StringTraits;
 
@@ -32,7 +32,7 @@ public:
 	using const_pointer_t = typename string_traits::const_pointer_t;
 	using size_t          = typename string_traits::size_t;
 
-	using alloc_t = typename string_traits::alloc_t;
+	using alloc_t = typename box_t::alloc_t;
 
 private:
 	using basic_string =          BasicString;

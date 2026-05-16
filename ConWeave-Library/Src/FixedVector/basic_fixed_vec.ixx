@@ -71,7 +71,7 @@ public:
 public:
 
 	constexpr pointer_t begin() noexcept {
-		return core_t::value.data;
+		return reinterpret_cast<pointer_t>(core_t::value.data);
 	}
 
 	constexpr const_pointer_t begin() const noexcept {
@@ -79,7 +79,7 @@ public:
 	}
 
 	constexpr pointer_t end() noexcept {
-		return core_t::value.data + core_t::size;
+		return begin() + core_t::size;
 	}
 
 	constexpr const_pointer_t end() const noexcept {
@@ -135,4 +135,37 @@ public:
 		core_t::destroy_vector();
 	}
 
+};
+
+export template <class Traits> class basic_fixed_vec<Traits, 0> {
+private:
+	using traits = Traits;
+
+public:
+	using value_t		  = typename traits::value_t;
+	using reference_t	  = typename traits::reference_t;
+	using pointer_t		  = typename traits::pointer_t;
+	using const_pointer_t = typename traits::const_pointer_t;
+	using size_t		  = typename traits::size_t;
+	using initlist_t	  = typename traits::initlist_t;
+
+public:
+
+	static constexpr void push_back() noexcept {}
+	static constexpr void push_back(value_t&& value) noexcept {}
+	static constexpr void pop_back() {}
+	static constexpr void unchcked_push_back(value_t&& value) noexcept {}
+	static constexpr void unchcked_pop_back() noexcept {}
+	static constexpr void begin() noexcept {}
+	static constexpr void end() noexcept {}
+	static constexpr void size() noexcept {}
+	static constexpr void max_byte_size() noexcept {}
+	static constexpr void capacity() noexcept {}
+	static constexpr void max_size() noexcept {}
+	static constexpr void at(size_t position) noexcept {}
+	static constexpr void operator[](size_t position) noexcept {}
+
+public:
+
+	constexpr ~basic_fixed_vec() noexcept {};
 };

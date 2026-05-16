@@ -1,4 +1,4 @@
-# 此为介绍类与其接口的文档
+# 此为介绍FixedVector类与其接口的文档
 
 ## 定长向量接口快照表
 
@@ -20,8 +20,10 @@
 
     > fixed_vector是模板类
         > 它需要填入值类型与长度
+    > fixed_vector的0size的特化版本
+        > 空定义接口
 
-    - 作用：静态存储元素
+    - 作用：静态与动态存储定长向量元素
         - 类型描述：若值类型为int，则reference为int&，以此类推
         - 以下为接口：
             ## construct
@@ -40,7 +42,7 @@
             - 返回值类型：bool
                 - 参数列表：(const value_t&)
                 - push_back(const value_t& value)
-                    - 用于推入最后一个位置的元素
+                    - 用于将元素推入末尾
                     ``` C++
                     import fixed_vector;
                     import std;
@@ -52,7 +54,7 @@
                     }
                     ```
                     #### 以上代码输出：true (1)
-                    函数返回值描述：若无剩余空间，则返回false，否则返回true
+                    函数强调返回描述：若无剩余空间，则返回false，否则返回true
 
             # unchcked_push_back
             - 同push_back的核心功能，区别是不做检查，在某种情况下是不安全的
@@ -60,11 +62,11 @@
             # unchcked_pop_back
             - 同pop_back的核心功能，区别是不做检查，在某种情况下是不安全的
 
-             ## pop_back
+            ## pop_back
             - 返回值类型：bool
                 - 参数列表：(void)
                 - pop_back()
-                    - 用于弹出最后一个位置的元素
+                    - 用于弹出末尾元素
                     ``` C++
                     import fixed_vector;
                     import std;
@@ -80,7 +82,7 @@
                     ```
                     #### 以上代码输出：true (1)
                     #### 弹出前有：0 1 2 弹出后：0 1
-                    函数返回值描述：若无剩余空间，则返回false，否则返回true
+                    函数强调返回描述：若无剩余空间，则返回false，否则返回true
 
             ## begin and end
             - 返回值类型：pointer_t 非静态成员函数名：begin 参数列表：(void) 与 返回值类型：pointer_t 非静态成员函数名：end 参数列表：（void）
@@ -102,7 +104,7 @@
                 }
                 ```
                 #### 以上代码输出：0 1 2 3 4
-                函数返回描述：无
+                函数强调返回描述：无
 
             ## size
             - 返回值类型：size_t 非静态成员函数名：size 参数列表：(void)
@@ -119,7 +121,7 @@
                     }
                     ```
                     #### 以上代码输出： 0
-                    函数返回描述：无
+                    函数强调返回描述：无
 
             ## capacity
             - 返回值类型：size_t 非静态成员函数名：capacity 参数列表：(void)
@@ -136,7 +138,7 @@
                     }
                     ```
                     #### 以上代码输出： 4
-                    函数返回描述：无
+                    函数强调返回描述：无
 
             ## max_size
             - 返回值类型：size_t 非静态成员函数名：size 参数列表：(void)
@@ -153,7 +155,7 @@
                     }
                     ```
                     #### 以上代码输出： 5
-                    函数返回描述：无
+                    函数强调返回描述：无
 
             ## at
             - 返回值类型：reference_t 非静态成员函数名：at 参数列表：(size_t)
@@ -168,12 +170,12 @@
                         dast::fixed_vector<int, 5> vec;
                         vec[0] = 1;
                         std::cout << vec.at(0) << '\n' // out: 1
-                        vec.at(6); // error: out of range
+                        vec.at(6); // Exception: out of range
                         return 0;
                     }
                     ```
                     #### 由于抛出异常，以上代码执行至vec.at(6)时终止
-                    函数返回描述：无
+                    函数强调返回描述：无
 
             ## operator
             - operator[]
@@ -191,7 +193,7 @@
                         }
                         ```
                         #### 以上代码输出： 1
-                        函数返回描述：无
+                        函数强调返回描述：无
 
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#construct
 [push_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#push_back

@@ -217,6 +217,7 @@ private:
 	{
 		box_cache_t& cache = core_t::cache;
 		size_t buf_size    = cache.specs;
+		size			   = std::max(size, buf_size);
 		size_t alloc_size  = size * expand;
 		pointer_t buffer   = alloc.allocate(alloc_size);
 		strutil::strcopy(buffer, cache.pointer, buf_size);
@@ -284,7 +285,9 @@ private:
 		if constexpr (init_heap) {
 			return heapify_cache<expand>(alloc, value, size);
 		}
-		return new_space<expand>(alloc, value, size);
+		else {
+			return new_space<expand>(alloc, value, size);
+		}
 	}
 
 	constexpr void set_length(size_t size) noexcept {
