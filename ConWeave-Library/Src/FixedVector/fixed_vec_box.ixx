@@ -61,7 +61,7 @@ public:
 		return reinterpret_cast<const_pointer_t>(value.data);
 	}
 
-	constexpr  fixed_vec_box() noexcept : value(), size(0) {};
+	constexpr  fixed_vec_box()			  noexcept : size(0) {};
 	constexpr  fixed_vec_box(size_t size) noexcept : size(size) {};
-	constexpr ~fixed_vec_box() noexcept = default;
+	constexpr ~fixed_vec_box()			  noexcept = default;
 };
