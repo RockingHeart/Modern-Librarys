@@ -8,7 +8,7 @@ int main() {
     {
 	    for (std::size_t i = 0; i < 100000; i++) {
             //std::vector<int> vec(5);
-            dast::vector<int,6> vec(5);
+            dast::vector<int> vec(5);
             
             for (auto j = 0ull; j < 10000; j++) {
                 vec.push_back(j);

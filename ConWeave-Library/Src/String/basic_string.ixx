@@ -206,7 +206,7 @@ private:
 		return size;
 	}
 
-	template <float expand>
+	template <float Expand>
 	constexpr void heapify_cache (alloc_t&     alloc,
 								  box_value_t& value,
 		                          size_t       size)
@@ -218,7 +218,7 @@ private:
 		box_cache_t& cache = core_t::cache;
 		size_t buf_size    = cache.specs;
 		size			   = std::max(size, buf_size);
-		size_t alloc_size  = size * expand;
+		size_t alloc_size  = size * Expand;
 		pointer_t buffer   = alloc.allocate(alloc_size);
 		strutil::strcopy(buffer, cache.pointer, buf_size);
 		buffer[buf_size]	= char_t();
@@ -253,7 +253,7 @@ private:
 		strutil::strcopy(value.pointer, value.before, value.before_count);
 	}
 
-	template <float expand>
+	template <float Expand>
 	constexpr void new_space (alloc_t&     alloc,
 							  box_value_t& value,
 		                      size_t       size)
@@ -263,14 +263,14 @@ private:
 		)
 	{
 		pointer_t old_ptr     = value.pointer;
-		size_t alloc_size	  = size * expand;
+		size_t alloc_size	  = size * Expand;
 		value.pointer		  = alloc.allocate(alloc_size);
 		value.left			  = alloc_size - size;
 		strutil::strcopy(value.pointer, old_ptr, value.count);
 		alloc.deallocate(old_ptr, value.count);
 	}
 
-	template <bool init_heap = false, float expand = 0.0f>
+	template <bool InitHeap = false, float Expand = 0.0f>
 	constexpr void respace(size_t size)
 		noexcept (
 			noexcept(allocator().allocate(0ull)) &&
@@ -282,11 +282,11 @@ private:
 		if constexpr (trait_is_advanced_mode()) {
 			return reserve_before(alloc, value, size);
 		}
-		if constexpr (init_heap) {
-			return heapify_cache<expand>(alloc, value, size);
+		if constexpr (InitHeap) {
+			return heapify_cache<Expand>(alloc, value, size);
 		}
 		else {
-			return new_space<expand>(alloc, value, size);
+			return new_space<Expand>(alloc, value, size);
 		}
 	}
 

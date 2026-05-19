@@ -96,7 +96,7 @@ public:
 		return core_t::max_size * sizeof(value_t);
 	}
 
-	static constexpr size_t capacity() noexcept {
+	static constexpr size_t remain() noexcept {
 		return core_t::max_size - core_t::size;
 	}
 
@@ -160,7 +160,7 @@ public:
 	static constexpr void end() noexcept {}
 	static constexpr void size() noexcept {}
 	static constexpr void max_byte_size() noexcept {}
-	static constexpr void capacity() noexcept {}
+	static constexpr void remain() noexcept {}
 	static constexpr void max_size() noexcept {}
 	static constexpr void at(size_t position) noexcept {}
 	static constexpr void operator[](size_t position) noexcept {}

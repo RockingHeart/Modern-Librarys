@@ -14,8 +14,8 @@ export template <class BasicString, class StringTraits>
         }
 	)
 class string_core :
-	protected     string_box<StringTraits>,
-	private       string_box<StringTraits>::alloc_t {
+	private		  StringTraits::alloc_t,
+	protected     string_box<StringTraits> {
 public:
 	using string_traits = StringTraits;
 
@@ -60,7 +60,7 @@ public:
 	}
 
 	template <class SelfType>
-	constexpr auto capacity(this SelfType&& self) noexcept {
+	constexpr auto remain(this SelfType&& self) noexcept {
 		return self.string_capacity();
 	}
 
