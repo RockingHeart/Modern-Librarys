@@ -25,6 +25,7 @@
         - 未来：[Future-Vector]
         - 更新：[UpdateLog-Vector]
         - 文介：[ImplationFile-Vector]
+        - 缺报：[DefectReport-Vector]
     - Utility
         - 文介：[ImplationFile-Utility]
 
@@ -35,7 +36,7 @@
 | :---: | :---: | :---: | :---: |
 | string | 已实现 | 实现基础有效时间为2025年11月份之前 | 1.11.0 |
 | fixed_vector | 已实现 | 将于2025年11月份开始实现 | 1.3.5 |
-| vector | 未实现 | 待定 | 0.0.0 |
+| vector | 已实现 | 2026.5.19 | 0.0.3 |
 | filer | 未实现 | 等待vector编写完毕 | 0.0.0 |
 
 ## 性能评估
@@ -121,6 +122,7 @@ This project is currently using Chinese to support MD files.
 [Future-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/Future-Vector.md
 [UpdateLog-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/UpdateLog-Vector.md
 [ImplationFile-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/ImplationFile-Vector.md
+[DefectReport-Vector]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Vector/DefectReport-Vector.md
 
 <!-- Utility -->
 [ImplationFile-Utility]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Utility/ImplationFile.md
