@@ -1,5 +1,6 @@
 import std;
 import vector;
+import fixed_vector;
 
 import <windows.h>;
 
@@ -7,16 +8,18 @@ import <cassert>;
 import <iostream>;
 
 int main() {
+   char* long_str = new char[1024];
+    std::memset(long_str, 1, 1024);
     auto stime = GetTickCount64();
     {
-        for (std::size_t i = 0; i < 10000; i++) {
+        for (std::size_t i = 0; i < 2000; i++) {
             std::vector<std::string> vec(5);
 
-            for (auto j = 0ull; j < 10000; j++) {
+            for (auto j = 0ull; j < 2000; j++) {
                 for (auto z = 0ull; z < 5; z++) {
                     vec[z] = "Hello";
                 }
-                vec.push_back("");
+                vec.push_back(long_str);
             }
         }
     }
@@ -25,18 +28,19 @@ int main() {
 
 	stime = GetTickCount64();
     {
-        for (std::size_t i = 0; i < 10000; i++) {
+        for (std::size_t i = 0; i < 2000; i++) {
             dast::vector<std::string> vec(5);
 
-            for (auto j = 0ull; j < 10000; j++) {
+            for (auto j = 0ull; j < 2000; j++) {
                 for (auto z = 0ull; z < 5; z++) {
                     vec[z] = "Hello";
                 }
-                vec.push_back("");
+                vec.push_back(long_str);
             }
         }
     }
 	etime = GetTickCount64();
     std::cout << (etime - stime);
+    delete[] long_str;
     return 0;
 }

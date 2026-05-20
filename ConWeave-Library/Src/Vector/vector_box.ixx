@@ -31,20 +31,20 @@ public:
 
 protected:
 
-    struct box_value {
+    struct box_data {
         pointer_t origin {};
         pointer_t curent {};
         size_t    remain {};
     };
 
     static constexpr size_t buffer_size = BuferSize == 0 ? 0 : BuferSize * sizeof(value_t)
-        <= sizeof(box_value) ? sizeof(box_value) / sizeof(value_t) : BuferSize;
+        <= sizeof(box_data) ? sizeof(box_data) / sizeof(value_t) : BuferSize;
 
     template <size_t buffer_size>
     struct box {
         union {
             fixed_vector<buffer_size> buffer;
-            box_value                 data;
+            box_data                 data;
         };
 
         vector_mode mode;
@@ -55,7 +55,7 @@ protected:
 
     template <>
     struct box<0> {
-        box_value data;
+        box_data data;
         constexpr  box() noexcept {};
         constexpr ~box() noexcept {};
     };

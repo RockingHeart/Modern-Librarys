@@ -21,7 +21,7 @@ public:
 
 public:
 
-	constexpr basic_fixed_vec() noexcept = default;
+	constexpr basic_fixed_vec() = default;
 
 	constexpr basic_fixed_vec(size_t size)
 		noexcept(noexcept(core_t::construct_vector()))
@@ -66,6 +66,14 @@ public:
 		noexcept(noexcept(core_t::unchcked_pop_element()))
 	{
 		return core_t::unchcked_pop_element();
+	}
+
+public:
+
+	constexpr void resize(size_t size)
+		noexcept(noexcept(core_t::resize_vector(0ull)))
+	{
+		return core_t::resize_vector(size);
 	}
 
 public:

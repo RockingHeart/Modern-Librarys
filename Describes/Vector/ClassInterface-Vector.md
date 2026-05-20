@@ -7,6 +7,7 @@
 | construct | [construct] |
 | push_back | [push_back] |
 | pop_back | [pop_back] |
+| resize | [resize] |
 | data_size | [data_size] |
 | size | [size] |
 | bufsize | [bufsize] |
@@ -67,6 +68,24 @@
                     函数强调返回描述：
                     - 若无元素可弹出则返回false
                     - 若弹出成功则返回true
+
+            ## resize
+            - 返回值类型：void 非静态成员函数名：resize 参数列表：(void)
+            - size_t resize(void)
+                - 用于设置长度
+                    ``` C++
+                    import vector;
+                    import std;
+
+                    int main() {
+                        dast::vector<int> vec;
+                        vec.resize(4);
+                        std::cout << vec.size() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： 4
+                    函数强调返回描述：无
 
             ## data_size
             - 返回值类型：size_t
@@ -192,6 +211,7 @@
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#construct
 [push_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#push_back
 [pop_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#pop_back
+[resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#resize
 [data_size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#data_size
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#size
 [bufsize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/Vector/ClassInterface-Vector.md#bufsize

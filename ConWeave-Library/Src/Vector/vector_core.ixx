@@ -26,7 +26,7 @@ protected:
 
     using alloc_t     = typename box_t::alloc_t;
     using sequence_t  = typename box_t::sequence_t;
-    using box_value_t = typename box_t::box_value;
+    using box_data_t  = typename box_t::box_data;
 
 protected:
 
@@ -72,10 +72,10 @@ protected:
         );
         transfer(buf_ptr, new_ptr, buf_size);
 
-        box_value_t& data = box_t::value.data;
-        data.origin       = new_ptr;
-        data.curent       = data.origin + buf_size;
-        data.remain       = new_cap;
+        box_data_t& data = box_t::value.data;
+        data.origin      = new_ptr;
+        data.curent      = data.origin + size;
+        data.remain      = new_cap;
 
         if constexpr (box_t::buffer_size) {
             box_t::value.mode = vector_mode::storage;
@@ -91,10 +91,10 @@ protected:
         pointer_t new_ptr = reinterpret_cast<pointer_t> (
             alloc.allocate(sesize(new_cap))
         );
-        box_value_t& data = box_t::value.data;
-        data.origin = new_ptr;
-        data.curent = data.origin;
-        data.remain = new_cap;
+        box_data_t& data = box_t::value.data;
+        data.origin      = new_ptr;
+        data.curent      = data.origin;
+        data.remain      = new_cap;
         if constexpr (box_t::buffer_size) {
             box_t::value.mode = vector_mode::storage;
         }
@@ -115,28 +115,29 @@ protected:
     }
 
     template <std::size_t Expand = 1>
-    constexpr void new_space()
+    constexpr void new_space(size_t size = 0)
         noexcept(noexcept(allocator().allocate(0ull)) &&
         noexcept(allocator().deallocate(nullptr, 0ull)) &&
         noexcept(transfer(nullptr, nullptr, 0ull)))
     {
-        alloc_t& alloc    = allocator();
-        box_value_t& data = box_t::value.data;
+        alloc_t& alloc = allocator();
+        box_data_t& data = box_t::value.data;
         pointer_t old_ptr = data.origin;
 
         if constexpr (!box_t::buffer_size) {
             if (old_ptr == nullptr) {
-                data.origin = reinterpret_cast<pointer_t> (
-                    alloc.allocate(sesize(5))
-                );
+                size_t init_cap = std::max(size, size_t(8));
+                data.origin = reinterpret_cast<pointer_t>(
+                    alloc.allocate(sesize(init_cap))
+                    );
                 data.curent = data.origin;
-                data.remain = 5;
+                data.remain = init_cap;
                 return;
             }
         }
 
         size_t old_cap = data.remain;
-        size_t new_cap = old_cap * Expand;
+        size_t new_cap = std::max(size, old_cap * Expand);
 
         pointer_t new_ptr = reinterpret_cast<pointer_t> (
             alloc.allocate(sesize(new_cap))
@@ -146,8 +147,8 @@ protected:
         transfer(old_ptr, new_ptr, old_size);
 
         data.origin = new_ptr;
-        data.curent = new_ptr + old_size;
-        data.remain = new_cap; 
+        data.curent = new_ptr + (!size ? old_size : size);
+        data.remain = new_cap;
 
         alloc.deallocate(reinterpret_cast<std::byte*>(old_ptr), sesize(old_cap));
     }
@@ -167,13 +168,33 @@ protected:
 
 protected:
 
-    constexpr void construct(size_t count)
-		noexcept(std::is_nothrow_move_constructible_v<value_t>)
-	{
-        box_value_t& data = box_t::value.data;
+    constexpr void construct(size_t count) {
+        box_data_t& data = box_t::value.data;
         for (std::size_t i = 0; i < count; i++) {
-            new (data.curent) value_t();
-            data.curent += 1;
+            new (data.origin + i) value_t();
+        }
+        data.curent = data.origin + count;
+    }
+
+    constexpr void construct(size_t begin, size_t end) {
+        box_data_t& data = box_t::value.data;
+        for (; begin < end; ++begin) {
+            new (data.origin + begin) value_t();
+        }
+    }
+
+protected:
+
+    constexpr void deconstruct(size_t begin, size_t end) {
+        box_data_t& data = box_t::value.data;
+        for (; begin < end; ++begin) {
+            (data.origin + begin)->~value_t();
+        }
+    }
+
+    constexpr void deconstruct(pointer_t begin, pointer_t end) {
+        for (; begin < end; ++begin) {
+            begin->~value_t();
         }
     }
 
@@ -185,7 +206,7 @@ protected:
 			std::is_nothrow_copy_constructible_v<value_t>
         )
     {
-        box_value_t& data = box_t::value.data;
+        box_data_t& data = box_t::value.data;
         if constexpr (box_t::can_memcpy) {
             *data.curent = value;
         }
@@ -201,7 +222,7 @@ protected:
 			std::is_nothrow_move_constructible_v<value_t>
         )
     {
-        box_value_t& data = box_t::value.data;
+        box_data_t& data = box_t::value.data;
         if constexpr (box_t::can_memcpy) {
             *data.curent = std::move(value);
         }
@@ -216,10 +237,10 @@ protected:
     constexpr bool pop_out_from_data()
         noexcept (
 			box_t::can_memcpy ||
-			std::is_nothrow_move_constructible_v<value_t>
+			std::is_nothrow_destructible_v<value_t>
         )
     {
-        box_value_t& data = box_t::value.data;
+        box_data_t& data = box_t::value.data;
         if (data.curent == data.origin) {
             return false;
         }

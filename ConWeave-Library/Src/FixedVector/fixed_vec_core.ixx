@@ -2,10 +2,9 @@ export module fixed_vec_core;
 
 import fixed_vec_box;
 
-import <type_traits>;
-
 import <cstddef>;
 import <memory>;
+import <type_traits>;
 
 export template <class Traits, std::size_t Size>
 class fixed_vec_core :
@@ -23,12 +22,6 @@ protected:
 	using initlist_t      = typename box_t::initlist_t;
 
 private:
-
-	constexpr void definit(size_t index) noexcept {
-		for (; index < box_t::max_size; ++index) {
-			box_t::value.data[index] = value_t();
-		}
-	}
 
 	constexpr void construct_init()
 		noexcept (
@@ -61,6 +54,25 @@ private:
 	}
 
 protected:
+
+	constexpr void definit(size_t index)
+		noexcept (
+			box_t::can_memcpy ||
+			noexcept(new (std::addressof(box_t::pointer()[0])) value_t())
+		)
+	{
+		if constexpr (box_t::can_memcpy) {
+			for (; index < box_t::max_size; ++index) {
+				box_t::value.data[index] = value_t();
+			}
+		}
+		else {
+			pointer_t pointer = box_t::pointer();
+			for (size_t i = 0; i < box_t::max_size; ++i) {
+				new (std::addressof(pointer[i])) value_t();
+			}
+		}
+	}
 
 	constexpr void construct_vector()
 		noexcept (
@@ -95,6 +107,17 @@ protected:
 		}
 		else {
 			construct_init(data);
+		}
+	}
+
+protected:
+
+	constexpr void deconstruct(size_t begin, size_t end)
+		noexcept(std::is_nothrow_destructible_v<value_t>)
+	{
+		pointer_t pointer = box_t::pointer();
+		for (size_t i = begin; i < end; ++i) {
+			pointer[i].~value_t();
 		}
 	}
 
@@ -160,6 +183,16 @@ protected:
 		}
 		unchcked_pop_element();
 		return true;
+	}
+
+protected:
+
+	constexpr void resize_vector(std::size_t size) {
+		if (size < box_t::size) {
+			deconstruct(box_t::size, size);
+		}
+		
+		box_t::size = size;
 	}
 
 protected:

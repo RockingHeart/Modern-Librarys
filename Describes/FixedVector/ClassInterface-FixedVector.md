@@ -9,6 +9,7 @@
 | pop back | [pop_back] |
 | unchcked push back | [unchcked_push_back] |
 | unchcked pop back | [unchcked_pop_back] |
+| resize | [resize] |
 | begin and end | [begin_and_end] |
 | size | [size] |
 | capacity | [capacity] |
@@ -61,6 +62,24 @@
 
             # unchcked_pop_back
             - 同pop_back的核心功能，区别是不做检查，在某种情况下是不安全的
+
+            ## resize
+            - 返回值类型：void 非静态成员函数名：resize 参数列表：(void)
+            - size_t resize(void)
+                - 用于设置长度
+                    ``` C++
+                    import fixed_vector;
+                    import std;
+
+                    int main() {
+                        dast::fixed_vector<int, 5> vec;
+                        vec.resize(2);
+                        std::cout << vec.size() << '\n'
+                        return 0;
+                    }
+                    ```
+                    #### 以上代码输出： 2
+                    函数强调返回描述：无
 
             ## pop_back
             - 返回值类型：bool
@@ -141,7 +160,7 @@
                     函数强调返回描述：无
 
             ## max_size
-            - 返回值类型：size_t 非静态成员函数名：size 参数列表：(void)
+            - 返回值类型：size_t 非静态成员函数名：max_size 参数列表：(void)
             - size_t max_size(void)
                 - 用于获取当前最大存储大小
                     ``` C++
@@ -200,6 +219,7 @@
 [pop_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#pop_back
 [unchcked_push_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#unchcked_push_back
 [unchcked_pop_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#unchcked_pop_back
+[resize]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#resize
 [begin_and_end]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#begin-and-end
 [size]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#size
 [capacity]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#capacity

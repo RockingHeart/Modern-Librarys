@@ -22,17 +22,20 @@ public:
 
     using alloc_t     = typename core_t::alloc_t;
     using sequence_t  = typename core_t::sequence_t;
-    using box_value_t = typename core_t::box_value;
+    using box_data_t  = typename core_t::box_data;
 
 public:
 
     constexpr basic_vector() noexcept = default;
 
-    constexpr basic_vector(size_t cap)
-		noexcept
+    constexpr basic_vector(size_t size)
+		noexcept (
+			noexcept(core_t::template heapify_cache<0ull>(0ull)) &&
+			noexcept(core_t::construct(0ull))
+        )
 	{
-        core_t::template respace<true>(cap);
-        core_t::construct(cap);
+        core_t::template heapify_cache<1>(size);
+        core_t::construct(size);
     };
 
 public:
@@ -52,7 +55,7 @@ public:
             }
         }
 
-        box_value_t& data = core_t::value.data;
+        box_data_t& data = core_t::value.data;
         if (static_cast<size_t>(data.curent - data.origin) == data.remain) {
             core_t::template new_space<2>();
         }
@@ -68,13 +71,44 @@ public:
 
 public:
 
+    constexpr void resize(size_t size) {
+        box_data_t& data = core_t::value.data;
+
+        if constexpr (core_t::buffer_size) {
+            if (core_t::value.mode == vector_mode::cache) {
+                if (size < core_t::buffer_size) {
+                    core_t::value.buffer.resize(size);
+                }
+                else {
+                    size_t old_size = core_t::value.buffer.size();
+                    core_t::template heapify_cache<1>(size);
+                    core_t::construct(old_size, size);
+                }
+                return;
+            }
+        }
+
+        size_t old_size = static_cast<size_t>(data.curent - data.origin);
+
+        if (size < old_size) {
+            core_t::deconstruct(data.origin + size, data.curent);
+            data.curent = data.origin + size;
+            return;
+        }
+
+        core_t::template new_space<1>(size);
+        core_t::construct(old_size, size);
+    }
+
+public:
+
     constexpr size_t size() const noexcept {
         if constexpr (core_t::buffer_size) {
             if (core_t::value.mode == vector_mode::cache) {
                 return core_t::value.buffer.size();
             }
         }
-        const box_value_t& data = core_t::value.data;
+        const box_data_t& data = core_t::value.data;
         return static_cast<size_t>(data.curent - data.origin);
     }
 
@@ -133,11 +167,13 @@ public:
             }
         }
 
-        box_value_t& data = core_t::value.data;
+        box_data_t& data = core_t::value.data;
 
         if constexpr (!core_t::can_memcpy) {
-            size_t sz = static_cast<size_t>(data.curent - data.origin);
-            for (size_t i = 0; i < sz; ++i) {
+            size_t size = static_cast<size_t> (
+                data.curent - data.origin
+            );
+            for (size_t i = 0; i < size; ++i) {
                 data.origin[i].~value_t();
             }
         }
