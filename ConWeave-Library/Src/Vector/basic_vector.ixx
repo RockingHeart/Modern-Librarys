@@ -3,8 +3,6 @@ export module basic_vector;
 import vector_core;
 
 import <cstddef>;
-import <utility>;
-import <memory>;
 
 export using ::vector_mode;
 
@@ -121,14 +119,6 @@ public:
         }
         return begin()[position];
     }
-
-    struct quoter {
-    	pointer_t address;
-        constexpr value_t& operator=(const value_t& value) {
-            new (address) value_t(std::move(value));
-            return *address;
-        }
-    };
 
     constexpr reference_t operator[](size_t position) noexcept {
         return begin()[position];
