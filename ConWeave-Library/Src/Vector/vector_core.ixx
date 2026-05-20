@@ -124,7 +124,7 @@ protected:
         box_value_t& data = box_t::value.data;
         pointer_t old_ptr = data.origin;
 
-        if constexpr (box_t::buffer_size) {
+        if constexpr (!box_t::buffer_size) {
             if (old_ptr == nullptr) {
                 data.origin = reinterpret_cast<pointer_t> (
                     alloc.allocate(sesize(8))
