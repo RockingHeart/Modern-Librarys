@@ -30,11 +30,11 @@ public:
 
     constexpr basic_vector(size_t size)
 		noexcept (
-			noexcept(core_t::template heapify_cache<0ull>(0ull)) &&
+			noexcept(core_t::template respace<true, 0ull>(0ull)) &&
 			noexcept(core_t::construct(0ull))
         )
 	{
-        core_t::template heapify_cache<1>(size);
+        core_t::template respace<true, 1>(size);
         core_t::construct(size);
     };
 

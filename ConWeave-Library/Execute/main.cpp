@@ -21,6 +21,11 @@ int main() {
                 }
                 vec.push_back(long_str);
             }
+
+            vec.resize(5000);
+            for (auto a = 0ull; a < 3000; a++) {
+                vec.push_back(long_str);
+            }
         }
     }
     auto etime = GetTickCount64();
@@ -35,6 +40,11 @@ int main() {
                 for (auto z = 0ull; z < 5; z++) {
                     vec[z] = "Hello";
                 }
+                vec.push_back(long_str);
+            }
+
+            vec.resize(5000);
+            for (auto a = 0ull; a < 3000; a++) {
                 vec.push_back(long_str);
             }
         }
