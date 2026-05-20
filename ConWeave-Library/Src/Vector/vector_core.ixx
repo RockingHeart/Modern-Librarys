@@ -54,8 +54,8 @@ protected:
         }
     }
 
-    template <std::size_t Expand = 2>
-    constexpr void heapify_cache(size_t min_size)
+    template <std::size_t Expand = 1>
+    constexpr void heapify_cache(size_t size)
         noexcept (
 			noexcept(allocator().allocate(0ull)) &&
 			noexcept(transfer(nullptr, nullptr, 0ull))
@@ -64,7 +64,7 @@ protected:
         alloc_t& alloc    = allocator();
         pointer_t buf_ptr = box_t::value.buffer.begin();
         size_t buf_size   = box_t::value.buffer.size();
-        size_t target     = std::max(min_size, buf_size);
+        size_t target     = std::max(size, buf_size);
         size_t new_cap    = target * Expand;
 
         pointer_t new_ptr = reinterpret_cast<pointer_t> (
@@ -88,9 +88,9 @@ protected:
     {
         alloc_t& alloc = allocator();
         size_t new_cap = cap * Expand;
-        pointer_t new_ptr = reinterpret_cast<pointer_t>(
+        pointer_t new_ptr = reinterpret_cast<pointer_t> (
             alloc.allocate(sesize(new_cap))
-            );
+        );
         box_value_t& data = box_t::value.data;
         data.origin = new_ptr;
         data.curent = data.origin;
@@ -114,7 +114,7 @@ protected:
         }
     }
 
-    template <std::size_t Expand = 2>
+    template <std::size_t Expand = 1>
     constexpr void new_space()
         noexcept(noexcept(allocator().allocate(0ull)) &&
         noexcept(allocator().deallocate(nullptr, 0ull)) &&
@@ -127,10 +127,10 @@ protected:
         if constexpr (!box_t::buffer_size) {
             if (old_ptr == nullptr) {
                 data.origin = reinterpret_cast<pointer_t> (
-                    alloc.allocate(sesize(8))
+                    alloc.allocate(sesize(5))
                 );
                 data.curent = data.origin;
-                data.remain = 8;
+                data.remain = 5;
                 return;
             }
         }
@@ -152,16 +152,28 @@ protected:
         alloc.deallocate(reinterpret_cast<std::byte*>(old_ptr), sesize(old_cap));
     }
 
-    template <bool is_init, std::size_t Expand = 1>
+    template <bool IsInit, std::size_t Expand = 1>
     constexpr void respace(size_t size)
         noexcept(noexcept(allocator().allocate(0ull)) &&
         noexcept(allocator().deallocate(nullptr, 0ull)))
     {
-        if constexpr (is_init) {
+        if constexpr (IsInit) {
             return init<Expand>(size);
         }
         else {
             return new_space<Expand>();
+        }
+    }
+
+protected:
+
+    constexpr void construct(size_t count)
+		noexcept(std::is_nothrow_move_constructible_v<value_t>)
+	{
+        box_value_t& data = box_t::value.data;
+        for (std::size_t i = 0; i < count; i++) {
+            new (data.curent) value_t();
+            data.curent += 1;
         }
     }
 
