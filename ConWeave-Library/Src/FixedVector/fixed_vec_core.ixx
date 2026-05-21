@@ -90,24 +90,70 @@ protected:
 
 	constexpr void construct_vector(const initlist_t& list)
 		noexcept (
-			box_t::trivial_copy
-			?
-				std::is_trivially_constructible_v<value_t>
-			:
-				noexcept(construct_init(list.begin()))
+			box_t::trivial_copy ?
+			std::is_trivially_constructible_v<value_t> :
+			noexcept(construct_init(list.begin()))
 		)
 	{
 		const_pointer_t data = list.begin();
 		if constexpr (box_t::trivial_copy) {
-			size_t i = 0;
-			for (; i < box_t::size; ++i) {
-				box_t::value.data[i] = data[i];
-			}
-			definit(i);
+			size_t size = box_t::size;
+			std::memcpy (
+				box_t::value.data,
+				data,
+				size * sizeof(value_t)
+			);
+			definit(size);
 		}
 		else {
 			construct_init(data);
 		}
+	}
+
+	constexpr void construct_impl(const_pointer_t vec_data, size_t size)
+	{
+		pointer_t self_data = box_t::pointer();
+		for (size_t i = 0; i < size; ++i) {
+			new (self_data + i) value_t (
+				vec_data[i]
+			);
+		}
+	}
+
+	constexpr void construct_impl(pointer_t vec_data, size_t size)
+	{
+		pointer_t self_data = box_t::pointer();
+		for (size_t i = 0; i < size; ++i) {
+			new (self_data + i) value_t (
+				std::move(vec_data[i])
+			);
+		}
+	}
+
+	constexpr void construct_impl(auto&& vec) {
+		size_t size = box_t::size;
+		if constexpr (box_t::trivial_copy) {
+			std::memcpy (
+				box_t::pointer(),
+				vec.value.data,
+				size * sizeof(value_t)
+			);
+		}
+		else {
+			construct_impl (
+				vec.pointer(),
+				size
+			);
+		}
+	}
+
+	constexpr void construct_vector(const fixed_vec_core& vec) {
+		return construct_impl(vec);
+	}
+
+	constexpr void construct_vector(fixed_vec_core&& vec) {
+		construct_impl(std::move(vec));
+		vec.size = 0;
 	}
 
 protected:

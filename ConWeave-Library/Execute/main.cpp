@@ -8,7 +8,17 @@ import <cassert>;
 import <iostream>;
 
 int main() {
-    char* long_str = new char[1024];
+    dast::fixed_vector<std::string, 2> vec1 {
+		"Hello", "World"
+    };
+    dast::fixed_vector<std::string, 2> vec2 = std::move(vec1);
+    for (auto& c : vec1) {
+        std::cout << c << ' ';
+    }
+    for (auto& c : vec2) {
+        std::cout << c << ' ';
+    }
+    /*char* long_str = new char[1024];
     std::memset(long_str, 1, 1024);
     auto stime = GetTickCount64();
     {
@@ -55,6 +65,6 @@ int main() {
     }
 	etime = GetTickCount64();
     std::cout << (etime - stime);
-    delete[] long_str;
+    delete[] long_str;*/
     return 0;
 }

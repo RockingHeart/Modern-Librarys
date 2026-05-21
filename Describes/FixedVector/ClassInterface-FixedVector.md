@@ -36,8 +36,12 @@
                 - fixed_vector(size_t size)
                     - 以默认值类型的构造方法构造定长度的元素 <br>
                 - 参数列表：(initlist_t)
-                - fixed_vector(const initlist_t& list)
+                - fixed_vector(const initlist_t& list) <br>
                     - 以列表中的全部元素构造定长向量
+                - 参数列表：(const fixed_vector&)
+                    - 复制副本构造 <br>
+                - 参数列表：(fixed_vector&& vec)
+                    - 迁移构造（迁移之后vec无效） <br>
             
             ## push_back
             - 返回值类型：bool

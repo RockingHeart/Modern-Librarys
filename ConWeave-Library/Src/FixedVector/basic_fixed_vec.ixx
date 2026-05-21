@@ -37,6 +37,20 @@ public:
 		core_t::construct_vector(list);
 	}
 
+	constexpr basic_fixed_vec(const basic_fixed_vec& vec)
+		noexcept(noexcept(core_t::construct_vector(vec)))
+			: core_t(vec.size())
+	{
+		core_t::construct_vector(vec);
+	}
+
+	constexpr basic_fixed_vec(basic_fixed_vec&& vec)
+		noexcept(noexcept(core_t::construct_vector(std::move(vec))))
+			: core_t(vec.size())
+	{
+		core_t::construct_vector(std::move(vec));
+	}
+
 public:
 
 	constexpr bool push_back(const value_t& value)
