@@ -29,7 +29,11 @@
             - 返回值类型：vector 构造函数名：vector
             - 参数列表：(void)
                 - vector(void)
-                    - 用于构造空状态定长向量 <br>
+                    - 用于构造空状态向量 <br>
+            - 参数列表：(std::initializer_list<Ty>)
+                - vector(std::initializer_list<Ty>)
+                    - 用初始化列表的元素构造向量 <br>
+
 
             ## push_back
             - 返回值类型：void

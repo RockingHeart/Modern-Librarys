@@ -57,11 +57,11 @@ protected:
 
 	constexpr void definit(size_t index)
 		noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			noexcept(new (std::addressof(box_t::pointer()[0])) value_t())
 		)
 	{
-		if constexpr (box_t::can_memcpy) {
+		if constexpr (box_t::trivial_copy) {
 			for (; index < box_t::max_size; ++index) {
 				box_t::value.data[index] = value_t();
 			}
@@ -76,11 +76,11 @@ protected:
 
 	constexpr void construct_vector()
 		noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			noexcept(construct_init())
 		)
 	{
-		if constexpr (box_t::can_memcpy) {
+		if constexpr (box_t::trivial_copy) {
 			definit(0);
 		}
 		else {
@@ -90,7 +90,7 @@ protected:
 
 	constexpr void construct_vector(const initlist_t& list)
 		noexcept (
-			box_t::can_memcpy
+			box_t::trivial_copy
 			?
 				std::is_trivially_constructible_v<value_t>
 			:
@@ -98,7 +98,7 @@ protected:
 		)
 	{
 		const_pointer_t data = list.begin();
-		if constexpr (box_t::can_memcpy) {
+		if constexpr (box_t::trivial_copy) {
 			size_t i = 0;
 			for (; i < box_t::size; ++i) {
 				box_t::value.data[i] = data[i];
@@ -126,14 +126,14 @@ protected:
 	template <class ArgType>
 	constexpr void unchcked_push_element(ArgType&& arg)
 		noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			noexcept (
 				new (std::addressof(box_t::pointer()[0]))
 					value_t(std::forward<ArgType>(arg))
 			)
 		)
 	{
-		if constexpr (box_t::can_memcpy) {
+		if constexpr (box_t::trivial_copy) {
 			box_t::value.data[box_t::size++] = std::forward<ArgType>(arg);
 		}
 		else {
@@ -146,7 +146,7 @@ protected:
 	template <class ArgType>
 	constexpr bool push_element(ArgType&& arg)
 		noexcept (
-			box_t::can_memcpy || 
+			box_t::trivial_copy || 
 			noexcept (
 				unchcked_push_element(std::forward<ArgType>(arg))
 			)
@@ -161,12 +161,12 @@ protected:
 
 	constexpr void unchcked_pop_element()
 		noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			std::is_nothrow_destructible_v<value_t>
 		)
 	{
 		box_t::size -= 1;
-		if constexpr (!box_t::can_memcpy) {
+		if constexpr (!box_t::trivial_copy) {
 			pointer_t pointer = box_t::pointer();
 			pointer[box_t::size].~value_t();
 		}
@@ -174,7 +174,7 @@ protected:
 
 	constexpr bool pop_element()
 		noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			unchcked_pop_element()
 		)
 	{
@@ -199,11 +199,11 @@ protected:
 
 	constexpr void destroy_vector()
 		noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			std::is_nothrow_destructible_v<value_t>
 		)
 	{
-		if (!box_t::can_memcpy) {
+		if (!box_t::trivial_copy) {
 			size_t    count = box_t::size;
 			pointer_t pointer = box_t::pointer();
 			for (size_t i = 0; i < count; ++i) {

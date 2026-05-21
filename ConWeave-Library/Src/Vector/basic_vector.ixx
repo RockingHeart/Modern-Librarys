@@ -3,6 +3,8 @@ export module basic_vector;
 import vector_core;
 
 import <cstddef>;
+import <type_traits>;
+import <initializer_list>;
 
 export using ::vector_mode;
 
@@ -34,9 +36,44 @@ public:
 			noexcept(core_t::construct(0ull))
         )
 	{
+        if constexpr (core_t::buffer_size) {
+            if (size <= core_t::buffer_size) {
+                core_t::value.buffer.resize(size);
+                return;
+            }
+        }
         core_t::template respace<true, 1>(size);
         core_t::construct(size);
     };
+
+    template <class Ty>
+		requires (std::is_convertible_v<Ty, value_t>)
+    constexpr basic_vector(std::initializer_list<Ty> list)
+		noexcept (
+			noexcept(core_t::construct(nullptr, nullptr, 0ull))
+			&&
+			noexcept(core_t::template respace<false, 0ull>(0ull))
+        )
+	{
+        size_t size = list.size();
+        if constexpr (core_t::buffer_size) {
+            if (size <= core_t::buffer_size) {
+                core_t::construct (
+                    core_t::value.buffer.begin(),
+                    list.begin(),
+                    size
+                );
+                core_t::value.buffer.resize(size);
+                return;
+            }
+        }
+        core_t::template respace<true, 2>(size);
+        core_t::construct (
+            core_t::value.data.origin,
+            list.begin(),
+            size
+        );
+    }
 
 public:
 
@@ -44,7 +81,7 @@ public:
         noexcept(noexcept(core_t::push_to_data(value_t())) &&
         noexcept(core_t::template new_space<2>()))
     {
-        if constexpr (core_t::buffer_size != 0) {
+        if constexpr (core_t::buffer_size) {
             if (core_t::value.mode == vector_mode::cache) {
                 if (core_t::value.buffer.push_back(value)) {
                     return;
@@ -169,7 +206,7 @@ public:
 
         box_data_t& data = core_t::value.data;
 
-        if constexpr (!core_t::can_memcpy) {
+        if constexpr (!core_t::trivial_copy) {
             size_t size = static_cast<size_t> (
                 data.curent - data.origin
             );

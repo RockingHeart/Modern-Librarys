@@ -40,11 +40,11 @@ protected:
 
     constexpr void transfer(pointer_t old_ptr, pointer_t new_ptr, size_t size)
         noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			std::is_nothrow_move_constructible_v<value_t>
         )
     {
-        if constexpr (box_t::can_memcpy) {
+        if constexpr (box_t::trivial_copy) {
             std::memcpy(new_ptr, old_ptr, size * sizeof(value_t));
         }
         else {
@@ -83,17 +83,17 @@ protected:
     }
 
     template <std::size_t Expand = 1>
-    constexpr void init_data(size_t cap)
+    constexpr void init_data(size_t size)
         noexcept(noexcept(allocator().allocate(0ull)))
     {
         alloc_t& alloc = allocator();
-        size_t new_cap = cap * Expand;
+        size_t new_cap = size * Expand;
         pointer_t new_ptr = reinterpret_cast<pointer_t> (
             alloc.allocate(sesize(new_cap))
         );
         box_data_t& data = box_t::value.data;
         data.origin      = new_ptr;
-        data.curent      = data.origin;
+        data.curent      = data.origin + size;
         data.remain      = new_cap;
         if constexpr (box_t::buffer_size) {
             box_t::value.mode = vector_mode::storage;
@@ -168,18 +168,39 @@ protected:
 
 protected:
 
-    constexpr void construct(size_t count) {
+    constexpr void construct(size_t count)
+        noexcept
+	{
         box_data_t& data = box_t::value.data;
         for (std::size_t i = 0; i < count; i++) {
             new (data.origin + i) value_t();
         }
-        data.curent = data.origin + count;
     }
 
-    constexpr void construct(size_t begin, size_t end) {
+    constexpr void construct(size_t begin, size_t end)
+		noexcept
+	{
         box_data_t& data = box_t::value.data;
         for (; begin < end; ++begin) {
             new (data.origin + begin) value_t();
+        }
+    }
+
+    constexpr void construct (pointer_t       dest,
+							  const_pointer_t src,
+							  size_t          size)
+        noexcept (
+			box_t::trivial_copy ||
+			std::is_nothrow_move_constructible_v<value_t>
+        )
+	{
+        for (size_t i = 0; i < size; ++i) {
+            if constexpr (box_t::trivial_copy) {
+                dest[i] = src[i];
+            }
+            else {
+                new (dest + i) value_t(std::move(src[i]));
+            }
         }
     }
 
@@ -202,12 +223,12 @@ protected:
 
     constexpr void push_to_data(const value_t& value)
         noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			std::is_nothrow_copy_constructible_v<value_t>
         )
     {
         box_data_t& data = box_t::value.data;
-        if constexpr (box_t::can_memcpy) {
+        if constexpr (box_t::trivial_copy) {
             *data.curent = value;
         }
         else {
@@ -218,12 +239,12 @@ protected:
 
     constexpr void push_to_data(value_t&& value)
         noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			std::is_nothrow_move_constructible_v<value_t>
         )
     {
         box_data_t& data = box_t::value.data;
-        if constexpr (box_t::can_memcpy) {
+        if constexpr (box_t::trivial_copy) {
             *data.curent = std::move(value);
         }
         else {
@@ -236,7 +257,7 @@ protected:
 
     constexpr bool pop_out_from_data()
         noexcept (
-			box_t::can_memcpy ||
+			box_t::trivial_copy ||
 			std::is_nothrow_destructible_v<value_t>
         )
     {
@@ -244,7 +265,7 @@ protected:
         if (data.curent == data.origin) {
             return false;
         }
-        if constexpr (!box_t::can_memcpy) {
+        if constexpr (!box_t::trivial_copy) {
             (data.curent - 1)->~value_t();
         }
         --data.curent;

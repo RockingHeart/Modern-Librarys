@@ -38,24 +38,24 @@ private:
 
 public:
 
-	constexpr static bool can_memcpy = std::is_trivially_copyable_v<value_t>;
+	constexpr static bool trivial_copy = std::is_trivially_copyable_v<value_t>;
 
 protected:
 
-	box_value<can_memcpy> value;
+	box_value<trivial_copy> value;
 	size_t                size;
 
 public:
 
 	constexpr pointer_t pointer() noexcept {
-		if constexpr (can_memcpy) {
+		if constexpr (trivial_copy) {
 			return value.data;
 		}
 		return reinterpret_cast<pointer_t>(value.data);
 	}
 
 	constexpr const_pointer_t pointer() const noexcept {
-		if constexpr (can_memcpy) {
+		if constexpr (trivial_copy) {
 			return value.data;
 		}
 		return reinterpret_cast<const_pointer_t>(value.data);

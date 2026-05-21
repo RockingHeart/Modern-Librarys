@@ -64,7 +64,7 @@ protected:
 
 public:
 
-    constexpr static bool can_memcpy = std::is_trivially_copyable_v<value_t>;
+    constexpr static bool trivial_copy = std::is_trivially_copyable_v<value_t>;
 
 public:
 
