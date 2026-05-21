@@ -186,20 +186,21 @@ protected:
         }
     }
 
-    constexpr void construct (pointer_t       dest,
-							  const_pointer_t src,
-							  size_t          size)
+    template <class Ty>
+    constexpr void construct (pointer_t address,
+							  const Ty* begin,
+							  const Ty* end)
         noexcept (
 			box_t::trivial_copy ||
 			std::is_nothrow_move_constructible_v<value_t>
         )
 	{
-        for (size_t i = 0; i < size; ++i) {
+        for (; begin != end; ++begin) {
             if constexpr (box_t::trivial_copy) {
-                dest[i] = src[i];
+                *(address++) = *begin;
             }
             else {
-                new (dest + i) value_t(std::move(src[i]));
+                new (address++) value_t(std::move(*begin));
             }
         }
     }

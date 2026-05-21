@@ -47,10 +47,13 @@ public:
     };
 
     template <class Ty>
-		requires (std::is_convertible_v<Ty, value_t>)
+		requires (
+			std::is_constructible_v<value_t, Ty> ||
+			std::is_convertible_v<Ty, value_t>
+        )
     constexpr basic_vector(std::initializer_list<Ty> list)
 		noexcept (
-			noexcept(core_t::construct(nullptr, nullptr, 0ull))
+			noexcept(core_t::template construct<Ty>(nullptr, nullptr, nullptr))
 			&&
 			noexcept(core_t::template respace<false, 0ull>(0ull))
         )
@@ -61,7 +64,7 @@ public:
                 core_t::construct (
                     core_t::value.buffer.begin(),
                     list.begin(),
-                    size
+                    list.end()
                 );
                 core_t::value.buffer.resize(size);
                 return;
@@ -71,7 +74,7 @@ public:
         core_t::construct (
             core_t::value.data.origin,
             list.begin(),
-            size
+            list.end()
         );
     }
 
