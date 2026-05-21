@@ -24,11 +24,7 @@ protected:
 private:
 
 	constexpr void construct_init()
-		noexcept (
-			noexcept (
-				new (std::addressof(box_t::pointer()[0])) value_t()
-			)
-		)
+		noexcept(std::is_nothrow_constructible_v<value_t>)
 	{
 		pointer_t pointer = box_t::pointer();
 		for (size_t i = 0; i < box_t::size; ++i) {
@@ -37,13 +33,7 @@ private:
 	}
 
 	constexpr void construct_init(const_pointer_t data)
-		noexcept (
-			noexcept (
-				new (std::addressof(box_t::pointer()[0])) value_t (
-					std::move(data[0])
-				)
-			)
-		)
+		noexcept(std::is_nothrow_move_constructible_v<value_t>)
 	{
 		pointer_t pointer = box_t::pointer();
 		for (size_t i = 0; i < box_t::size; ++i) {
@@ -58,7 +48,7 @@ protected:
 	constexpr void definit(size_t index)
 		noexcept (
 			box_t::trivial_copy ||
-			noexcept(new (std::addressof(box_t::pointer()[0])) value_t())
+			std::is_nothrow_constructible_v<value_t>
 		)
 	{
 		if constexpr (box_t::trivial_copy) {
@@ -111,6 +101,10 @@ protected:
 	}
 
 	constexpr void construct_impl(const_pointer_t vec_data, size_t size)
+		noexcept (
+			box_t::trivial_copy ||
+			std::is_nothrow_copy_constructible_v<value_t>
+		)
 	{
 		pointer_t self_data = box_t::pointer();
 		for (size_t i = 0; i < size; ++i) {
@@ -121,6 +115,10 @@ protected:
 	}
 
 	constexpr void construct_impl(pointer_t vec_data, size_t size)
+		noexcept (
+			box_t::trivial_copy ||
+			std::is_nothrow_move_constructible_v<value_t>
+		)
 	{
 		pointer_t self_data = box_t::pointer();
 		for (size_t i = 0; i < size; ++i) {
@@ -130,7 +128,12 @@ protected:
 		}
 	}
 
-	constexpr void construct_impl(auto&& vec) {
+	constexpr void construct_impl(auto&& vec)
+		noexcept (
+			box_t::trivial_copy ||
+			noexcept(construct_impl(vec.pointer(), 0ull))
+		)
+	{
 		size_t size = box_t::size;
 		if constexpr (box_t::trivial_copy) {
 			std::memcpy (
@@ -147,11 +150,15 @@ protected:
 		}
 	}
 
-	constexpr void construct_vector(const fixed_vec_core& vec) {
+	constexpr void construct_vector(const fixed_vec_core& vec)
+		noexcept(noexcept(construct_impl(vec)))
+	{
 		return construct_impl(vec);
 	}
 
-	constexpr void construct_vector(fixed_vec_core&& vec) {
+	constexpr void construct_vector(fixed_vec_core&& vec)
+		noexcept(noexcept(construct_impl(std::move(vec))))
+	{
 		construct_impl(std::move(vec));
 		vec.size = 0;
 	}
