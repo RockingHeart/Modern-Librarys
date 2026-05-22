@@ -33,6 +33,12 @@
             - 参数列表：(std::initializer_list<Ty>)
                 - vector(std::initializer_list<Ty>)
                     - 用初始化列表的元素构造向量 <br>
+            - 参数列表：(cosnt vector&)
+                - vector(cosnt vector& vec)
+                    - 给定vec拷贝构造 <br>
+            - 参数列表：(vector&&)
+                - vector(vector&& vec)
+                    - 给定vec移动构造 <br>
 
 
             ## push_back
@@ -209,6 +215,39 @@
                         }
                         ```
                         #### 以上代码输出： 1
+                        函数强调返回描述：无
+                - 返回值类型：vector& 非静态运算符重载符：=
+                    - 参数列表：(const vector&)
+                    - vector& operator=(const vector&)
+                        - 用于重新赋值构造
+                        ``` C++
+                        import vector;
+                        import std;
+
+                        int main() {
+                            dast::vector<int> vec1 = 1;
+                            dast::vector<int> vec2 = vec1;
+                            std::cout << vec2[0];
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出： 1
+                        函数强调返回描述：无
+                    - 参数列表：(vector&&)
+                    - vector& operator=(vector&&)
+                        - 用于重新移动构造
+                        ``` C++
+                        import vector;
+                        import std;
+
+                        int main() {
+                            dast::vector<std::string> vec1 = {"Hello"};
+                            dast::vector<std::string> vec2 = std::move(vec1);
+                            std::cout << vec1[0];
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出： " "
                         函数强调返回描述：无
             
 

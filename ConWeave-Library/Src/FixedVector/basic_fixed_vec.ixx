@@ -97,7 +97,7 @@ public:
 	}
 
 	constexpr const_pointer_t begin() const noexcept {
-		return core_t::value.data;
+		return reinterpret_cast<const_pointer_t>(core_t::value.data);
 	}
 
 	constexpr pointer_t end() noexcept {
@@ -105,7 +105,7 @@ public:
 	}
 
 	constexpr const_pointer_t end() const noexcept {
-		return core_t::value.data + core_t::size;
+		return begin() + core_t::size;
 	}
 
 public:
@@ -149,7 +149,12 @@ public:
 		return core_t::pointer()[position];
 	}
 
-	constexpr basic_fixed_vec& operator=(const basic_fixed_vec& vec) {
+	constexpr basic_fixed_vec& operator=(const basic_fixed_vec& vec)
+		noexcept (
+			noexcept(core_t::deconstruct(0, size())) &&
+			noexcept(core_t::construct_vector(vec))
+		)
+	{
 		core_t::resize_vector(0);
 		size_t size = vec.size();
 		core_t::construct_vector(vec);
@@ -158,13 +163,15 @@ public:
 	}
 
 	constexpr basic_fixed_vec& operator=(basic_fixed_vec&& vec)
-		noexcept(
+		noexcept (
 			noexcept(core_t::deconstruct(0, size())) &&
 			noexcept(core_t::construct_vector(std::move(vec)))
 		)
 	{
 		core_t::resize_vector(0);
+		size_t size = vec.size();
 		core_t::construct_vector(std::move(vec));
+		core_t::size = size;
 		return *this;
 	}
 

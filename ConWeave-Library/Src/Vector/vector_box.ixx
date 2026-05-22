@@ -26,10 +26,10 @@ public:
     using size_t     = typename vector_traits::size_t;
     using sequence_t = typename vector_traits::sequence_t;
 
+protected:
+
     template <size_t BufferSize>
     using fixed_vector = dast::fixed_vector<value_t, BufferSize>;
-
-protected:
 
     struct box_data {
         pointer_t origin {};
@@ -40,11 +40,13 @@ protected:
     static constexpr size_t buffer_size = BuferSize == 0 ? 0 : BuferSize * sizeof(value_t)
         <= sizeof(box_data) ? sizeof(box_data) / sizeof(value_t) : BuferSize;
 
+    using box_buffer = fixed_vector<buffer_size>;
+
     template <size_t buffer_size>
     struct box {
         union {
             fixed_vector<buffer_size> buffer;
-            box_data                 data;
+            box_data                  data;
         };
 
         vector_mode mode;

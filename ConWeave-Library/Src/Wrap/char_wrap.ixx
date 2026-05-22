@@ -1,6 +1,8 @@
-﻿export module char_wrap;
+export module char_wrap;
 
 import utility;
+
+import <functional>;
 
 export namespace wrap {
 	template <rest::character CharType, size_t Size>

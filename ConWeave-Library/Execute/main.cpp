@@ -8,18 +8,7 @@ import <cassert>;
 import <iostream>;
 
 int main() {
-    dast::fixed_vector<std::string, 2> vec1 {
-		"Hello", "World"
-    };
-    dast::fixed_vector<std::string, 2> vec2 = std::move(vec1);
-    vec1 = vec2;
-    for (auto& c : vec1) {
-        std::cout << c << ' ';
-    } std::cout << '\n';
-    for (auto& c : vec2) {
-        std::cout << c << ' ';
-    }
-    /*char* long_str = new char[1024];
+    char* long_str = new char[1024];
     std::memset(long_str, 1, 1024);
     auto stime = GetTickCount64();
     {
@@ -28,16 +17,20 @@ int main() {
                 "Hello", "This", "World"
             };
 
+            std::vector<std::string> vec2;
+
+            vec2 = std::move(vec);
+
             for (auto j = 0ull; j < 2000; j++) {
                 for (auto z = 0ull; z < 3; z++) {
-                    vec[z] = "Hello";
+                    vec2[z] = "Hello";
                 }
-                vec.push_back(long_str);
+                vec2.push_back(long_str);
             }
 
-            vec.resize(5000);
+            vec2.resize(5000);
             for (auto a = 0ull; a < 5000; a++) {
-                vec.push_back(long_str);
+                vec2.push_back(long_str);
             }
         }
     }
@@ -51,21 +44,25 @@ int main() {
                 "Hello", "This", "World"
             };
 
+            dast::vector<std::string> vec2;
+
+            vec2 = std::move(vec);
+
             for (auto j = 0ull; j < 2000; j++) {
                 for (auto z = 0ull; z < 3; z++) {
-                    vec[z] = "Hello";
+                    vec2[z] = "Hello";
                 }
-                vec.push_back(long_str);
+                vec2.push_back(long_str);
             }
 
-            vec.resize(5000);
+            vec2.resize(5000);
             for (auto a = 0ull; a < 5000; a++) {
-                vec.push_back(long_str);
+                vec2.push_back(long_str);
             }
         }
     }
 	etime = GetTickCount64();
     std::cout << (etime - stime);
-    delete[] long_str;*/
+    delete[] long_str;
     return 0;
 }

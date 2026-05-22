@@ -24,9 +24,10 @@ protected:
     using const_pointer_t = typename box_t::const_pointer_t;
     using size_t          = typename box_t::size_t;
 
-    using alloc_t     = typename box_t::alloc_t;
-    using sequence_t  = typename box_t::sequence_t;
-    using box_data_t  = typename box_t::box_data;
+    using alloc_t      = typename box_t::alloc_t;
+    using sequence_t   = typename box_t::sequence_t;
+    using box_data_t   = typename box_t::box_data;
+    using box_buffer_t = typename box_t::box_buffer;
 
 protected:
 
@@ -126,12 +127,11 @@ protected:
 
         if constexpr (!box_t::buffer_size) {
             if (old_ptr == nullptr) {
-                size_t init_cap = std::max(size, size_t(8));
-                data.origin = reinterpret_cast<pointer_t>(
-                    alloc.allocate(sesize(init_cap))
-                    );
-                data.curent = data.origin;
-                data.remain = init_cap;
+                data.origin = reinterpret_cast<pointer_t> (
+                    alloc.allocate(sesize(size))
+                );
+                data.curent = data.origin + size;
+                data.remain = size;
                 return;
             }
         }
@@ -187,22 +187,177 @@ protected:
     }
 
     template <class Ty>
+    constexpr void construct_at(pointer_t address, Ty* src)
+		noexcept(std::is_nothrow_move_constructible_v<value_t>)
+	{
+        new (address) value_t(std::move(*src));
+    }
+
+    template <class Ty>
+    constexpr void construct_at(pointer_t address, const Ty* src)
+        noexcept(std::is_nothrow_copy_constructible_v<value_t>)
+	{
+        new (address) value_t(*src);
+    }
+
+    template <class Ty>
     constexpr void construct (pointer_t address,
-							  const Ty* begin,
-							  const Ty* end)
+							  Ty* begin,
+							  Ty* end)
         noexcept (
 			box_t::trivial_copy ||
-			std::is_nothrow_move_constructible_v<value_t>
+			noexcept(construct_at(nullptr, begin))
         )
 	{
-        for (; begin != end; ++begin) {
+        for (; begin != end; ++begin, ++address) {
             if constexpr (box_t::trivial_copy) {
-                *(address++) = *begin;
+                *address = *begin;
             }
             else {
-                new (address++) value_t(std::move(*begin));
+                construct_at(address, begin);
             }
         }
+    }
+
+    template <class Ty>
+    constexpr void construct_impl(Ty&& vec)
+		noexcept (
+			box_t::buffer_size ?
+			std::is_nothrow_assignable_v<box_buffer_t, Ty> :
+			noexcept(construct(nullptr, vec.begin(), vec.end()))
+        )
+	{
+        size_t size = vec.vector_size();
+        if constexpr (box_t::buffer_size) {
+            if (size <= box_t::buffer_size) {
+                if constexpr (std::is_rvalue_reference_v<Ty>) {
+                    box_t::value.buffer = std::move(vec.value.buffer);
+                }
+            	else {
+                    box_t::value.buffer = vec.value.buffer;
+                }
+                return;
+            }
+        }
+    	respace<true, 1>(size);
+        construct (
+            box_t::value.data.origin,
+            vec.begin(), vec.end()
+        );
+    }
+
+    constexpr void construct(const vector_core& vec)
+        noexcept(noexcept(construct_impl(vec)))
+	{
+        return construct_impl(vec);
+    }
+
+    constexpr void construct(vector_core&& vec)
+        noexcept(noexcept(construct_impl(std::move(vec))))
+	{
+    	construct_impl(std::move(vec));
+        box_data_t& data = vec.value.data;
+        data.curent = data.origin;
+    }
+
+protected:
+
+    constexpr void resize_impl(size_t size)
+        noexcept (
+			box_t::buffer_size ?
+			noexcept(resize_buffer(0ull)) : true &&
+			noexcept(resize_data(size))
+        )
+    {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return resize_buffer(size);
+            }
+        }
+
+        return resize_data(size);
+    }
+
+protected:
+
+    template <class Ty>
+    constexpr void assign_impl(Ty&& vec) {
+        if constexpr (box_t::buffer_size) {
+            if (vec.value.mode == vector_mode::cache) {
+                auto& vec_buffer = vec.value.buffer;
+                size_t size      = vec_buffer.size();
+                resize_impl(size);
+                construct (
+                    begin(),
+                    vec_buffer.begin(),
+                    vec_buffer.end()
+                );
+                return;
+            }
+        }
+        using PointerType = std::conditional_t <
+            std::is_const_v<std::remove_reference_t<Ty>>,
+            const_pointer_t,
+            pointer_t
+        >;
+        auto& vec_data          = vec.value.data;
+        PointerType data_origin = vec_data.origin;
+        PointerType data_curent = vec_data.curent;
+        size_t size             = static_cast<size_t> (
+            vec_data.curent - vec_data.origin
+        );
+        resize_impl(size);
+        construct (
+            begin(),
+            data_origin,
+            data_curent
+        );
+    }
+
+    constexpr void assign(const vector_core& vec) {
+        return assign_impl(vec);
+    }
+
+    constexpr void assign(vector_core&& vec) {
+        return assign_impl(std::move(vec));
+    }
+
+protected:
+
+    pointer_t begin() noexcept {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return box_t::value.buffer.begin();
+            }
+        }
+        return box_t::value.data.origin;
+    }
+
+    const_pointer_t begin() const noexcept {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return box_t::value.buffer.begin();
+            }
+        }
+        return box_t::value.data.origin;
+    }
+
+    pointer_t end() noexcept {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return box_t::value.buffer.end();
+            }
+        }
+        return box_t::value.data.curent;
+    }
+
+    const_pointer_t end() const noexcept {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return box_t::value.buffer.end();
+            }
+        }
+        return box_t::value.data.curent;
     }
 
 protected:
@@ -218,6 +373,45 @@ protected:
         for (; begin < end; ++begin) {
             begin->~value_t();
         }
+    }
+
+protected:
+
+    constexpr size_t vector_size() const noexcept {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return box_t::value.buffer.size();
+            }
+        }
+        const box_data_t& data = box_t::value.data;
+        return static_cast<size_t>(data.curent - data.origin);
+    }
+
+protected:
+
+    constexpr void resize_buffer(size_t size) {
+        if (size < box_t::buffer_size) {
+            box_t::value.buffer.resize(size);
+        }
+        else {
+            size_t old_size = box_t::value.buffer.size();
+            heapify_cache<1>(size);
+            construct(old_size, size);
+        }
+    }
+
+    constexpr void resize_data(size_t size) {
+        box_data_t& data = box_t::value.data;
+        size_t old_size  = static_cast<size_t>(data.curent - data.origin);
+
+        if (size < old_size) {
+            deconstruct(data.origin + size, data.curent);
+            data.curent = data.origin + size;
+            return;
+        }
+
+        new_space<1>(size);
+        construct(old_size, size);
     }
 
 protected:

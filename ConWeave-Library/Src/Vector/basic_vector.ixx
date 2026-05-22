@@ -22,9 +22,10 @@ public:
     using const_pointer_t = typename core_t::const_pointer_t;
     using size_t          = typename core_t::size_t;
 
-    using alloc_t     = typename core_t::alloc_t;
-    using sequence_t  = typename core_t::sequence_t;
-    using box_data_t  = typename core_t::box_data;
+    using alloc_t      = typename core_t::alloc_t;
+    using sequence_t   = typename core_t::sequence_t;
+    using box_data_t   = typename core_t::box_data;
+    using box_buffer_t = typename core_t::box_buffer;
 
 public:
 
@@ -63,8 +64,7 @@ public:
             if (size <= core_t::buffer_size) {
                 core_t::construct (
                     core_t::value.buffer.begin(),
-                    list.begin(),
-                    list.end()
+                    list.begin(), list.end()
                 );
                 core_t::value.buffer.resize(size);
                 return;
@@ -73,9 +73,20 @@ public:
         core_t::template respace<true, 2>(size);
         core_t::construct (
             core_t::value.data.origin,
-            list.begin(),
-            list.end()
+            list.begin(), list.end()
         );
+    }
+
+    constexpr basic_vector(const basic_vector& vec)
+		noexcept(noexcept(core_t::construct(vec)))
+	{
+        core_t::construct(vec);
+    }
+
+    constexpr basic_vector(basic_vector&& vec)
+        noexcept(noexcept(core_t::construct(std::move(vec))))
+    {
+        core_t::construct(std::move(vec));
     }
 
 public:
@@ -111,33 +122,10 @@ public:
 
 public:
 
-    constexpr void resize(size_t size) {
-        box_data_t& data = core_t::value.data;
-
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                if (size < core_t::buffer_size) {
-                    core_t::value.buffer.resize(size);
-                }
-                else {
-                    size_t old_size = core_t::value.buffer.size();
-                    core_t::template heapify_cache<1>(size);
-                    core_t::construct(old_size, size);
-                }
-                return;
-            }
-        }
-
-        size_t old_size = static_cast<size_t>(data.curent - data.origin);
-
-        if (size < old_size) {
-            core_t::deconstruct(data.origin + size, data.curent);
-            data.curent = data.origin + size;
-            return;
-        }
-
-        core_t::template new_space<1>(size);
-        core_t::construct(old_size, size);
+    constexpr void resize(size_t size)
+		noexcept(noexcept(core_t::resize_impl(size)))
+	{
+        return core_t::resize_impl(size);
     }
 
 public:
@@ -168,21 +156,19 @@ public:
 public:
 
     constexpr pointer_t begin() noexcept {
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                return core_t::value.buffer.begin();
-            }
-        }
-        return core_t::value.data.origin;
+        return core_t::begin();
     }
 
-    constexpr pointer_t end() noexcept {
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                return core_t::value.buffer.end();
-            }
-        }
-        return core_t::value.data.curent;
+    constexpr const_pointer_t begin() const noexcept {
+        return core_t::begin();
+    }
+
+    constexpr const_pointer_t end() noexcept {
+        return core_t::end();
+    }
+
+    constexpr const_pointer_t end() const noexcept {
+        return core_t::end();
     }
 
 public:
@@ -194,8 +180,20 @@ public:
         return begin()[position];
     }
 
+public:
+
     constexpr reference_t operator[](size_t position) noexcept {
         return begin()[position];
+    }
+
+    constexpr basic_vector& operator=(const basic_vector& vec) {
+        core_t::assign(vec);
+        return *this;
+    }
+
+    constexpr basic_vector& operator=(basic_vector&& vec) {
+        core_t::assign(std::move(vec));
+        return *this;
     }
 
 public:

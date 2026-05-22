@@ -128,7 +128,8 @@ protected:
 		}
 	}
 
-	constexpr void construct_impl(auto&& vec, size_t size)
+	template <class Ty>
+	constexpr void construct_impl(Ty&& vec, size_t size)
 		noexcept (
 			box_t::trivial_copy ||
 			noexcept(construct_impl(vec.pointer(), 0ull))
