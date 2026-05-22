@@ -186,12 +186,16 @@ public:
         return begin()[position];
     }
 
-    constexpr basic_vector& operator=(const basic_vector& vec) {
+    constexpr basic_vector& operator=(const basic_vector& vec)
+		noexcept(noexcept(core_t::assign(vec)))
+	{
         core_t::assign(vec);
         return *this;
     }
 
-    constexpr basic_vector& operator=(basic_vector&& vec) {
+    constexpr basic_vector& operator=(basic_vector&& vec)
+		noexcept(noexcept(core_t::assign(std::move(vec))))
+	{
         core_t::assign(std::move(vec));
         return *this;
     }

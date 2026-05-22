@@ -264,8 +264,7 @@ protected:
 
     constexpr void resize_impl(size_t size)
         noexcept (
-			box_t::buffer_size ?
-			noexcept(resize_buffer(0ull)) : true &&
+			noexcept(resize_buffer(0ull)) &&
 			noexcept(resize_data(size))
         )
     {
@@ -281,7 +280,12 @@ protected:
 protected:
 
     template <class Ty>
-    constexpr void assign_impl(Ty&& vec) {
+    constexpr void assign_impl(Ty&& vec)
+		noexcept (
+			noexcept(resize_impl(0ull)) &&
+			noexcept(construct(nullptr, nullptr, nullptr))
+        )
+	{
         if constexpr (box_t::buffer_size) {
             if (vec.value.mode == vector_mode::cache) {
                 auto& vec_buffer = vec.value.buffer;
@@ -314,11 +318,15 @@ protected:
         );
     }
 
-    constexpr void assign(const vector_core& vec) {
+    constexpr void assign(const vector_core& vec)
+		noexcept(noexcept(assign_impl(vec)))
+	{
         return assign_impl(vec);
     }
 
-    constexpr void assign(vector_core&& vec) {
+    constexpr void assign(vector_core&& vec)
+		noexcept(noexcept(assign_impl(std::move(vec))))
+	{
         return assign_impl(std::move(vec));
     }
 
