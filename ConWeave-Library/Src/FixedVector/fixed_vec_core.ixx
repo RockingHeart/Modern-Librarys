@@ -128,13 +128,12 @@ protected:
 		}
 	}
 
-	constexpr void construct_impl(auto&& vec)
+	constexpr void construct_impl(auto&& vec, size_t size)
 		noexcept (
 			box_t::trivial_copy ||
 			noexcept(construct_impl(vec.pointer(), 0ull))
 		)
 	{
-		size_t size = box_t::size;
 		if constexpr (box_t::trivial_copy) {
 			std::memcpy (
 				box_t::pointer(),
@@ -151,15 +150,15 @@ protected:
 	}
 
 	constexpr void construct_vector(const fixed_vec_core& vec)
-		noexcept(noexcept(construct_impl(vec)))
+		noexcept(noexcept(construct_impl(vec, 0ull)))
 	{
-		return construct_impl(vec);
+		return construct_impl(vec, vec.size);
 	}
 
 	constexpr void construct_vector(fixed_vec_core&& vec)
-		noexcept(noexcept(construct_impl(std::move(vec))))
+		noexcept(noexcept(construct_impl(std::move(vec), 0ull)))
 	{
-		construct_impl(std::move(vec));
+		construct_impl(std::move(vec), vec.size);
 		vec.size = 0;
 	}
 
@@ -240,9 +239,11 @@ protected:
 
 protected:
 
-	constexpr void resize_vector(std::size_t size) {
-		if (size < box_t::size) {
-			deconstruct(box_t::size, size);
+	constexpr void resize_vector(std::size_t size)
+		noexcept(noexcept(deconstruct(0ull, 0ull)))
+	{
+		if (size <= box_t::size) {
+			deconstruct(0, size);
 		}
 		
 		box_t::size = size;

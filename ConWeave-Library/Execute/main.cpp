@@ -12,9 +12,10 @@ int main() {
 		"Hello", "World"
     };
     dast::fixed_vector<std::string, 2> vec2 = std::move(vec1);
+    vec1 = vec2;
     for (auto& c : vec1) {
         std::cout << c << ' ';
-    }
+    } std::cout << '\n';
     for (auto& c : vec2) {
         std::cout << c << ' ';
     }

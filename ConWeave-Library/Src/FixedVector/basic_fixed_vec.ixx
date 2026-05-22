@@ -149,6 +149,25 @@ public:
 		return core_t::pointer()[position];
 	}
 
+	constexpr basic_fixed_vec& operator=(const basic_fixed_vec& vec) {
+		core_t::resize_vector(0);
+		size_t size = vec.size();
+		core_t::construct_vector(vec);
+		core_t::size = size;
+		return *this;
+	}
+
+	constexpr basic_fixed_vec& operator=(basic_fixed_vec&& vec)
+		noexcept(
+			noexcept(core_t::deconstruct(0, size())) &&
+			noexcept(core_t::construct_vector(std::move(vec)))
+		)
+	{
+		core_t::resize_vector(0);
+		core_t::construct_vector(std::move(vec));
+		return *this;
+	}
+
 public:
 
 	constexpr ~basic_fixed_vec()

@@ -217,6 +217,40 @@
                         ```
                         #### 以上代码输出： 1
                         函数强调返回描述：无
+            - operator=
+                - 返回值类型：fixed_vector& 非静态运算符重载符：=
+                    - 参数列表：(const fixed_vector&)
+                    - fixed_vector& operator=(const fixed_vector&)
+                        - 用于重新赋值构造
+                        ``` C++
+                        import fixed_vector;
+                        import std;
+
+                        int main() {
+                            dast::fixed_vector<int, 1> vec1 = 1;
+                            dast::fixed_vector<int, 1> vec2 = vec1;
+                            std::cout << vec2[0];
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出： 1
+                        函数强调返回描述：无
+                    - 参数列表：(fixed_vector&&)
+                    - fixed_vector& operator=(fixed_vector&&)
+                        - 用于重新移动构造
+                        ``` C++
+                        import fixed_vector;
+                        import std;
+
+                        int main() {
+                            dast::fixed_vector<std::string, 1> vec1 = {"Hello"};
+                            dast::fixed_vector<std::string, 1> vec2 = std::move(vec1);
+                            std::cout << vec1[0];
+                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出： " "
+                        函数强调返回描述：无
 
 [construct]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#construct
 [push_back]: https://github.com/RockingHeart/Modern-Librarys/blob/main/Describes/FixedVector/ClassInterface-FixedVector.md#push_back
