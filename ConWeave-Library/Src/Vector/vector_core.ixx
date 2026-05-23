@@ -63,8 +63,9 @@ protected:
         )
     {
         alloc_t& alloc    = allocator();
-        pointer_t buf_ptr = box_t::value.buffer.begin();
-        size_t buf_size   = box_t::value.buffer.size();
+        box_buffer_t& buf = box_t::value.buffer;
+        pointer_t buf_ptr = buf.begin();
+        size_t buf_size   = buf.size();
         size_t target     = std::max(size, buf_size);
         size_t new_cap    = target * Expand;
 
@@ -121,8 +122,8 @@ protected:
         noexcept(allocator().deallocate(nullptr, 0ull)) &&
         noexcept(transfer(nullptr, nullptr, 0ull)))
     {
-        alloc_t& alloc = allocator();
-        box_data_t& data = box_t::value.data;
+        alloc_t& alloc    = allocator();
+        box_data_t& data  = box_t::value.data;
         pointer_t old_ptr = data.origin;
 
         if constexpr (!box_t::buffer_size) {
@@ -230,7 +231,7 @@ protected:
         size_t size = vec.vector_size();
         if constexpr (box_t::buffer_size) {
             if (size <= box_t::buffer_size) {
-                if constexpr (std::is_rvalue_reference_v<Ty>) {
+                if constexpr (std::is_rvalue_reference_v<decltype(vec)>) {
                     box_t::value.buffer = std::move(vec.value.buffer);
                 }
             	else {
@@ -283,7 +284,7 @@ protected:
     constexpr void assign_impl(Ty&& vec)
 		noexcept (
 			noexcept(resize_impl(0ull)) &&
-			noexcept(construct(nullptr, nullptr, nullptr))
+			noexcept(construct<value_t>(nullptr, nullptr, nullptr))
         )
 	{
         if constexpr (box_t::buffer_size) {
@@ -299,15 +300,15 @@ protected:
                 return;
             }
         }
-        using PointerType = std::conditional_t <
+        using pointer_type = std::conditional_t <
             std::is_const_v<std::remove_reference_t<Ty>>,
             const_pointer_t,
             pointer_t
         >;
-        auto& vec_data          = vec.value.data;
-        PointerType data_origin = vec_data.origin;
-        PointerType data_curent = vec_data.curent;
-        size_t size             = static_cast<size_t> (
+        auto& vec_data           = vec.value.data;
+        pointer_type data_origin = vec_data.origin;
+        pointer_type data_curent = vec_data.curent;
+        size_t size              = static_cast<size_t> (
             vec_data.curent - vec_data.origin
         );
         resize_impl(size);

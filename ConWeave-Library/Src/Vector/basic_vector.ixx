@@ -97,17 +97,19 @@ public:
     {
         if constexpr (core_t::buffer_size) {
             if (core_t::value.mode == vector_mode::cache) {
-                if (core_t::value.buffer.push_back(value)) {
+                box_buffer_t& buf = core_t::value.buffer;
+                if (buf.push_back(value)) {
                     return;
                 }
-                core_t::template heapify_cache<2>(core_t::value.buffer.max_size());
+                core_t::template heapify_cache<2>(buf.max_size());
                 core_t::push_to_data(value);
                 return;
             }
         }
 
         box_data_t& data = core_t::value.data;
-        if (static_cast<size_t>(data.curent - data.origin) == data.remain) {
+        size_t data_size = static_cast<size_t>(data.curent - data.origin);
+        if (data_size == data.remain) {
             core_t::template new_space<2>();
         }
 
