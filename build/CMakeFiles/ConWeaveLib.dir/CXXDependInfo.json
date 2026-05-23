@@ -1,0 +1,259 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "Clang",
+	"compiler-simulate-id" : "MSVC",
+	"config" : "Debug",
+	"cxx-modules" : 
+	{
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/FixedVector/basic_fixed_vec.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "FixedVector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/FixedVector/basic_fixed_vec.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/FixedVector/fixed_vec_box.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "FixedVector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/FixedVector/fixed_vec_box.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/FixedVector/fixed_vec_core.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "FixedVector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/FixedVector/fixed_vec_core.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/FixedVector/fixed_vec_traits.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "FixedVector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/FixedVector/fixed_vec_traits.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/FixedVector/fixed_vector.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "FixedVector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/FixedVector/fixed_vector.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/String/basic_string.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "String",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/String/basic_string.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/String/string.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "String",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/String/string.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/String/string_box.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "String",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/String/string_box.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/String/string_context.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "String",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/String/string_context.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/String/string_core.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "String",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/String/string_core.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/String/string_traits.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "String",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/String/string_traits.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Utility/adder.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Utility",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Utility/adder.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Utility/bitinfo.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Utility",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Utility/bitinfo.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Utility/character.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Utility",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Utility/character.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Utility/match.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Utility",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Utility/match.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Utility/type_restion.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Utility",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Utility/type_restion.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Utility/utility.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Utility",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Utility/utility.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Vector/basic_vector.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Vector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Vector/basic_vector.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Vector/vector.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Vector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Vector/vector.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Vector/vector_box.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Vector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Vector/vector_box.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Vector/vector_core.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Vector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Vector/vector_core.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Vector/vector_traits.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Vector",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Vector/vector_traits.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		},
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Src/Wrap/char_wrap.ixx.obj" : 
+		{
+			"bmi-only" : false,
+			"destination" : null,
+			"name" : "mods",
+			"relative-directory" : "Wrap",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Src/Wrap/char_wrap.ixx",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		}
+	},
+	"database-info" : null,
+	"dir-cur-bld" : "A:/ConWeave-Lib/build",
+	"dir-cur-src" : "A:/ConWeave-Lib",
+	"dir-top-bld" : "A:/ConWeave-Lib/build",
+	"dir-top-src" : "A:/ConWeave-Lib",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "A:/ConWeave-Lib/build/CMakeFiles/ConWeaveLib.dir",
+	"sources" : 
+	{
+		"CMakeFiles/ConWeaveLib.dir/ConWeave-Library/Execute/main.cpp.obj" : 
+		{
+			"language" : "CXX",
+			"source" : "A:/ConWeave-Lib/ConWeave-Library/Execute/main.cpp"
+		}
+	}
+}

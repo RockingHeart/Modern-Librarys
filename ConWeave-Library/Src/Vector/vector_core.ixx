@@ -263,19 +263,18 @@ protected:
 
 protected:
 
-    constexpr void resize_impl(size_t size)
-        noexcept (
-			noexcept(resize_buffer(0ull)) &&
-			noexcept(resize_data(size))
-        )
-    {
+    constexpr bool is_cache_mode() const noexcept {
         if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
-                return resize_buffer(size);
-            }
+            return box_t::value.mode == vector_mode::cache;
         }
+        return false;
+    }
 
-        return resize_data(size);
+    constexpr bool is_storage_mode() const noexcept {
+        if constexpr (box_t::buffer_size) {
+            return box_t::value.mode == vector_mode::storage;
+        }
+        return false;
     }
 
 protected:
@@ -334,51 +333,57 @@ protected:
 protected:
 
     pointer_t begin() noexcept {
-        if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
-                return box_t::value.buffer.begin();
-            }
+        if (is_cache_mode()) {
+            return box_t::value.buffer.begin();
         }
         return box_t::value.data.origin;
     }
 
     const_pointer_t begin() const noexcept {
-        if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
-                return box_t::value.buffer.begin();
-            }
+        if (is_cache_mode()) {
+            return box_t::value.buffer.begin();
         }
         return box_t::value.data.origin;
     }
 
     pointer_t end() noexcept {
-        if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
-                return box_t::value.buffer.end();
-            }
+        if (is_cache_mode()) {
+            return box_t::value.buffer.end();
         }
         return box_t::value.data.curent;
     }
 
     const_pointer_t end() const noexcept {
-        if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
-                return box_t::value.buffer.end();
-            }
+        if (is_cache_mode()) {
+            return box_t::value.buffer.end();
         }
         return box_t::value.data.curent;
     }
 
 protected:
 
-    constexpr void deconstruct(size_t begin, size_t end) {
+    constexpr void deconstruct(size_t begin, size_t end)
+		noexcept(std::is_nothrow_destructible_v<value_t>)
+	{
         box_data_t& data = box_t::value.data;
         for (; begin < end; ++begin) {
             (data.origin + begin)->~value_t();
         }
     }
 
-    constexpr void deconstruct(pointer_t begin, pointer_t end) {
+    constexpr void deconstruct (box_data_t& data,
+								size_t begin,
+								size_t end)
+		noexcept(std::is_nothrow_destructible_v<value_t>)
+	{
+        for (; begin < end; ++begin) {
+            (data.origin + begin)->~value_t();
+        }
+    }
+
+    constexpr void deconstruct(pointer_t begin, pointer_t end)
+		noexcept(noexcept(std::is_nothrow_destructible_v<value_t>))
+	{
         for (; begin < end; ++begin) {
             begin->~value_t();
         }
@@ -387,18 +392,22 @@ protected:
 protected:
 
     constexpr size_t vector_size() const noexcept {
-        if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
-                return box_t::value.buffer.size();
-            }
+        if (is_cache_mode()) {
+            return box_t::value.buffer.size();
         }
+
         const box_data_t& data = box_t::value.data;
         return static_cast<size_t>(data.curent - data.origin);
     }
 
 protected:
 
-    constexpr void resize_buffer(size_t size) {
+    constexpr void resize_buffer(size_t size)
+		noexcept (
+			noexcept(box_t::value.buffer.resize(0ull)) &&
+			noexcept(heapify_cache<0ull>(0ull))
+        )
+	{
         if (size < box_t::buffer_size) {
             box_t::value.buffer.resize(size);
         }
@@ -409,7 +418,12 @@ protected:
         }
     }
 
-    constexpr void resize_data(size_t size) {
+    constexpr void resize_data(size_t size)
+		noexcept (
+			noexcept(deconstruct(nullptr, nullptr)) &&
+			noexcept(new_space<0ull>(0ull))
+        )
+	{
         box_data_t& data = box_t::value.data;
         size_t old_size  = static_cast<size_t>(data.curent - data.origin);
 
@@ -421,6 +435,19 @@ protected:
 
         new_space<1>(size);
         construct(old_size, size);
+    }
+
+    constexpr void resize_impl(size_t size)
+        noexcept (
+			noexcept(resize_buffer(0ull)) &&
+			noexcept(resize_data(0ull)) &&
+			noexcept(construct(0ull, 0ull))
+        )
+    {
+        if (is_cache_mode()) {
+            return resize_buffer(size);
+        }
+        return resize_data(size);
     }
 
 protected:

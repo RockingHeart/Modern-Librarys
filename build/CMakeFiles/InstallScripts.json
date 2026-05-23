@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"A:/ConWeave-Lib/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

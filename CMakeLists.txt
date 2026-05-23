@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.31)
 
+if (NOT MSVC)
+    set(CMAKE_EXPERIMENTAL_CXX_MODULE_SCAN ON)
+endif()
+
 project(ConWeaveLib)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -10,7 +14,7 @@ if (MSVC)
     add_compile_options(/experimental:module)
     add_compile_options(/permissive-)
 else()
-    add_compile_options(-fmodules)
+    add_compile_options(-std=c++23 -stdlib=libc++)
 endif()
 
 file(GLOB StringPath "ConWeave-Library/Src/String/*.ixx")
@@ -26,11 +30,13 @@ add_executable(ConWeaveLib
 target_sources(ConWeaveLib
     PRIVATE
     FILE_SET mods TYPE CXX_MODULES
-    FILES ${UtilityPath}
-    FILES ${WrapPath}
-    FILES ${StringPath}
-    FILES ${VectorPath}
-    FILES ${FixedVectorPath}
+    BASE_DIRS ConWeave-Library/Src
+    FILES
+        ${UtilityPath}
+        ${WrapPath}
+        ${StringPath}
+        ${VectorPath}
+        ${FixedVectorPath}
 )
 
 source_group("String" FILES ${StringPath})

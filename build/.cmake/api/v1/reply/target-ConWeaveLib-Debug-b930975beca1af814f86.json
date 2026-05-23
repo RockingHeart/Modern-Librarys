@@ -1,0 +1,363 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "ConWeaveLib.exe"
+		},
+		{
+			"path" : "ConWeaveLib.pdb"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"add_compile_options",
+			"target_sources"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 30,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-O0 -std=gnu++23 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-std=c++23"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-stdlib=libc++"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "23"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23
+			]
+		}
+	],
+	"fileSets" : 
+	[
+		{
+			"baseDirectories" : 
+			[
+				"ConWeave-Library/Src"
+			],
+			"name" : "mods",
+			"type" : "CXX_MODULES",
+			"visibility" : "PRIVATE"
+		}
+	],
+	"id" : "ConWeaveLib::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Xlinker /subsystem:console",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-fuse-ld=lld-link",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "ConWeaveLib",
+	"nameOnDisk" : "ConWeaveLib.exe",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Execute",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "Utility",
+			"sourceIndexes" : 
+			[
+				1,
+				2,
+				3,
+				4,
+				5,
+				6
+			]
+		},
+		{
+			"name" : "Wrap",
+			"sourceIndexes" : 
+			[
+				7
+			]
+		},
+		{
+			"name" : "String",
+			"sourceIndexes" : 
+			[
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			]
+		},
+		{
+			"name" : "Vector",
+			"sourceIndexes" : 
+			[
+				14,
+				15,
+				16,
+				17,
+				18
+			]
+		},
+		{
+			"name" : "FixedVector",
+			"sourceIndexes" : 
+			[
+				19,
+				20,
+				21,
+				22,
+				23
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Execute/main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Utility/adder.ixx",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Utility/bitinfo.ixx",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Utility/character.ixx",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Utility/match.ixx",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Utility/type_restion.ixx",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Utility/utility.ixx",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Wrap/char_wrap.ixx",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/String/basic_string.ixx",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/String/string.ixx",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/String/string_box.ixx",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/String/string_context.ixx",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/String/string_core.ixx",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/String/string_traits.ixx",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Vector/basic_vector.ixx",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Vector/vector.ixx",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Vector/vector_box.ixx",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Vector/vector_core.ixx",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/Vector/vector_traits.ixx",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/FixedVector/basic_fixed_vec.ixx",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/FixedVector/fixed_vec_box.ixx",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/FixedVector/fixed_vec_core.ixx",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/FixedVector/fixed_vec_traits.ixx",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "ConWeave-Library/Src/FixedVector/fixed_vector.ixx",
+			"sourceGroupIndex" : 5
+		}
+	],
+	"type" : "EXECUTABLE"
+}

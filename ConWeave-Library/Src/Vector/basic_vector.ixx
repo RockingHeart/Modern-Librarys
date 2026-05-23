@@ -95,16 +95,14 @@ public:
         noexcept(noexcept(core_t::push_to_data(value_t())) &&
         noexcept(core_t::template new_space<2>()))
     {
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                box_buffer_t& buf = core_t::value.buffer;
-                if (buf.push_back(value)) {
-                    return;
-                }
-                core_t::template heapify_cache<2>(buf.max_size());
-                core_t::push_to_data(value);
+        if (core_t::is_cache_mode()) {
+            box_buffer_t& buf = core_t::value.buffer;
+            if (buf.push_back(value)) {
                 return;
             }
+            core_t::template heapify_cache<2>(buf.max_size());
+            core_t::push_to_data(value);
+            return;
         }
 
         box_data_t& data = core_t::value.data;
@@ -133,20 +131,17 @@ public:
 public:
 
     constexpr size_t size() const noexcept {
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                return core_t::value.buffer.size();
-            }
+        if (core_t::is_cache_mode()) {
+            return core_t::value.buffer.size();
         }
+
         const box_data_t& data = core_t::value.data;
         return static_cast<size_t>(data.curent - data.origin);
     }
 
     constexpr size_t capacity() const noexcept {
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                return core_t::value.buffer.max_size();
-            }
+        if (core_t::is_cache_mode()) {
+            return core_t::value.buffer.max_size();
         }
         return core_t::value.data.remain;
     }
@@ -205,10 +200,8 @@ public:
 public:
 
     constexpr ~basic_vector() noexcept {
-        if constexpr (core_t::buffer_size) {
-            if (core_t::value.mode == vector_mode::cache) {
-                return;
-            }
+        if (core_t::is_cache_mode()) {
+            return;
         }
 
         box_data_t& data = core_t::value.data;

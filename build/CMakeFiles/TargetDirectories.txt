@@ -1,0 +1,3 @@
+A:/ConWeave-Lib/build/CMakeFiles/ConWeaveLib.dir
+A:/ConWeave-Lib/build/CMakeFiles/edit_cache.dir
+A:/ConWeave-Lib/build/CMakeFiles/rebuild_cache.dir
