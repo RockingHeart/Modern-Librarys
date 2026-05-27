@@ -312,9 +312,9 @@ private:
 		strutil::strcopy (
 			self.pointer,
 			object.pointer,
-			object.count
+			object.specs
 		);
-		self.count = object.count;
+		self.specs = object.specs;
 	}
 
 	constexpr void copy_cache (box_cache_t&    cache,
@@ -512,26 +512,24 @@ private:
 		                          box_value_t& object_value)
 		noexcept
 	{
-		if constexpr (!trait_is_advanced_mode()) {
-			return;
+		if constexpr (trait_is_advanced_mode()) {
+			if (!object_value.before) {
+				return;
+			}
+
+			self_value.before = alloc.allocate(
+				object_value.before_count + object_value.before_left + 1
+			);
+
+			strutil::strcopy(
+				self_value.before,
+				object_value.before,
+				object_value.before_count
+			);
+
+			self_value.before_count = object_value.before_count;
+			self_value.before[self_value.before_count] = char_t();
 		}
-
-		if (!object_value.before) {
-			return;
-		}
-
-		self_value.before = alloc.allocate (
-			object_value.before_count + object_value.before_left + 1
-		);
-
-		strutil::strcopy (
-			self_value.before,
-			object_value.before,
-			object_value.before_count
-		);
-
-		self_value.before_count = object_value.before_count;
-		self_value.before[self_value.before_count] = char_t();
 	}
 
 	constexpr void assign_data(box_value_t&  self_value, box_value_t&  object_value) noexcept {

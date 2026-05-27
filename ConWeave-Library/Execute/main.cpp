@@ -1,14 +1,17 @@
 import std;
-import vector;
-import fixed_vector;
+import filer;
+import reader;
+import writer;
+import string;
+
+import std;
 
 import <windows.h>;
 
-import <cassert>;
-import <iostream>;
-
 int main() {
-    char* long_str = new char[1024];
+    filer<char, reader, writer> file("A:\\Tests\\Test.txt");
+    std::cout << file.data();
+    /*char* long_str = new char[1024];
     std::memset(long_str, 1, 1024);
     auto stime = GetTickCount64();
     {
@@ -63,6 +66,6 @@ int main() {
     }
 	etime = GetTickCount64();
     std::cout << (etime - stime);
-    delete[] long_str;
+    delete[] long_str;*/
     return 0;
 }

@@ -438,21 +438,57 @@
 
             ## append
             - 返回值类型：void 非静态成员函数名：append
+                - 参数列表：(basic_string) 
+                    - void append(basic_string)
+                    - 用于在末尾添加指定字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            dast::cstring str1 = { "Hello", 5 };
+                            dast::cstring str2 = { "World", 5 };
+                            str1.append(str2)
+                            std::cout << str1.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："HelloWorld"
+                    该函数强调的返回描述：无
+
                 - 参数为模板形参包
-                    - void append(ArgsType...)
-                    - 用于在末尾添加多个参数的子字符的串
+                    - 参数列表：(const_pointer_t) 
+                    - void append(const_pointer_t)
+                    - 用于在末尾添加指定字符串
                         ``` C++
                         import string;
                         import std;
 
                         int main() {
                             dast::cstring str = { "Hello", 5 };
-                            str.append('.', "Hello", '.', str)
+                            str.append("World")
                             std::cout << str.const_string() << '\n'
                             return 0;
                         }
                         ```
-                    #### 以上代码输出："Hello.Hello.Hello.Hello"
+                    #### 以上代码输出："HelloWorld"
+                    该函数强调的返回描述：无
+
+                    - 参数列表：(const_pointer_t, size_t) 
+                    - void append(const_pointer_t str, size_t size)
+                    - 用于在末尾添加指定size长度的str字符串
+                        ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            dast::cstring str = { "Hello", 5 };
+                            str.append("World", 2)
+                            std::cout << str.const_string() << '\n'
+                            return 0;
+                        }
+                        ```
+                    #### 以上代码输出："HelloWo"
                     该函数强调的返回描述：无
 
             ## left

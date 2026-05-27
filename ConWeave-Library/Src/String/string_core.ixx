@@ -87,6 +87,11 @@ public:
 		return self.pointer();
 	}
 
+	template <class SelfType>
+	constexpr auto data(this SelfType&& self) {
+		return self.pointer();
+	}
+
 public:
 
 	template <class SelfType, class... ArgsType>
@@ -413,15 +418,15 @@ public:
 	template <class SelfType, class... ArgsType>
 	constexpr void append(this SelfType&& self, ArgsType&&... args)
 		noexcept (
-			noexcept((self.append_impl(std::forward<ArgsType>(args)), ...))
+			noexcept(self.append_impl(std::forward<ArgsType>(args)...))
 		)
 		requires (
 			requires {
-				(self.append_impl(std::forward<ArgsType>(args)), ...);
+				self.append_impl(std::forward<ArgsType>(args)...);
 			}
 		)
 	{
-		(self.append_impl(std::forward<ArgsType>(args)), ...);
+		self.append_impl(std::forward<ArgsType>(args)...);
 	}
 
 	template <class SelfType, class... ArgsType>

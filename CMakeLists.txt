@@ -20,6 +20,7 @@ endif()
 file(GLOB StringPath "ConWeave-Library/Src/String/*.ixx")
 file(GLOB FixedVectorPath "ConWeave-Library/Src/FixedVector/*.ixx")
 file(GLOB VectorPath "ConWeave-Library/Src/Vector/*.ixx")
+file(GLOB FilerPath "ConWeave-Library/Src/Filer/*.ixx")
 file(GLOB WrapPath "ConWeave-Library/Src/Wrap/*.ixx")
 file(GLOB UtilityPath "ConWeave-Library/Src/Utility/*.ixx")
 
@@ -35,13 +36,15 @@ target_sources(ConWeaveLib
         ${UtilityPath}
         ${WrapPath}
         ${StringPath}
-        ${VectorPath}
         ${FixedVectorPath}
+        ${VectorPath}
+        ${FilerPath}
 )
 
 source_group("String" FILES ${StringPath})
-source_group("Vector" FILES ${VectorPath})
 source_group("FixedVector" FILES ${FixedVectorPath})
+source_group("Vector" FILES ${VectorPath})
+source_group("Filer" FILES ${FilerPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
 
