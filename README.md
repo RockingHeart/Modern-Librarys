@@ -6,7 +6,6 @@
     - 项目源码：[Source]
     - 项目规范：[DevStandard]
     - 项目名间：[Namespace]
-    - 项目协议：[License]
     - 项目欢庆：[Rejoice]
     - 项目能报：[PerformanceReport]
     - String
@@ -100,7 +99,6 @@ This project is currently using Chinese to support MD files.
 [Source]: https://github.com/RockingHeart/ConWeave-Lib/tree/main/ConWeave-Library/Src
 [DevStandard]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/DevStandard.md
 [Namespace]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Namespace.md
-[License]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/License.md
 [Rejoice]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Rejoice.md
 [PerformanceReport]: https://github.com/RockingHeart/ConWeave-Lib/tree/main/PerformanceReport
 
