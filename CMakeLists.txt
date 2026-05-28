@@ -27,12 +27,10 @@ file(GLOB FilerPath "ConWeave-Library/Src/Filer/*.ixx")
 file(GLOB WrapPath "ConWeave-Library/Src/Wrap/*.ixx")
 file(GLOB UtilityPath "ConWeave-Library/Src/Utility/*.ixx")
 
-add_executable(ConWeaveLib
-    ${ConWeaveLib_Path}/Execute/main.cpp
-)
+add_library(ConWeaveLib)
 
 target_sources(ConWeaveLib
-    PRIVATE
+    PUBLIC
     FILE_SET mods TYPE CXX_MODULES
     BASE_DIRS ${ConWeaveLib_Path}/Export
     FILES
@@ -47,6 +45,12 @@ target_sources(ConWeaveLib
         ${FilerPath}
 )
 
+target_include_directories(ConWeaveLib
+    PUBLIC
+    ${ConWeaveLib_Path}/Export
+    ${ConWeaveLib_Path}/Src
+)
+
 source_group("Export" FILES ${ExportPath})
 
 source_group("String" FILES ${StringPath})
@@ -55,5 +59,3 @@ source_group("Vector" FILES ${VectorPath})
 source_group("Filer" FILES ${FilerPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
-
-source_group("Execute" ${ConWeaveLib_Path}/Execute/main.cpp)
