@@ -5,7 +5,7 @@ import vector_traits;
 import <cstddef>;
 import <type_traits>;
 
-import fixed_vector;
+import dast.fixed_vector;
 
 export using ::vector_mode;
 

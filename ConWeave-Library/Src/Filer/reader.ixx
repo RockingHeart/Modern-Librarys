@@ -1,11 +1,12 @@
 export module reader;
 
+import filoader;
+
 import utility;
-import string;
+import dast.string;
+
 import <type_traits>;
 import <cstddef>;
-
-import filoader;
 import <windows.h>;
 
 export template <rest::character CharType>

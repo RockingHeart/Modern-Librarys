@@ -1,4 +1,4 @@
-export module string;
+export module dast.string;
 
 import string_traits;
 import string_core;

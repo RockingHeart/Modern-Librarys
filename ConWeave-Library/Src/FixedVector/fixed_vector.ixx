@@ -1,4 +1,4 @@
-﻿export module fixed_vector;
+export module dast.fixed_vector;
 
 import <cstddef>;
 

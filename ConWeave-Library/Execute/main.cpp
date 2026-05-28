@@ -1,15 +1,10 @@
 import std;
-import filer;
-import reader;
-import writer;
-import string;
-
-import std;
+import cw;
 
 import <windows.h>;
 
 int main() {
-    filer<char, reader, writer> file("A:\\Tests\\Test.txt");
+    sys::filer file("A:\\Tests\\Test.txt");
     std::cout << file.data();
     /*char* long_str = new char[1024];
     std::memset(long_str, 1, 1024);
