@@ -49,6 +49,9 @@ public:
 		if (!loader.is_loaded()) {
 			return;
 		}
+		if (text) {
+			text.resize(0);
+		}
 		read_text(loader.id());
 	}
 
