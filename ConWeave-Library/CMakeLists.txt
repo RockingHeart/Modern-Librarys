@@ -56,5 +56,5 @@ if(TEST)
         ${DebugSources}
     )
     target_link_libraries(ConWeaveLib_test PRIVATE ConWeaveLib)
-    source_group("Debugs" FILES Debugs/*.cpp)
+    source_group("Debugs" FILES ${DebugSources})
 endif()
