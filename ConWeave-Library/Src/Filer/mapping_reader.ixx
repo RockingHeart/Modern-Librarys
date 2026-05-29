@@ -1,48 +1,61 @@
-export module mapping_reader;
+export module sys.mapping_reader;
 
-import filoader;
+import sys.filoader;
+import sys.access;
 
 import utility;
 import dast.string;
 
 import <type_traits>;
 import <cstddef>;
+import <memory>;
 import <windows.h>;
 
-export template <rest::character CharType>
-class mapping_reader {
+export namespace sys {
+	template <rest::character CharType>
+	class mapping_reader;
+}
+
+template <rest::character CharType>
+class sys::mapping_reader {
 public:
 	using char_t = CharType;
-	using text_t = const CharType*;
+	using text_t = CharType*;
 
 private:
-	using loader = filoader<char_t>;
+	using loader   =		  filoader<char_t>;
 	using fileid_t = typename loader::fileid_t;
 
 private:
 
 	text_t text;
 
+public:
+
+	static constexpr size_t mapping_behavior(loader& loader) noexcept {
+		if (loader.template has<comaccess::read>()) {
+			size_t result = 0x0004;
+			if (loader.template has<comaccess::write>()) {
+				return result | 0x0002;
+			}
+			return result;
+		}
+		return 0xF001F;
+	}
+
 private:
 
-	constexpr void read_text(fileid_t id) noexcept {
+	constexpr void read_text(loader& loader) noexcept {
 		text = static_cast<text_t> (
-			MapViewOfFile(id, FILE_MAP_READ, 0, 0, 0)
+			MapViewOfFile(loader.id(), mapping_behavior(loader), 0, 0, 0)
 		);
 	}
 
 public:
 
 	constexpr mapping_reader()
-		noexcept : text(nullptr)
+		noexcept : text()
 	{}
-
-	constexpr mapping_reader(loader& loader)
-		noexcept : text(nullptr)
-	{
-		loader.mapping();
-		read(loader);
-	}
 
 public:
 
@@ -50,8 +63,9 @@ public:
 		if (!loader.is_loaded() || text) {
 			return false;
 		}
-		loader.mapping();
-		read_text(loader.id());
+		fileid_t old = loader.mapping();
+		CloseHandle(old);
+		read_text(loader);
 		return true;
 	}
 

@@ -1,6 +1,6 @@
-export module fixed_vec_core;
+export module fixed_vector.impl.core;
 
-import fixed_vec_box;
+import fixed_vector.impl.box;
 
 import <cstddef>;
 import <memory>;

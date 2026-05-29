@@ -1,6 +1,6 @@
-export module vector_box;
+export module vector.impl.box;
 
-import vector_traits;
+import vector.impl.traits;
 
 import <cstddef>;
 import <type_traits>;

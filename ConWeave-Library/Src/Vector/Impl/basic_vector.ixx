@@ -1,6 +1,6 @@
-export module basic_vector;
+export module vector.impl.basic;
 
-import vector_core;
+import vector.impl.core;
 
 import <cstddef>;
 import <type_traits>;

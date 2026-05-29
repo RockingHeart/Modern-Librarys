@@ -1,6 +1,6 @@
-export module string_box;
+export module string.impl.box;
 
-import string_traits;
+import string.impl.traits;
 
 using namespace traits;
 

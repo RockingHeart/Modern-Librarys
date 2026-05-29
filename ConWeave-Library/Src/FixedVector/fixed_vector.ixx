@@ -2,8 +2,7 @@ export module dast.fixed_vector;
 
 import <cstddef>;
 
-import fixed_vec_traits;
-import basic_fixed_vec;
+import fixed_vector.impl;
 
 export namespace dast {
 	template <class ValueType, std::size_t Size, class SizeType = std::size_t>

@@ -23,9 +23,6 @@
                 - 参数列表：(path_t, permission)
                 - filer(path_t path, permission permis = permission::read_only)
                      - 用于以permis权限打开path指定的文件（这个函数会先构造空的读取器再使读取器读取内容） <br>
-                - 参数列表：(filoader<char_t>&)
-                - filer(filoader<char_t>& filoader)
-                     - 用于以filoader打开filoader内部指定的文件（这个函数直接构造读取器） <br>
 
             
             ## data

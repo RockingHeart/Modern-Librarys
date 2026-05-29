@@ -1,4 +1,4 @@
-﻿export module string_context;
+export module string.impl.context;
 
 import utility;
 

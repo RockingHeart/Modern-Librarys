@@ -1,4 +1,4 @@
-export module fixed_vec_box;
+export module fixed_vector.impl.box;
 
 import <cstddef>;
 import <type_traits>;

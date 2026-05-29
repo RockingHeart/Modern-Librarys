@@ -1,7 +1,7 @@
-export module string_core;
+export module string.impl.core;
 
-import string_box;
-import string_context;
+import string.impl.box;
+import string.impl.context;
 
 import <type_traits>;
 

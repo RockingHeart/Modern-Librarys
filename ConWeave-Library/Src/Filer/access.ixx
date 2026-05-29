@@ -1,17 +1,17 @@
-export module access;
+export module sys.access;
 
 import <cstddef>;
 
 export enum class comaccess : std::size_t {
-	read = 1 << 0,
-	write = 1 << 1,
-	execute = 1 << 2,
-	read_share = 1 << 3,
-	write_share = 1 << 4,
+	read		 = 1 << 0,
+	write		 = 1 << 1,
+	execute		 = 1 << 2,
+	read_share   = 1 << 3,
+	write_share  = 1 << 4,
 	delete_share = 1 << 5,
-	create = 1 << 6,
-	make = 1 << 7,
-	clear = 1 << 8
+	create		 = 1 << 6,
+	make		 = 1 << 7,
+	clear		 = 1 << 8
 };
 
 export constexpr std::size_t operator|(comaccess left, comaccess right) noexcept {

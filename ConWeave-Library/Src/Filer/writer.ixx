@@ -1,15 +1,20 @@
-export module writer;
+export module sys.writer;
 
-import filoader;
-import access;
+import sys.filoader;
+import sys.access;
 
 import utility;
 
 import <windows.h>;
 import <cstddef>;
 
-export template <rest::character CharType>
-class writer {
+export namespace sys {
+	template <rest::character CharType>
+	class writer;
+}
+
+template <rest::character CharType>
+class sys::writer {
 public:
 	using char_t = CharType;
 	using text_t = const CharType*;
@@ -25,8 +30,8 @@ public:
 
 public:
 
-	static constexpr bool write(loader& loader, text_t text) {
-		if (!loader.has<comaccess::write>()) {
+	static constexpr bool write(loader& loader, text_t text) noexcept {
+		if (!loader.template has<comaccess::write>()) {
 			return false;
 		}
 		std::size_t size    = text.size();

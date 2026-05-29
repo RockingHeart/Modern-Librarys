@@ -1,6 +1,6 @@
-export module vector_core;
+export module vector.impl.core;
 
-import vector_box;
+import vector.impl.box;
 
 import <cstddef>;
 import <cstring>;

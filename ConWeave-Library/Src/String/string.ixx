@@ -1,10 +1,8 @@
 export module dast.string;
 
-import string_traits;
-import string_core;
-import basic_string;
+import string.impl;
 
-export import string_context;
+export import string.impl.context;
 
 import utility;
 

@@ -1,6 +1,6 @@
-export module reader;
+export module sys.reader;
 
-import filoader;
+import sys.filoader;
 
 import utility;
 import dast.string;
@@ -9,8 +9,13 @@ import <type_traits>;
 import <cstddef>;
 import <windows.h>;
 
-export template <rest::character CharType>
-class reader {
+export namespace sys {
+	template <rest::character CharType>
+	class reader;
+}
+
+template <rest::character CharType>
+class sys::reader{
 public:
 	using char_t = CharType;
 	using text_t = dast::string<char_t>;

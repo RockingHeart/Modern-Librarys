@@ -1,7 +1,6 @@
 export module dast.vector;
 
-import vector_traits;
-import basic_vector;
+import vector.impl;
 
 import <cstddef>;
 import <memory>;

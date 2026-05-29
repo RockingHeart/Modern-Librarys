@@ -1,9 +1,9 @@
 module;
 #include <windows.h>;
 
-export module filoader;
+export module sys.filoader;
 
-import access;
+import sys.access;
 
 import <cstddef>;
 import <type_traits>;
@@ -11,17 +11,22 @@ import <type_traits>;
 import utility;
 
 constexpr std::size_t generic(std::size_t mark) noexcept {
-	if (mark & comaccess::read)	   return 0x80000000;
-	if (mark & comaccess::write)   return 0x40000000;
-	if (mark & comaccess::execute) return 0x20000000;
-	return 0x10000000;
+	size_t access = 0;
+	if (mark & comaccess::read)	   access |= 0x80000000;
+	if (mark & comaccess::write)   access |= 0x40000000;
+	if (mark & comaccess::execute) access |= 0x20000000;
+	if (access == 0) {
+		return 0x10000000;
+	}
+	return access;
 }
 
 constexpr std::size_t share(std::size_t mark) noexcept {
-	if (mark & comaccess::read_share)   return 0x00000001;
-	if (mark & comaccess::write_share)  return 0x00000002;
-	if (mark & comaccess::delete_share) return 0x00000004;
-	return 0; // comaccess::exclusive
+	size_t access = 0;
+	if (mark & comaccess::read_share)   access |= 0x00000001;
+	if (mark & comaccess::write_share)  access |= 0x00000002;
+	if (mark & comaccess::delete_share) access |= 0x00000004;
+	return access; // Return comaccess::exclusive if access is 0
 }
 
 constexpr std::size_t create(std::size_t mark) noexcept {
@@ -31,8 +36,13 @@ constexpr std::size_t create(std::size_t mark) noexcept {
 	return 3;
 }
 
-export template <rest::character CharType>
-class filoader {
+export namespace sys {
+	template <rest::character CharType>
+	class filoader;
+}
+
+template <rest::character CharType>
+class sys::filoader {
 public:
 	using char_t   = CharType;
 	using path_t   = const CharType*;
@@ -101,7 +111,7 @@ public:
 		return true;
 	}
 
-	constexpr bool mapping(const char_t* name = nullptr) noexcept {
+	constexpr fileid_t mapping(const char_t* name = nullptr) noexcept {
 		fileid_t old = fileid;
 		if constexpr (std::is_same_v<char_t, char>) {
 			fileid = CreateFileMappingA (
@@ -119,10 +129,9 @@ public:
 		}
 		if (!fileid) {
 			fileid = old;
-			return false;
+			return nullptr;
 		}
-		CloseHandle(old);
-		return true;
+		return old;
 	}
 
 	constexpr bool close() const noexcept {

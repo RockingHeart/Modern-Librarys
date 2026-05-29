@@ -1,7 +1,7 @@
-export module basic_string;
+export module string.impl.basic;
 
-import string_traits;
-import string_context;
+import string.impl.traits;
+import string.impl.context;
 import char_wrap;
 
 import utility;

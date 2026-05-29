@@ -1,4 +1,4 @@
-export module string_traits;
+export module string.impl.traits;
 
 import utility;
 import <cstddef>;

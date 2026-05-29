@@ -1,4 +1,4 @@
-export module vector_traits;
+export module vector.impl.traits;
 
 import utility;
 

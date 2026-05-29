@@ -17,8 +17,11 @@ endif()
 
 file(GLOB ExportPath "Export/*.ixx")
 file(GLOB StringPath "Src/String/*.ixx")
+file(GLOB StringImplPath "Src/String/impl/*.ixx")
 file(GLOB FixedVectorPath "Src/FixedVector/*.ixx")
+file(GLOB FixedVectorImplPath "Src/FixedVector/impl/*.ixx")
 file(GLOB VectorPath "Src/Vector/*.ixx")
+file(GLOB VectorImplPath "Src/Vector/impl/*.ixx")
 file(GLOB FilerPath "Src/Filer/*.ixx")
 file(GLOB WrapPath "Src/Wrap/*.ixx")
 file(GLOB UtilityPath "Src/Utility/*.ixx")
@@ -31,7 +34,13 @@ target_sources(ConWeaveLib
     BASE_DIRS ${ConWeaveLib_Path}/Export
     FILES ${ExportPath}
     BASE_DIRS ${ConWeaveLib_Path}/Src
-    FILES ${UtilityPath} ${WrapPath} ${StringPath} ${FixedVectorPath} ${VectorPath} ${FilerPath}
+    FILES
+        ${UtilityPath}
+        ${WrapPath}
+        ${StringPath} ${StringImplPath}
+        ${FixedVectorPath} ${FixedVectorImplPath}
+        ${VectorPath} ${VectorImplPath}
+        ${FilerPath}
 )
 
 target_include_directories(ConWeaveLib
@@ -42,8 +51,11 @@ target_include_directories(ConWeaveLib
 
 source_group("Export" FILES ${ExportPath})
 source_group("String" FILES ${StringPath})
+source_group("String\\impl" FILES ${StringImplPath})
 source_group("FixedVector" FILES ${FixedVectorPath})
+source_group("FixedVector\\impl" FILES ${FixedVectorImplPath})
 source_group("Vector" FILES ${VectorPath})
+source_group("Vector\\impl" FILES ${VectorImplPath})
 source_group("Filer" FILES ${FilerPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
