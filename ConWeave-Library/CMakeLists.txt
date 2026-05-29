@@ -10,16 +10,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(ConWeaveLib_Path ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (MSVC)
-    add_compile_options(/std:c++latest)
-    add_compile_options(/std:clatest)
-    add_compile_options(/experimental:module)
-    add_compile_options(/permissive-)
+    add_compile_options(/std:c++latest /std:clatest /experimental:module /permissive-)
 else()
     add_compile_options(-std=c++23 -stdlib=libc++)
 endif()
 
 file(GLOB ExportPath "Export/*.ixx")
-
 file(GLOB StringPath "Src/String/*.ixx")
 file(GLOB FixedVectorPath "Src/FixedVector/*.ixx")
 file(GLOB VectorPath "Src/Vector/*.ixx")
@@ -33,16 +29,9 @@ target_sources(ConWeaveLib
     PUBLIC
     FILE_SET mods TYPE CXX_MODULES
     BASE_DIRS ${ConWeaveLib_Path}/Export
-    FILES
-        ${ExportPath}
+    FILES ${ExportPath}
     BASE_DIRS ${ConWeaveLib_Path}/Src
-    FILES
-        ${UtilityPath}
-        ${WrapPath}
-        ${StringPath}
-        ${FixedVectorPath}
-        ${VectorPath}
-        ${FilerPath}
+    FILES ${UtilityPath} ${WrapPath} ${StringPath} ${FixedVectorPath} ${VectorPath} ${FilerPath}
 )
 
 target_include_directories(ConWeaveLib
@@ -52,7 +41,6 @@ target_include_directories(ConWeaveLib
 )
 
 source_group("Export" FILES ${ExportPath})
-
 source_group("String" FILES ${StringPath})
 source_group("FixedVector" FILES ${FixedVectorPath})
 source_group("Vector" FILES ${VectorPath})
