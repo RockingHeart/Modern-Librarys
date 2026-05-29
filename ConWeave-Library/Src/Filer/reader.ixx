@@ -45,14 +45,15 @@ public:
 
 public:
 
-	constexpr void read(loader& loader) noexcept {
+	constexpr bool read(loader& loader) noexcept {
 		if (!loader.is_loaded()) {
-			return;
+			return false;
 		}
 		if (text) {
 			text.resize(0);
 		}
 		read_text(loader.id());
+		return true;
 	}
 
 	constexpr auto data() const noexcept {
