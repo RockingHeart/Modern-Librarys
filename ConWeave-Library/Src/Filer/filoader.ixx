@@ -4,6 +4,7 @@ module;
 export module sys.filoader;
 
 import sys.access;
+import sys.error;
 
 import <cstddef>;
 import <type_traits>;
@@ -135,7 +136,7 @@ public:
 	}
 
 	constexpr bool close() const noexcept {
-		if (!fileid) {
+		if (!is_loaded()) {
 			return false;
 		}
 		return CloseHandle(fileid);
@@ -151,7 +152,7 @@ public:
 	}
 
 	[[nodiscard]] constexpr bool is_loaded() const noexcept {
-		return fileid != nullptr;
+		return fileid != INVALID_HANDLE_VALUE;
 	}
 
 public:

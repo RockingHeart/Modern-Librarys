@@ -59,17 +59,14 @@ private:
 
 private:
 
-	static constexpr size_t bandwidth_of_specs() noexcept {
-		switch (type_size) {
-			case 1:
-				return 5;
-			case 2:
-				return 4;
-			case 4:
-				return 3;
-		}
-		return 7;
-	}
+	template<size_t>
+	struct bandwidth_calculator {
+		static constexpr size_t value = 7;
+	};
+
+	template<> struct bandwidth_calculator<1> { static constexpr size_t value = 5; };
+	template<> struct bandwidth_calculator<2> { static constexpr size_t value = 4; };
+	template<> struct bandwidth_calculator<4> { static constexpr size_t value = 3; };
 
 public:
 
@@ -77,28 +74,30 @@ public:
 
 	constexpr static size_t type_size   = sizeof(char_t);
 	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / type_size;
-	static constexpr size_t bandwidth	= bandwidth_of_specs();
+	static constexpr size_t bandwidth	= bandwidth_calculator<type_size>::value;
 
 protected:
 
 	struct cache_t {
 		char_t		 pointer[buffer_size];
 		cache_size_t specs [[indeterminate]] : bandwidth;
+		string_mode  modes : 1;
+		bool	 is_xored  : 1 = false;
 	};
 
-	class status {
+	/*class status {
 		char_t		 fill_buffer[buffer_size];
 		cache_size_t fill_specs : bandwidth;
 	public:
 		string_mode modes : 1 = string_mode::cache;
 		bool	 is_xored : 1 = false;
 		constexpr status(string_mode mode) noexcept : modes(mode) {}
-	};
+	};*/
 
 	union {
 		cache_t        cache;
 		box_value_type value;
-		status		   state;
+		//status		   state;
 	};
 
 public:
@@ -106,27 +105,30 @@ public:
 	constexpr  string_box()
 		noexcept : cache {
 			.pointer {},
-			.specs = 0
+			.specs = 0,
+			.modes = string_mode::cache
 		}
 	{};
 
 	constexpr  string_box(char_t char_value)
 		noexcept : cache {
 			.pointer {},
-			.specs = 1
+			.specs = 1,
+			.modes = string_mode::cache
 		}
 	{
 		cache.pointer[0] = char_value;
 	};
 
 	constexpr  string_box(size_t size)
-		noexcept : state {
-			string_mode::cache
+		noexcept : cache {
+			.modes = string_mode::cache
 		}
 	{
 		size >= buffer_size ? void([this, size] {
 			value.count = size;
-			state.modes = string_mode::storage;
+			cache.modes = string_mode::storage;
+			//state.modes = string_mode::storage;
 		}()) : void(cache = cache_t {
 			.specs = static_cast<cache_size_t>(size)
 		});

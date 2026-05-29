@@ -79,6 +79,10 @@ public:
 		return reader.data();
 	}
 
+	constexpr filoader<char_t>& com_loader() noexcept {
+		return loader;
+	}
+
 	constexpr reader_wap& com_reader() noexcept {
 		return reader;
 	}

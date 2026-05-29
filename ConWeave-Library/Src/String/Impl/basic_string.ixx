@@ -129,26 +129,26 @@ private:
 
 private:
 
-	constexpr basic_string(basic_string& object, char_t value)
+	constexpr basic_string(const basic_string& object, char_t value)
 		noexcept
 	{
 		assign_init(object, &value, 1);
 	}
 
-	constexpr basic_string(basic_string& object, const_pointer_t pointer)
+	constexpr basic_string(const basic_string& object, const_pointer_t pointer)
 		noexcept
 	{
 		assign_init(object, pointer, strutil::strlenof(pointer));
 	}
 
-	constexpr basic_string(basic_string& object, basic_string& right_object)
+	constexpr basic_string(const basic_string& object, basic_string& right_object)
 		noexcept
 	{
 		assign_init(object, right_object.pointer(), right_object.string_length());
 	}
 
 
-	constexpr basic_string(basic_string& object, char_action act)
+	constexpr basic_string(const basic_string& object, char_action act)
 		noexcept
 	{
 		assign_init(object);
@@ -223,7 +223,7 @@ private:
 		strutil::strcopy(buffer, cache.pointer, buf_size);
 		buffer[buf_size]	= char_t();
 		value.pointer		= buffer;
-		core_t::state.modes = string_mode::storage;
+		core_t::cache.modes = string_mode::storage;
 		if constexpr (trait_is_advanced_mode()) {
 			value.before = nullptr;
 		}
@@ -435,10 +435,10 @@ private:
 			return;
 		}
 		box_value_t& value = core_t::value;
-		size_t size = value.count;
-		size_t alloc_size = size * 1.5;
-		value.pointer = allocator().allocate(alloc_size);
-		value.left = alloc_size - size;
+		size_t size		   = value.count;
+		size_t alloc_size  = size * 1.5;
+		value.pointer	   = allocator().allocate(alloc_size);
+		value.left		   = alloc_size - size;
 		strutil::strcopy(value.pointer, str, size);
 		value.pointer[size] = char_t();
 	}
@@ -811,20 +811,20 @@ private:
 
 	[[nodiscard]]
 	constexpr bool is_large_mode() const noexcept {
-		return core_t::state.modes == string_mode::storage;
+		return core_t::cache.modes == string_mode::storage;
 	}
 
 	[[nodiscard]]
 	constexpr bool is_cache_mode() const noexcept {
-		return core_t::state.modes == string_mode::cache;
+		return core_t::cache.modes == string_mode::cache;
 	}
 
 private:
 
 	constexpr string_info curr_info() const noexcept {
 		return string_info {
-			core_t::state.modes,
-			core_t::state.is_xored
+			core_t::cache.modes,
+			core_t::cache.is_xored
 		};
 	}
 
@@ -1352,7 +1352,7 @@ private:
 		for (size_t i = 0; i < size; ++i) {
 			string[i] ^= key;
 		}
-		core_t::state.is_xored = true;
+		core_t::cache.is_xored = true;
 		return string;
 	}
 
@@ -1387,7 +1387,7 @@ private:
 		box_cache_t& cache  = core_t::cache;
 		cache.specs         = size;
 		cache.pointer[size] = '\0';
-		core_t::state.modes = string_mode::cache;
+		core_t::cache.modes = string_mode::cache;
 		if constexpr (trait_is_advanced_mode()) {
 			release_before(alloc, value);
 		}
@@ -1910,7 +1910,7 @@ public:
 
 	template <class... ArgsType>
 	constexpr basic_string operator+(ArgsType&&... args)
-		noexcept requires (
+		const noexcept requires (
 		    requires {
 		        basic_string { *this, std::forward<ArgsType>(args)... };
 	        }
