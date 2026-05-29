@@ -7,7 +7,7 @@ endif()
 project(ConWeaveLib)
 
 set(CMAKE_CXX_STANDARD 23)
-set(ConWeaveLib_Path ${CMAKE_CURRENT_SOURCE_DIR}/ConWeave-Library)
+set(ConWeaveLib_Path ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (MSVC)
     add_compile_options(/std:c++latest)
@@ -18,14 +18,14 @@ else()
     add_compile_options(-std=c++23 -stdlib=libc++)
 endif()
 
-file(GLOB ExportPath "ConWeave-Library/Export/*.ixx")
+file(GLOB ExportPath "Export/*.ixx")
 
-file(GLOB StringPath "ConWeave-Library/Src/String/*.ixx")
-file(GLOB FixedVectorPath "ConWeave-Library/Src/FixedVector/*.ixx")
-file(GLOB VectorPath "ConWeave-Library/Src/Vector/*.ixx")
-file(GLOB FilerPath "ConWeave-Library/Src/Filer/*.ixx")
-file(GLOB WrapPath "ConWeave-Library/Src/Wrap/*.ixx")
-file(GLOB UtilityPath "ConWeave-Library/Src/Utility/*.ixx")
+file(GLOB StringPath "Src/String/*.ixx")
+file(GLOB FixedVectorPath "Src/FixedVector/*.ixx")
+file(GLOB VectorPath "Src/Vector/*.ixx")
+file(GLOB FilerPath "Src/Filer/*.ixx")
+file(GLOB WrapPath "Src/Wrap/*.ixx")
+file(GLOB UtilityPath "Src/Utility/*.ixx")
 
 add_library(ConWeaveLib)
 
