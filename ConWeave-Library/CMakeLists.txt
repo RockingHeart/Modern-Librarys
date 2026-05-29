@@ -47,3 +47,13 @@ source_group("Vector" FILES ${VectorPath})
 source_group("Filer" FILES ${FilerPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
+
+option(TEST "Build tests" OFF)
+
+if(TEST)
+    add_executable(ConWeaveLib_test
+        Execute/main.cpp
+    )
+    target_link_libraries(ConWeaveLib_test PRIVATE ConWeaveLib)
+    source_group("Execute" FILES Execute/main.cpp)
+endif()
