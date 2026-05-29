@@ -51,9 +51,10 @@ source_group("Utility" FILES ${UtilityPath})
 option(TEST "Build tests" OFF)
 
 if(TEST)
+    file(GLOB DebugSources "Debugs/*.cpp")
     add_executable(ConWeaveLib_test
-        Execute/main.cpp
+        ${DebugSources}
     )
     target_link_libraries(ConWeaveLib_test PRIVATE ConWeaveLib)
-    source_group("Execute" FILES Execute/main.cpp)
+    source_group("Debugs" FILES Debugs/*.cpp)
 endif()
