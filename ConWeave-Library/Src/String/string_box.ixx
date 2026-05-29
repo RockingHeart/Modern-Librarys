@@ -82,13 +82,12 @@ public:
 protected:
 
 	struct cache_t {
-		char_t pointer[buffer_size];
+		char_t		 pointer[buffer_size];
 		cache_size_t specs [[indeterminate]] : bandwidth;
 	};
 
 	class status {
-		char_t		 fill_buffer[sizeof(pointer_t) + sizeof(size_t)];
-		size_t		 fill_allocsize;
+		char_t		 fill_buffer[buffer_size];
 		cache_size_t fill_specs : bandwidth;
 	public:
 		string_mode modes : 1 = string_mode::cache;
