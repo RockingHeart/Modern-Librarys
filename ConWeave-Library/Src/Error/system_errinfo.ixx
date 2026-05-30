@@ -1,7 +1,7 @@
 module;
 #include <windows.h>
 
-export module sys.error;
+export module sys.error_info;
 
 import utility;
 import dast.string;
@@ -12,11 +12,12 @@ import <type_traits>;
 
 export namespace sys {
     template <rest::character CharType>
-    unsigned long detailed_error(unsigned long error) noexcept;
+    dast::string<CharType> detailed_error(unsigned long error) noexcept;
 }
 
 template <rest::character CharType = char>
-unsigned long sys::detailed_error(unsigned long error) noexcept {
+dast::string<CharType> sys::detailed_error(unsigned long error) noexcept {
+    dast::string<CharType> result;
     CharType* message = nullptr;
 
     if constexpr (std::is_same_v<CharType, char>) {
@@ -30,7 +31,7 @@ unsigned long sys::detailed_error(unsigned long error) noexcept {
             0, nullptr
         );
         if (message) {
-            fprintf(stderr, "\033[31mError: %s\033[0m\n", message);
+            result = message;
             LocalFree(message);
         }
     }
@@ -45,10 +46,16 @@ unsigned long sys::detailed_error(unsigned long error) noexcept {
             0, nullptr
         );
         if (message) {
-            fwprintf(stderr, L"\033[31mError: %s\033[0m\n", message);
+            int len = WideCharToMultiByte(CP_UTF8, 0, message, -1,
+                nullptr, 0, nullptr, nullptr);
+            if (len > 0) {
+                result.resize(len - 1);
+                WideCharToMultiByte(CP_UTF8, 0, message, -1,
+                    &result[0], len, nullptr, nullptr);
+            }
             LocalFree(message);
         }
     }
 
-    return error;
+    return result;
 }

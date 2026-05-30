@@ -4,7 +4,7 @@ module;
 export module sys.filoader;
 
 import sys.access;
-import sys.error;
+import sys.error_sentinel;
 
 import <cstddef>;
 import <type_traits>;
@@ -87,7 +87,9 @@ public:
 	constexpr filoader (path_t	   path,
 						permission per = permission::read_only)
 		noexcept : fileid(open_file(path, per)), permis(per)
-	{}
+	{
+		error_sentinel<error_type::open_file> sentinel{};
+	}
 
 	constexpr filoader(const filoader& loader)
 		noexcept : fileid(loader.fileid), permis(loader.permis)
@@ -106,7 +108,7 @@ public:
 				  const permission& per = permission::read_only)
 		noexcept
 	{
-		if (fileid_t fileid = open_file(path, per); !fileid) {
+		if (open_file(path, per); !is_loaded()) {
 			return false;
 		}
 		return true;

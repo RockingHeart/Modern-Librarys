@@ -107,9 +107,9 @@
                     import std;
                     
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.at(0) << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：'H'
@@ -126,9 +126,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.const_string() << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：'H'
@@ -144,11 +144,11 @@
                     import std;
 
                     int main() {
-                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str1 = "Hello";
                         dast::cstring str2 = { "World", 5 };
                         str1.swap(str2);
                         std::cout << str.const_string() << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："World"
@@ -164,11 +164,11 @@
                     import std;
 
                     int main() {
-                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str1 = "Hello";
                         dast::cstring str2 = { "World", 5 };
                         str1.move(str2);
                         std::cout << str.const_string() << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："World"
@@ -184,11 +184,11 @@
                 import std;
 
                 int main() {
-                    dast::cstring str = { "Hello", 5 };
+                    dast::cstring str = "Hello";
                     for (auto& c : str) {
                         std::cout << c << ' ';
                     } std::cout << '\n';
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出："H e l l o"
@@ -205,7 +205,7 @@
                 int main() {
                     dast::cstring str = { " Hello ", 7 };
                     std::cout << str.cut(' ');
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出：2
@@ -220,11 +220,11 @@
                 import std;
 
                 int main() {
-                    dast::cstring str = { "Hello", 5 };
+                    dast::cstring str = "Hello";
                     for (auto& v : str.reverse()) {
                         std::cout << v << ' ';
                     }
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出："o l l e H"
@@ -242,7 +242,7 @@
                     dast::cstring str = { " Hello ", 5 };
                     std::cout << str.trimmed() << '\n';
                     std::cout << str.const_string() << '\n';
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码第一次输出：2
@@ -258,10 +258,10 @@
                 import std;
 
                 int main() {
-                    dast::cstring str = { "HELLO", 5 };
+                    dast::cstring str = "Hello";
                     auto lower = str.lower();
                     std::cout << lower.const_string() << '\n';
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出："hello"
@@ -276,10 +276,10 @@
                 import std;
 
                 int main() {
-                    dast::cstring str = { "hello", 5 };
+                    dast::cstring str = "Hello";
                     auto upper = str.upper();
                     std::cout << upper.const_string() << '\n';
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出："HELLO"
@@ -298,10 +298,10 @@
                     import std;
                     
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.index('e', 0, str.size()) << '\n';
                         std::cout << str.index('l', str.size(), 0) << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码第一次输出：1
@@ -317,9 +317,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.index(4) << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出： true
@@ -339,7 +339,7 @@
                     dast::cstring str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                     str.resize(60);
                     std::cout << str.clear_residue() << '\n';
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出：'1'
@@ -359,7 +359,7 @@
                     dast::cstring str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
                     str.resize(60);
                     std::cout << str.leave_residue() << '\n';
-                    return 0;
+                    
                 }
                 ```
                 #### 以上代码输出：'1'
@@ -373,9 +373,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："Hello"
@@ -392,9 +392,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.truncate(1, 4).const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："ell"
@@ -410,10 +410,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.center('*', 5)
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
@@ -427,10 +426,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.center("*****")
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello\*\*\*\*\*"
@@ -446,11 +444,10 @@
                         import std;
 
                         int main() {
-                            dast::cstring str1 = { "Hello", 5 };
+                            dast::cstring str1 = "Hello";
                             dast::cstring str2 = { "World", 5 };
                             str1.append(str2)
                             std::cout << str1.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："HelloWorld"
@@ -465,10 +462,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.append("World")
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："HelloWorld"
@@ -482,10 +478,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.append("World", 2)
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："HelloWo"
@@ -501,10 +496,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.left('*', 5)
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello"
@@ -518,10 +512,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.left("*****")
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："\*\*\*\*\*Hello"
@@ -537,10 +530,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.right('*', 5)
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："Hello\*\*\*\*\*"
@@ -554,10 +546,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str.right("*****")
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："Hello\*\*\*\*\*"
@@ -576,7 +567,6 @@
                             dast::cstring str = { " World", 5 };
                             str.expand_prefix("Hello")
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                     #### 以上代码输出："Hello World"
@@ -594,9 +584,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.empty() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：false
@@ -614,7 +604,7 @@
                     int main() {
                         dast::cstring str = { "     ", 5 };
                         std::cout << str.is_blank() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：true
@@ -632,7 +622,7 @@
                     int main() {
                         dast::cstring str = { "12345", 5 };
                         std::cout << str.is_digit() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：true
@@ -650,7 +640,7 @@
                     int main() {
                         dast::cstring str = { "abcde", 5 };
                         std::cout << str.is_lower() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：true
@@ -668,7 +658,7 @@
                     int main() {
                         dast::cstring str = { "ABCDE", 5 };
                         std::cout << str.is_upper() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：true
@@ -686,7 +676,7 @@
                     int main() {
                         dast::cstring str = { "ABCDEfg", 7 };
                         std::cout << str.is_enstr() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：true
@@ -704,7 +694,7 @@
                     int main() {
                         dast::cstring str = { "abc", 3 };
                         std::cout << str.is_ascii() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：true
@@ -720,12 +710,12 @@
                     import std;
 
                     int main() {
-                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str1 = "Hello";
                         std::cout << str.max_size() << '\n'
 
                         dast::cstring str2 = { "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 30 };
                         std::cout << str.max_size() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码str1输出24（缓存阈值大小）<br> 以上代码str2输出60（成员堆大小阈值。请注意：当前该阈值使用构造的字符串大小乘以2以计算，此算法待更改）
@@ -747,7 +737,7 @@
                         bool is_xored = info.is_xored;
                         std::cout << (mode == string_mode::cache) << '\n';
                         std::cout << is_xored << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码依次输出：1 -> 1
@@ -764,10 +754,10 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         str.replace("World", 0, 5);
                         std::cout << str.const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："World"
@@ -781,10 +771,10 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         str.replace('A', 0, 5);
                         std::cout << str.const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：49
@@ -807,7 +797,7 @@
                         dast::cstring str = "Hd";
                         str.insert("ello Worl", 0);
                         std::cout << str.const_string();
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："Hello World"
@@ -827,7 +817,7 @@
                         dast::cstring str = "Hello";
                         str.exclusive_or('.');
                         std::cout << str.const_string();
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："fKBBA"
@@ -847,7 +837,7 @@
                         if (str.leave_residue()) {
 	                        std::cout << str.residue().size << '\n';
                         }
-                        return 0;
+                        
                     }
                 ```
                 #### 以上代码输出："AAAAA"
@@ -864,7 +854,7 @@
                     import std;
 
                     int main() {
-                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str1 = "Hello";
 
                         auto print_str = [&]() {
                             std::cout << str.const_string() << ' '
@@ -877,7 +867,7 @@
 
                         str.resize(30);
                         print_str();
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码第一次输出："Hello" 0 24<br>以上代码第二次输出："Hello" 1 30
@@ -895,10 +885,10 @@
                     import std;
 
                     int main() {
-                        dast::cstring str1 = { "Hello", 5 };
+                        dast::cstring str1 = "Hello";
                         str1.reserve(50);
                         std::cout << str1.max_size() << ' ' << str1.size() << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出："50 5"
@@ -926,7 +916,7 @@
                         dast::cstring str = "Hello AAAAAAAAAAA";
                         str.restore_cache_mode();
                         std::cout << str.size() << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：":AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -944,7 +934,7 @@
                         dast::cstring str1 = { 'A', 50 };
                         str.restore_cache_mode(12);
                         std::cout << str.const_string() << '\n';
-                        return 0;
+                        
                     }
                     ```
                      #### 以上代码输出："AAAAAAAAAAAA"
@@ -963,7 +953,7 @@
                         dast::cstring str = "Hello";
                         str.toggle_large_mode();
                         std::cout << (str.mode() == mode_status::storage) << '\n';
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：1
@@ -978,9 +968,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.size() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出： 5
@@ -997,9 +987,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << str.tick('l', 0, str.size()) << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出：2
@@ -1016,10 +1006,10 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "Hello", 5 };
+                        dast::cstring str = "Hello";
                         std::string std_str = str.to<std::string>();
                         std::cout << std_str << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出： "Hello"
@@ -1035,9 +1025,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "HELLO", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << std_str.to_lower().const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出： "hello"
@@ -1053,9 +1043,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "hELLO", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << std_str.swapcase().const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出： "Hello"
@@ -1071,9 +1061,9 @@
                     import std;
 
                     int main() {
-                        dast::cstring str = { "hello", 5 };
+                        dast::cstring str = "Hello";
                         std::cout << std_str.to_upper().const_string() << '\n'
-                        return 0;
+                        
                     }
                     ```
                     #### 以上代码输出： "HELLO"
@@ -1090,10 +1080,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             dast::cstring str2 = str + 'A';
                             std::cout << str2.const_string() << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："HelloA"
@@ -1107,10 +1096,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             dast::cstring str2 = str + " World";
                             std::cout << str2.const_string() << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："Hello World"
@@ -1124,11 +1112,10 @@
                         import std;
 
                         int main() {
-                            dast::cstring str1 = { "Hello", 5 };
+                            dast::cstring str1 = "Hello";
                             dast::cstring str2 = { " Wello", 5 };
                             dast::cstring str3 = str1 + str2;
                             std::cout << str2.const_string() << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："Hello World"
@@ -1145,10 +1132,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str += 'A';
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："HelloA"
@@ -1162,10 +1148,9 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             str += " World";
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："Hello World"
@@ -1179,11 +1164,10 @@
                         import std;
 
                         int main() {
-                            dast::cstring str1 = { "Hello", 5 };
+                            dast::cstring str1 = "Hello";
                             dast::cstring str2 = { "World", 5 };
                             str1 += str2;
                             std::cout << str.const_string() << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："Hello World"
@@ -1199,9 +1183,8 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             std::cout << str[0] << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出：'H'
@@ -1219,7 +1202,6 @@
                         int main() {
                             dast::cstring str = { "A", 1 };
                             std::cout << (str == 'A') << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出：1
@@ -1233,9 +1215,24 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 1 };
+                            dast::cstring str = "Hello";
                             std::cout << (str == "Hello") << '\n'
-                            return 0;
+                        }
+                        ```
+                        #### 以上代码输出：1
+                        该函数强调的返回描述：无
+
+                - 参数列表：(basic_string&)
+                - bool operator==(basic_string& obj)
+                    - 用于比较存储的内容是否等于obj
+                         ``` C++
+                        import string;
+                        import std;
+
+                        int main() {
+                            dast::cstring str1 = "Hello";
+                            dast::cstring str2 = "Hello";
+                            std::cout << (str1 == str2) << '\n'
                         }
                         ```
                         #### 以上代码输出：1
@@ -1251,9 +1248,8 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             std::cout << (!str) << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出：true
@@ -1269,9 +1265,8 @@
                         import std;
 
                         int main() {
-                            dast::cstring str = { "Hello", 5 };
+                            dast::cstring str = "Hello";
                             std::cout << str << '\n'
-                            return 0;
                         }
                         ```
                         #### 以上代码输出："Hello"
@@ -1290,8 +1285,8 @@
                                 dast::cstring str1;
                                 str1 = 'A';
                                 std::cout << str1 << '\n'
-                                return 0;
-                            }
+                                
+  }
                             ```
                             #### 以上代码第一次输出："A"
                             该函数强调的返回描述：无
@@ -1305,11 +1300,11 @@
 
                             int main() {
                                 dast::cstring str1;
-                                dast::cstring str2 = { "Hello", 5 };
+                                dast::cstring str2 = "Hello";
                                 str1 = str2;
                                 std::cout << str1 << '\n'
-                                return 0;
-                            }
+                                
+  }
                             ```
                             #### 以上代码第一次输出："Hello"
                             该函数强调的返回描述：无
@@ -1331,12 +1326,12 @@
 
                             int main() {
                                 dast::cstring str1;
-                                dast::cstring str2 = { "Hello", 5 };
+                                dast::cstring str2 = "Hello";
                                 str1 = std::move(str2);
                                 std::cout << str1 << '\n'
                                 std::cout << str2 << '\n'
-                                return 0;
-                            }
+                                
+  }
                             ```
                             #### 以上代码第一次输出："Hello"
                             #### 以上代码第二次输出：""

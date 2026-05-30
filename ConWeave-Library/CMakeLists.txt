@@ -23,7 +23,7 @@ file(GLOB FixedVectorImplPath "Src/FixedVector/Impl/*.ixx")
 file(GLOB VectorPath "Src/Vector/*.ixx")
 file(GLOB VectorImplPath "Src/Vector/Impl/*.ixx")
 file(GLOB FilerPath "Src/Filer/*.ixx")
-file(GLOB ErrorOutPath "Src/ErrorOut/*.ixx")
+file(GLOB ErrorPath "Src/Error/*.ixx")
 file(GLOB WrapPath "Src/Wrap/*.ixx")
 file(GLOB UtilityPath "Src/Utility/*.ixx")
 
@@ -38,7 +38,7 @@ target_sources(ConWeaveLib
     FILES
         ${UtilityPath}
         ${WrapPath}
-        ${ErrorOutPath}
+        ${ErrorPath}
         ${StringPath} ${StringImplPath}
         ${FixedVectorPath} ${FixedVectorImplPath}
         ${VectorPath} ${VectorImplPath}
@@ -59,7 +59,7 @@ source_group("FixedVector\\Impl" FILES ${FixedVectorImplPath})
 source_group("Vector" FILES ${VectorPath})
 source_group("Vector\\Impl" FILES ${VectorImplPath})
 source_group("Filer" FILES ${FilerPath})
-source_group("ErrorOut" FILES ${ErrorOutPath})
+source_group("Error" FILES ${ErrorPath})
 source_group("Wrap" FILES ${WrapPath})
 source_group("Utility" FILES ${UtilityPath})
 
