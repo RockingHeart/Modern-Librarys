@@ -83,9 +83,15 @@ public:
 
 protected:
 
+	struct specs_bits {
+		cache_size_t size  : bandwidth;
+		string_mode  mode  : 1;
+		bool         xored : 1;
+	};
+
 	struct cache_t {
 		char_t		 pointer[buffer_size];
-		cache_size_t specs [[indeterminate]];
+		specs_bits   specs [[indeterminate]];
 	};
 
 	/*class status {
@@ -103,96 +109,33 @@ protected:
 		//status		   state;
 	};
 
-	constexpr string_mode mode() const noexcept {
-		return static_cast<string_mode>((cache.specs >> 7) & 1);
-	}
-
-	static constexpr string_mode mode(cache_t& cache) noexcept {
-		return static_cast<string_mode>((cache.specs >> 7) & 1);
-	}
-
-	constexpr void mode(string_mode value) noexcept {
-		if (value == string_mode::storage) {
-			cache.specs |= (1 << 7);
-			return;
-		}
-		cache.specs &= ~(1 << 7);
-	}
-
-	static constexpr void mode(cache_t& cache, string_mode value) noexcept {
-		if (value == string_mode::storage) {
-			cache.specs |= (1 << 7);
-			return;
-		}
-		cache.specs &= ~(1 << 7);
-	}
-
-	constexpr bool xored() const noexcept {
-		return (cache.specs >> 6) & 1;
-	}
-
-	static constexpr bool xored(cache_t& cache) noexcept {
-		return (cache.specs >> 6) & 1;
-	}
-
-	constexpr void xored(bool value) noexcept {
-		if (value) {
-			cache.specs |= (1 << 6);
-			return;
-		}
-		cache.specs &= ~(1 << 6);
-	}
-
-	static constexpr void xored(cache_t& cache, bool value) noexcept {
-		if (value) {
-			cache.specs |= (1 << 6);
-			return;
-		}
-		cache.specs &= ~(1 << 6);
-	}
-
-	constexpr cache_size_t cache_size() const noexcept {
-		return cache.specs & specs_mask;
-	}
-
-	static constexpr cache_size_t cache_size(cache_t& cache) noexcept {
-		return cache.specs & specs_mask;
-	}
-
-	constexpr void cache_size(cache_size_t value) noexcept {
-		cache.specs = (cache.specs & ~specs_mask) | (value & specs_mask);
-	}
-
-	static constexpr void cache_size(cache_t& cache, cache_size_t value) noexcept {
-		cache.specs = (cache.specs & ~specs_mask) | (value & specs_mask);
-	}
-
 public:
 
 	constexpr  string_box()
 		noexcept : cache {}
-	{
-		mode(string_mode::cache);
-	};
+	{};
 
 	constexpr  string_box(char_t char_value)
-		noexcept : cache {}
+		noexcept : cache {
+			.pointer =   {},
+			.specs   =   {
+				.size = 1,
+				.mode = string_mode::cache
+			}
+		}
 	{
 		cache.pointer[0] = char_value;
-		mode(string_mode::cache);
-		cache_size(1);
 	};
 
 	constexpr  string_box(size_t size)
 		noexcept : cache {}
 	{
 		if (size > buffer_size) {
-			value.count = size;
-			mode(string_mode::storage);
+			value.count		 = size;
+			cache.specs.mode = string_mode::storage;
 		}
 		else {
-			mode(string_mode::cache);
-			cache_size(size);
+			cache.specs.size = size;
 		}
 	}
 
