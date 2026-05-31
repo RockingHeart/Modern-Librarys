@@ -40,7 +40,7 @@
 
 ## 性能评估
 - string
-    ### 根据MSVC下的综合性能测试结果（String版本：1.13.0）：它与
+    请查阅：[PerformanceReport-String]
 
 <br>
 
@@ -96,6 +96,7 @@
 [Namespace]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Namespace.md
 [Rejoice]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Rejoice.md
 [PerformanceReport]: https://github.com/RockingHeart/ConWeave-Lib/tree/main/PerformanceReport
+[PerformanceReport-String]: https://github.com/RockingHeart/ConWeave-Lib/tree/main/PerformanceReport/String
 
 <!-- String -->
 [ClassInterface-String]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md

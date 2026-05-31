@@ -40,9 +40,7 @@
 
 ## Performance Evaluation
 - string
-    ### Based on comprehensive performance test results under MSVC: it's about one speed tier slower than the standard library (let S be speed, a speed tier being S to the power of N);
-    ### The reasons are: the inherently suboptimal computation speed of bitwise operations (primary), non-unified size and alloc_size members (primary), non-extreme implementation details (secondary), and MSVC's poor optimization for bitwise operations (secondary), resulting in slower performance compared to the standard library.
-    ### This String still has its merits, such as in scenarios sensitive to small character buffer requirements... Please note: this String is faster than the standard library's String in certain scenarios (like resize first then +=. 2026.3.4).
+    Please refer to: [PerformanceReport-String]
 
 <br>
 
@@ -102,6 +100,7 @@
 [Namespace]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Namespace.md
 [Rejoice]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/Rejoice.md
 [PerformanceReport]: https://github.com/RockingHeart/ConWeave-Lib/tree/main/PerformanceReport
+[PerformanceReport-String]: https://github.com/RockingHeart/ConWeave-Lib/tree/main/PerformanceReport/String
 
 <!-- String -->
 [ClassInterface-String]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md
