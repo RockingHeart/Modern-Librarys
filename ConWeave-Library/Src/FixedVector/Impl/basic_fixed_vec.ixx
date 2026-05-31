@@ -185,7 +185,7 @@ public:
 
 };
 
-export template <class Traits> class basic_fixed_vec<Traits, 0> {
+template <class Traits> class basic_fixed_vec<Traits, 0> {
 private:
 	using traits = Traits;
 

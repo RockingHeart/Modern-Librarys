@@ -1,12 +1,13 @@
-﻿export module utility : bitinfo;
+export module utility : bitinfo;
 
 import <cstddef>;
 
 export namespace bitinfo {
-
 	template <std::size_t bits>
-	constexpr size_t size = bits > 64 ? 0xffffffffffffffffu :
-		(1 << bits) - 1;
+	constexpr size_t size =
+		bits >= 64 ? ~std::size_t{ 0 } :
+		bits == 0  ? 0				   :
+		(std::size_t{ 1 } << (bits - 1) << 1) - 1;
 
 	template <std::size_t position, class ObjectType>
 	constexpr bool at(const ObjectType& object) noexcept;

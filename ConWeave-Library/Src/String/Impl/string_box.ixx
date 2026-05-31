@@ -11,7 +11,7 @@ export using ::string_mode;
 
 template<size_t>
 struct bandwidth_calculator {
-	static constexpr size_t value = 7;
+	static constexpr size_t value = 6;
 };
 
 template<> struct bandwidth_calculator<1> { static constexpr size_t value = 5; };
@@ -21,7 +21,6 @@ template<> struct bandwidth_calculator<4> { static constexpr size_t value = 3; }
 export template <class StringTraits>
 class string_box {
 public:
-
 	using string_traits = StringTraits;
 
 	using char_t          = typename string_traits::char_t;
@@ -35,58 +34,61 @@ public:
 
 private:
 
-	struct base_value {
-		pointer_t pointer;
-		size_t    count;
-		struct {
-			size_t left  : (sizeof(size_t) * CHAR_BIT) - 8;
-			size_t specs : 8;
-		};
-	};
-
-	template <value_traits>
-	struct box_value {};
-
-	template <>
-	struct box_value<value_traits::no_residue>
-		: base_value
-	{};
-
-	template <>
-	struct box_value<value_traits::remain>
-		: base_value
-	{
-		pointer_t before;
-		size_t    before_count;
-		size_t    before_left;
-	};
-
-	template <>
-	struct box_value<value_traits::enhance>
-		:  box_value<value_traits::remain>
-	{};
-
 	struct residue_info {
 		const_pointer_t const address;
 		const size_t		  size;
 		const size_t		  left;
 	};
 
-public:
+	struct base_value {
+		pointer_t pointer;
+		size_t    count;
+		struct {
+			size_t left : (sizeof(size_t)* CHAR_BIT) - 8;
+			size_t specs : 8;
+		};
+	};
 
+	struct remain_value {
+		pointer_t before;
+		size_t    before_count;
+		size_t    before_left;
+	};
+
+	struct enhance_value : remain_value {};
+
+	struct empty_value {};
+
+	template <value_traits ValueTrait>
+	struct box_value : base_value,
+		std::conditional_t <
+			ValueTrait == value_traits::remain,
+				remain_value,
+			std::conditional_t <
+				ValueTrait == value_traits::enhance,
+					enhance_value,
+				empty_value
+			>
+		>
+	{};
+
+protected:
 	using box_value_type = box_value<string_traits::value_trait>;
+
+public:
 
 	constexpr static size_t type_size   = sizeof(char_t);
 	constexpr static size_t buffer_size = (sizeof(box_value_type) - 1) / type_size;
 	constexpr static size_t bandwidth	= bandwidth_calculator<type_size>::value;
-	constexpr static size_t specs_mask  = (1 << bandwidth) - 1;
 
 protected:
 
 	struct specs_bits {
-		cache_size_t size  : bandwidth;
-		string_mode  mode  : 1;
-		bool         xored : 1;
+		constexpr static size_t padding_size = 8 - bandwidth - 2;
+		cache_size_t size	 : 5;
+		cache_size_t padding : padding_size > 0 ? padding_size : 0;
+		bool         xored	 : 1;
+		string_mode  mode	 : 1;
 	};
 
 	struct cache_t {

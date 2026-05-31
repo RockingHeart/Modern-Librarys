@@ -16,15 +16,15 @@ export enum class assoptions {
 	pull, async
 };
 
-export template <assoptions AssignOption, class>
+export template <assoptions, class>
 struct assign_operation {};
 
-export template <rest::character char_t>
+template <rest::character char_t>
 struct assign_operation<assoptions::pull, char_t> {
 	using type = std::generator<char_t>;
 };
 
-export template <class Type>
+template <class Type>
 struct assign_operation<assoptions::async, Type> {
 	
 };

@@ -20,9 +20,10 @@ public:
 	using string_traits = StringTraits;
 
 protected:
-	using box_t        =          string_box<StringTraits>;
+	using box_t		   =          string_box<StringTraits>;
 	using box_value_t  = typename box_t::box_value_type;
 	using box_cache_t  = typename box_t::cache_t;
+	using specs_bits_t = typename box_t::specs_bits;
 	using box_t::box_t;
 
 public:
