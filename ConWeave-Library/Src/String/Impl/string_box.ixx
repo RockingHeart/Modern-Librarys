@@ -2,10 +2,13 @@ export module string.impl.box;
 
 import string.impl.traits;
 
+import utility;
+
 import <cstdint>;
 import <bit>;
 
 using namespace traits;
+using namespace bitinfo;
 
 export using ::string_mode;
 
@@ -40,13 +43,33 @@ private:
 		const size_t		  left;
 	};
 
-	struct base_value {
-		pointer_t pointer;
-		size_t    count;
-		struct {
-			size_t left : (sizeof(size_t)* CHAR_BIT) - 8;
-			size_t specs : 8;
-		};
+	struct value_concord_little {
+		size_t left  : (sizeof(size_t)* CHAR_BIT) - 8;
+		size_t specs : 8;
+	};
+
+	struct value_concord_big {
+		size_t specs : 8;
+		size_t left  : (sizeof(size_t)* CHAR_BIT) - 8;
+	};
+
+
+	template <endpoint EndPoint>
+	struct value_concord {
+		using type = std::conditional_t <
+			EndPoint == endpoint::little,
+			value_concord_little,
+			value_concord_big
+		>;
+	};
+
+	using value_concord_t = value_concord<layout_endian()>::type;
+
+	struct base_value
+	{
+		pointer_t		pointer;
+		size_t			count;
+		value_concord_t concord;
 	};
 
 	struct remain_value {
@@ -83,12 +106,39 @@ public:
 
 protected:
 
-	struct specs_bits {
+	struct cache_concord_little {
 		constexpr static size_t padding_size = 8 - bandwidth - 2;
 		cache_size_t size	 : 5;
 		cache_size_t padding : padding_size > 0 ? padding_size : 0;
 		bool         xored	 : 1;
 		string_mode  mode	 : 1;
+	};
+
+	struct cache_concord_big {
+		constexpr static size_t padding_size = 8 - bandwidth - 2;
+		bool         xored	 : 1;
+		string_mode  mode	 : 1;
+		cache_size_t padding : padding_size > 0 ? padding_size : 0;
+		cache_size_t size	 : 5;
+	};
+
+
+	template <endpoint EndPoint>
+	struct cache_concord {
+		using type = std::conditional_t <
+			EndPoint == endpoint::little,
+			cache_concord_little,
+			cache_concord_big
+		>;
+	};
+
+	using cache_concord_t = cache_concord<layout_endian()>::type;
+
+	struct specs_bits : cache_concord_t {
+		using concord_t = cache_concord_t;
+		using concord_t::size;
+		using concord_t::mode;
+		using concord_t::xored;
 	};
 
 	struct cache_t {

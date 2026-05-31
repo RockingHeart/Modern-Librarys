@@ -190,11 +190,11 @@ private:
 
 	constexpr std::size_t alloc_size() const noexcept {
 		const box_value_t& value = core_t::value;
-		return value.count + value.left;
+		return value.count + value.concord.left;
 	}
 
 	constexpr std::size_t alloc_size(box_value_t& value) const noexcept {
-		return value.count + value.left;
+		return value.count + value.concord.left;
 	}
 
 	constexpr size_t ration_size(size_t size) const noexcept {
@@ -228,7 +228,7 @@ private:
 			value.before = nullptr;
 		}
 		value.count = buf_size;
-		value.left  = alloc_size - size;
+		value.concord.left  = alloc_size - size;
 	}
 
 	constexpr void reserve_cache(size_t size) noexcept {
@@ -248,7 +248,7 @@ private:
 		alloc.deallocate(value.before, value.before_count + value.before_left);
 		value.before            = value.pointer;
 		value.before_count      = value.count;
-		value.before_left		= value.left;
+		value.before_left		= value.concord.left;
 		value.pointer           = alloc.allocate(size);
 		strutil::strcopy(value.pointer, value.before, value.before_count);
 	}
@@ -265,7 +265,7 @@ private:
 		pointer_t old_ptr     = value.pointer;
 		size_t alloc_size	  = size * Expand;
 		value.pointer		  = alloc.allocate(alloc_size);
-		value.left			  = alloc_size - size;
+		value.concord.left			  = alloc_size - size;
 		strutil::strcopy(value.pointer, old_ptr, value.count);
 		alloc.deallocate(old_ptr, value.count);
 	}
@@ -434,7 +434,7 @@ private:
 		size_t count	   = sumlen;
 		size_t alloc_size  = count * 2;
 		value.pointer      = allocator().allocate(alloc_size);
-		value.left		   = alloc_size - count;
+		value.concord.left		   = alloc_size - count;
 		strutil::strcopy(value.pointer, object.pointer(), obj_size);
 		strutil::strcopy(value.pointer + obj_size, pointer, size);
 		value.pointer[count] = char_t();
@@ -451,7 +451,7 @@ private:
 		size_t size		   = value.count;
 		size_t alloc_size  = size * 2;
 		value.pointer	   = allocator().allocate(alloc_size);
-		value.left		   = alloc_size - size;
+		value.concord.left = alloc_size - size;
 		strutil::strcopy(value.pointer, str, size);
 		value.pointer[size] = char_t();
 	}
@@ -467,7 +467,7 @@ private:
 			size_t size			 = value.count;
 			size_t alloc_size    = size * 2;
 			data = value.pointer = allocator().allocate(alloc_size);
-			value.left           = alloc_size - size;
+			value.concord.left           = alloc_size - size;
 		}
 		const auto* begin = list.begin();
 		const auto* end   = list.end() - 1;
@@ -496,7 +496,7 @@ private:
 		size_t size        = value.count;
 		size_t alloc_size  = size * 25;
 		value.pointer      = allocator().allocate(alloc_size);
-		value.left		   = alloc_size - size;
+		value.concord.left		   = alloc_size - size;
 		strutil::strset(value.pointer, char_value, size);
 		value.pointer[size] = char_t();
 	}
@@ -657,12 +657,12 @@ private:
 			);
 		}
 
-		object_value.pointer = self.pointer;
-		object_value.count   = self.count;
-		object_value.left    = self.left;
-		self.pointer         = nullptr;
-		self.count			 = 0;
-		self.left			 = 0;
+		object_value.pointer	  = self.pointer;
+		object_value.count		  = self.count;
+		object_value.concord.left = self.concord.left;
+		self.pointer			  = nullptr;
+		self.count				  = 0;
+		self.concord.left		  = 0;
 
 		if constexpr (trait_is_advanced_mode()) {
 			release_before(object_alloc, object);
@@ -796,7 +796,7 @@ private:
 		if (is_cache_mode()) {
 			return core_t::buffer_size - core_t::cache.specs.size;
 		}
-		return core_t::value.left;
+		return core_t::value.concord.left;
 	}
 
 	constexpr size_t string_max_size() const noexcept {
@@ -1040,7 +1040,7 @@ private:
 				alloc.deallocate(value.pointer, max_size);
 			}
 			size_t size			 = sumlen * 2;
-			value.left			 = size - sumlen;
+			value.concord.left			 = size - sumlen;
 			data = value.pointer = alloc.allocate(alloc_size(value));
 			data[sumlen]         = char_t();
 			return old;
@@ -1426,7 +1426,7 @@ private:
 		size_t alloc_size  = strlen * 2;
 		value.pointer      = alloc.allocate(alloc_size);
 		strutil::strcopy(value.pointer, buffer, strlen);
-		value.left			  = alloc_size - strlen;
+		value.concord.left			  = alloc_size - strlen;
 		value.count           = strlen;
 		value.pointer[strlen] = char_t();
 		alloc.deallocate(buffer, strlen);
@@ -1451,7 +1451,7 @@ private:
 		box_value_t& value = core_t::value;
 		if (size < alloc_size(value)) {
 			value.pointer[size] = fill;
-			value.left			= alloc_size() - size;
+			value.concord.left			= alloc_size() - size;
 			value.count			= size;
 			return;
 		}

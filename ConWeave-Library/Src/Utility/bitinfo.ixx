@@ -1,6 +1,8 @@
 export module utility : bitinfo;
 
+import <bit>;
 import <cstddef>;
+import <cstdint>;
 
 export namespace bitinfo {
 	template <std::size_t bits>
@@ -14,6 +16,12 @@ export namespace bitinfo {
 
 	template <std::size_t position, class ObjectType>
 	constexpr void set(ObjectType& object, bool level) noexcept;
+
+	enum class endpoint : bool {
+		little, big
+	};
+
+	constexpr auto layout_endian() noexcept;
 }
 
 template <std::size_t position, class ObjectType>
@@ -27,4 +35,18 @@ constexpr void bitinfo::set(ObjectType& object, bool level) noexcept {
 		object |=  (1 << position);
 	else
 		object &= ~(1 << position);
+}
+
+constexpr auto bitinfo::layout_endian() noexcept {
+	struct layout {
+		uint8_t low : 4;
+		uint8_t hig : 4;
+	};
+
+	static constexpr layout bits{
+		0b1111, 0b0000
+	};
+
+	auto byte = std::bit_cast<uint8_t>(bits);
+	return static_cast<endpoint>(byte != 0x0F);
 }
