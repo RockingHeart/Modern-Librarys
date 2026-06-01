@@ -35,6 +35,10 @@ public:
 	using alloc_t	   = typename string_traits::alloc_t;
 	using cache_size_t = typename string_traits::cache_size_t;
 
+protected:
+
+	static constexpr size_t specs_max_length = 8;
+
 private:
 
 	struct residue_info {
@@ -45,11 +49,11 @@ private:
 
 	struct value_concord_little {
 		size_t left  : (sizeof(size_t)* CHAR_BIT) - 8;
-		size_t specs : 8;
+		size_t specs : specs_max_length;
 	};
 
 	struct value_concord_big {
-		size_t specs : 8;
+		size_t specs : specs_max_length;
 		size_t left  : (sizeof(size_t)* CHAR_BIT) - 8;
 	};
 
@@ -65,8 +69,7 @@ private:
 
 	using value_concord_t = value_concord<layout_endian()>::type;
 
-	struct base_value
-	{
+	struct base_value {
 		pointer_t		pointer;
 		size_t			count;
 		value_concord_t concord;
@@ -83,19 +86,25 @@ private:
 	struct empty_value {};
 
 	template <value_traits ValueTrait>
-	struct box_value : base_value,
+	using enhanced = std::conditional_t <
+		ValueTrait == value_traits::remain,
+			remain_value,
 		std::conditional_t <
-			ValueTrait == value_traits::remain,
-				remain_value,
-			std::conditional_t <
-				ValueTrait == value_traits::enhance,
-					enhance_value,
-				empty_value
-			>
+			ValueTrait == value_traits::enhance,
+				enhance_value,
+		empty_value
 		>
-	{};
+	>;
+
+	template <value_traits ValueTrait>
+	struct box_value : base_value,
+		enhanced<ValueTrait>
+	{
+		using enhanced = enhanced<ValueTrait>;
+	};
 
 protected:
+
 	using box_value_type = box_value<string_traits::value_trait>;
 
 public:
@@ -106,20 +115,29 @@ public:
 
 protected:
 
+	constexpr static size_t padding_size = specs_max_length - bandwidth - 2;
+
+
 	struct cache_concord_little {
-		constexpr static size_t padding_size = 8 - bandwidth - 2;
 		cache_size_t size	 : 5;
-		cache_size_t padding : padding_size > 0 ? padding_size : 0;
+		cache_size_t padding : padding_size;
 		bool         xored	 : 1;
 		string_mode  mode	 : 1;
+		constexpr cache_concord_little() noexcept = default;
+		constexpr cache_concord_little(cache_size_t size, string_mode mode)
+			noexcept : size(size), xored(false), mode(mode)
+		{}
 	};
 
 	struct cache_concord_big {
-		constexpr static size_t padding_size = 8 - bandwidth - 2;
 		bool         xored	 : 1;
 		string_mode  mode	 : 1;
-		cache_size_t padding : padding_size > 0 ? padding_size : 0;
+		cache_size_t padding : padding_size;
 		cache_size_t size	 : 5;
+		constexpr cache_concord_big() noexcept = default;
+		constexpr cache_concord_big(cache_size_t size, string_mode mode)
+			noexcept : xored(false), mode(mode), size(size)
+		{}
 	};
 
 
@@ -136,6 +154,7 @@ protected:
 
 	struct specs_bits : cache_concord_t {
 		using concord_t = cache_concord_t;
+		using concord_t::concord_t;
 		using concord_t::size;
 		using concord_t::mode;
 		using concord_t::xored;
@@ -146,19 +165,11 @@ protected:
 		specs_bits   specs [[indeterminate]];
 	};
 
-	/*class status {
-		char_t		 fill_buffer[buffer_size];
-		cache_size_t fill_specs : bandwidth;
-	public:
-		string_mode modes : 1 = string_mode::cache;
-		bool	 is_xored : 1 = false;
-		constexpr status(string_mode mode) noexcept : modes(mode) {}
-	};*/
+protected:
 
 	union {
 		cache_t        cache;
 		box_value_type value;
-		//status		   state;
 	};
 
 public:
@@ -170,9 +181,8 @@ public:
 	constexpr  string_box(char_t char_value)
 		noexcept : cache {
 			.pointer =   {},
-			.specs   =   {
-				.size = 1,
-				.mode = string_mode::cache
+			.specs   =	 {
+				1, string_mode::cache
 			}
 		}
 	{

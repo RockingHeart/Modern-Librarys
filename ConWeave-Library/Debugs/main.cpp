@@ -1,3 +1,5 @@
+#include <vector>
+
 import cw;
 import std;
 
@@ -9,7 +11,14 @@ constexpr int foo() {
 }
 
 int main() {
-    constexpr int a = foo();
-    std::cout << sizeof(dast::cstring) << '\n';
-    sys::mapping_filer<char> file("A:\\Tests\\Test.txt", permission::read_write);
+	constexpr auto cr = foo();
+	dast::vector<std::string_view, 5> vec;
+	for (size_t i = 0; i < 10000; i++) {
+		vec.push_back("Hello");
+	}
+	for (auto& c : vec) {
+		std::cout << c << '\n';
+	}
+	std::cout << sizeof(vec) << '\n';
+	std::cout << sizeof(dast::cstring) << '\n';
 }
