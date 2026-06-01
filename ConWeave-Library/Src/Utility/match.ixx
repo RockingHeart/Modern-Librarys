@@ -20,7 +20,7 @@ protected:
 
 	match::behav found; value_t result;
 
-protected:
+public:
 
 	constexpr match_box_t() noexcept = default;
 
