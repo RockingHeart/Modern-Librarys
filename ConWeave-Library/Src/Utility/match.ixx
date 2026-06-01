@@ -14,6 +14,7 @@ class match_box_t {
 public:
 	using value_t           =       ResultType;
 	using rvalue_t          =       ResultType&&;
+	using reference_t		=		ResultType&;
 	using const_reference_t = const ResultType&;
 
 protected:
@@ -59,6 +60,7 @@ private:
 public:
 	using value_t           = typename box_t::value_t;
 	using rvalue_t          = typename box_t::rvalue_t;
+	using reference_t		= typename box_t::reference_t;
 	using const_reference_t = typename box_t::const_reference_t;
 	
 public:
@@ -74,6 +76,11 @@ public:
 	[[nodiscard]]
 	constexpr bool is_success() const noexcept {
 		return box_t::found == match::success;
+	}
+
+	[[nodiscard]]
+	constexpr reference_t value() const noexcept {
+		return box_t::result;
 	}
 
 public:
