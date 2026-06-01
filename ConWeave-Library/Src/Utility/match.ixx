@@ -79,7 +79,7 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr reference_t value() const noexcept {
+	constexpr reference_t value() noexcept {
 		return box_t::result;
 	}
 
