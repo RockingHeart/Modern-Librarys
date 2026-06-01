@@ -1,4 +1,4 @@
-﻿export module utility : match;
+export module utility : match;
 
 import <utility>;
 
@@ -52,7 +52,7 @@ protected:
 
 export template <typename ResultType>
 class match_t :
-    protected match_box_t<ResultType> {
+    public	  match_box_t<ResultType> {
 private:
 	using box_t = match_box_t<ResultType>;
 
