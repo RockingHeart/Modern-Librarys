@@ -95,14 +95,16 @@ public:
         noexcept(noexcept(core_t::push_to_data(value_t())) &&
         noexcept(core_t::template new_space<2>()))
     {
-        if (core_t::is_cache_mode()) {
-            box_buffer_t& buf = core_t::value.buffer;
-            if (buf.push_back(value)) {
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                box_buffer_t& buf = core_t::value.buffer;
+                if (buf.push_back(value)) {
+                    return;
+                }
+                core_t::template heapify_cache<2>(buf.max_size());
+                core_t::push_to_data(value);
                 return;
             }
-            core_t::template heapify_cache<2>(buf.max_size());
-            core_t::push_to_data(value);
-            return;
         }
 
         box_data_t& data = core_t::value.data;
@@ -131,8 +133,10 @@ public:
 public:
 
     constexpr size_t size() const noexcept {
-        if (core_t::is_cache_mode()) {
-            return core_t::value.buffer.size();
+        if constexpr (core_t::buffer_size) {
+            if (core_t::value.mode == vector_mode::cache) {
+                return core_t::value.buffer.size();
+            }
         }
 
         const box_data_t& data = core_t::value.data;
@@ -140,8 +144,10 @@ public:
     }
 
     constexpr size_t capacity() const noexcept {
-        if (core_t::is_cache_mode()) {
-            return core_t::value.buffer.max_size();
+        if constexpr (core_t::buffer_size) {
+            if (core_t::value.mode == vector_mode::cache) {
+                return core_t::value.buffer.max_size();
+            }
         }
         return core_t::value.data.remain;
     }
