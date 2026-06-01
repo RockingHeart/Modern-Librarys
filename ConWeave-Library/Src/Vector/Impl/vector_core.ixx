@@ -333,29 +333,37 @@ protected:
 protected:
 
     pointer_t begin() noexcept {
-        if (is_cache_mode()) {
-            return box_t::value.buffer.begin();
+        if constexpr (box_t::buffer_size) {
+            if (vec.value.mode == vector_mode::cache) {
+                return box_t::value.buffer.begin();
+            }
         }
         return box_t::value.data.origin;
     }
 
     const_pointer_t begin() const noexcept {
-        if (is_cache_mode()) {
-            return box_t::value.buffer.begin();
+        if constexpr (box_t::buffer_size) {
+            if (vec.value.mode == vector_mode::cache) {
+                return box_t::value.buffer.begin();
+            }
         }
         return box_t::value.data.origin;
     }
 
     pointer_t end() noexcept {
-        if (is_cache_mode()) {
-            return box_t::value.buffer.end();
+        if constexpr (box_t::buffer_size) {
+            if (vec.value.mode == vector_mode::cache) {
+                return box_t::value.buffer.end();
+            }
         }
         return box_t::value.data.curent;
     }
 
     const_pointer_t end() const noexcept {
-        if (is_cache_mode()) {
-            return box_t::value.buffer.end();
+        if constexpr (box_t::buffer_size) {
+            if (vec.value.mode == vector_mode::cache) {
+                return box_t::value.buffer.end();
+            }
         }
         return box_t::value.data.curent;
     }
