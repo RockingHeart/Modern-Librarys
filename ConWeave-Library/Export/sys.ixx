@@ -1,4 +1,4 @@
-export module cw : sys;
+export module cwlib : sys;
 
 export import sys.filer;
 export import sys.filoader;

@@ -1,4 +1,4 @@
-export module cw : dast;
+export module cwlib : dast;
 
 export import dast.string;
 export import dast.fixed_vector;

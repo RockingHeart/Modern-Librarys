@@ -1,4 +1,4 @@
-export module cw;
+export module cwlib;
 
 export import :dast;
 export import :sys;
