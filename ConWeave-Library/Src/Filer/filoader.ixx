@@ -160,6 +160,10 @@ public:
 public:
 
 	constexpr ~filoader() noexcept {
-		void(close());
+		if (!is_loaded()) {
+			return;
+		}
+		CloseHandle(fileid);
+		fileid = nullptr;
 	}
 };
