@@ -129,10 +129,10 @@ protected:
         if constexpr (!box_t::buffer_size) {
             if (old_ptr == nullptr) {
                 data.origin = reinterpret_cast<pointer_t> (
-                    alloc.allocate(sesize(size))
+                    alloc.allocate(sesize(5))
                 );
-                data.curent = data.origin + size;
-                data.remain = size;
+                data.curent = data.origin;
+                data.remain = 5;
                 return;
             }
         }
