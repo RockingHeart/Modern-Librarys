@@ -95,8 +95,8 @@ public:
         noexcept(noexcept(core_t::push_to_data(value_t())) &&
         noexcept(core_t::template new_space<2>()))
     {
-        if constexpr (box_t::buffer_size) {
-            if (box_t::value.mode == vector_mode::cache) {
+        if constexpr (core_t::buffer_size) {
+            if (core_t::value.mode == vector_mode::cache) {
                 box_buffer_t& buf = core_t::value.buffer;
                 if (buf.push_back(value)) {
                     return;
