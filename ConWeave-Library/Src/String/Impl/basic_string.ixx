@@ -4,6 +4,8 @@ import string.impl.traits;
 import string.impl.context;
 import char_wrap;
 
+import dast.vector;
+
 import utility;
 import <iterator>;
 import <initializer_list>;
@@ -182,6 +184,11 @@ public:
 		auto end()   { return std::reverse_iterator{ self->string_begin() }; }
 	};
 
+	struct string_range {
+		const_pointer_t data;
+		size_t			size;
+	};
+
 private:
 
 	constexpr alloc_t& allocator() noexcept {
@@ -290,6 +297,19 @@ private:
 		else {
 			return new_space<Expand>(alloc, value, size);
 		}
+	}
+
+	constexpr string_range info() const noexcept {
+		const auto& cache = core_t::cache;
+		const auto* data  = cache.pointer;
+		size_t strlen	  = cache.specs.size;
+		if (is_large_mode()) {
+			const auto& value = core_t::value;
+			data			  = value.pointer;
+			strlen			  = value.count;
+		}
+
+		return { data, strlen };
 	}
 
 	constexpr void set_length(size_t size) noexcept {
@@ -1540,7 +1560,7 @@ private:
 
 private:
 
-	constexpr match_t<size_t> front_index (char_t target,
+	constexpr match_result<size_t> front_index (char_t target,
 		                                  size_t point,
 		                                  size_t end)
 		noexcept
@@ -1554,7 +1574,7 @@ private:
 		return match::failed;
 	}
 
-	constexpr match_t<size_t> last_index (char_t target,
+	constexpr match_result<size_t> last_index (char_t target,
 										  size_t point,
 										  size_t end)
 		noexcept
@@ -1572,13 +1592,32 @@ private:
 		return position < string_length();
 	}
 
-	constexpr match_t<size_t> index_string (
-		char_t target, size_t point, size_t end
-	) noexcept {
+	constexpr match_result<size_t> index_string (char_t target,
+												 size_t point,
+												 size_t end)
+		noexcept
+	{
 		if (point > end) {
 			return last_index(target, point, end);
 		}
 		return front_index(target, point, end);
+	}
+
+	constexpr dast::vector<size_t> inquiry_subscript(char_t value)
+		noexcept (
+			noexcept(noexcept(std::vector<size_t>{}.push_back(0)))
+		)
+	{
+		dast::vector<size_t> result;
+		auto [data, size] = info();
+
+		for (size_t i = 0; i < size; i++) {
+			if (data[i] == value) {
+				result.push_back(i);
+			}
+		}
+
+		return result;
 	}
 
 	constexpr reference_t at_string(size_t position) {

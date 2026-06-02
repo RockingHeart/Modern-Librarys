@@ -52,7 +52,7 @@ public:
 };
 
 export template <typename ResultType>
-class match_t :
+class match_result :
     public	  match_box_t<ResultType> {
 private:
 	using box_t = match_box_t<ResultType>;

@@ -263,22 +263,6 @@ protected:
 
 protected:
 
-    constexpr bool is_cache_mode() const noexcept {
-        if constexpr (box_t::buffer_size) {
-            return box_t::value.mode == vector_mode::cache;
-        }
-        return false;
-    }
-
-    constexpr bool is_storage_mode() const noexcept {
-        if constexpr (box_t::buffer_size) {
-            return box_t::value.mode == vector_mode::storage;
-        }
-        return false;
-    }
-
-protected:
-
     template <class Ty>
     constexpr void assign_impl(Ty&& vec)
 		noexcept (
@@ -400,8 +384,10 @@ protected:
 protected:
 
     constexpr size_t vector_size() const noexcept {
-        if (is_cache_mode()) {
-            return box_t::value.buffer.size();
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return box_t::value.buffer.size();
+            }
         }
 
         const box_data_t& data = box_t::value.data;
@@ -452,8 +438,10 @@ protected:
 			noexcept(construct(0ull, 0ull))
         )
     {
-        if (is_cache_mode()) {
-            return resize_buffer(size);
+        if constexpr (box_t::buffer_size) {
+            if (box_t::value.mode == vector_mode::cache) {
+                return resize_buffer(size);
+            }
         }
         return resize_data(size);
     }

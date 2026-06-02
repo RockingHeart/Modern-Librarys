@@ -137,6 +137,14 @@ public:
 		return old;
 	}
 
+	constexpr match_result<size_t> size() const noexcept {
+		LARGE_INTEGER size;
+		if (GetFileSizeEx(fileid, &size)) {
+			return size.QuadPart;
+		}
+		return match::failed;
+	}
+
 	constexpr bool close() const noexcept {
 		if (!is_loaded()) {
 			return false;

@@ -273,7 +273,7 @@ public:
 public:
 
 	template <class SelfType, class... ArgsType>
-	[[nodiscard]] constexpr auto index(this SelfType&& self, ArgsType&&... args)
+	constexpr auto index(this SelfType&& self, ArgsType&&... args)
 		noexcept requires (
 		    requires {
 		        self.index_string(std::forward<ArgsType>(args)...);
@@ -281,6 +281,17 @@ public:
 		)
 	{
 		return self.index_string(std::forward<ArgsType>(args)...);
+	}
+
+	template <class SelfType, class... ArgsType>
+	constexpr auto subscript(this SelfType&& self, ArgsType&&... args)
+		noexcept requires (
+			requires {
+				self.inquiry_subscript(std::forward<ArgsType>(args)...);
+			}
+		)
+	{
+		return self.inquiry_subscript(std::forward<ArgsType>(args)...);
 	}
 
 	template <class SelfType, class... ArgsType>

@@ -16,6 +16,7 @@
 | lower | [lower] |
 | upper | [upper] |
 | index | [index] |
+| subscript | [subscript] |
 | clear residue | [clear_residue] |
 | leave residue | [leave_residue] |
 | const string | [const_string] |
@@ -324,6 +325,26 @@
                     ```
                     #### 以上代码输出： true
                     函数返回值描述：合法则返回true，否则返回false
+
+            ## subscript
+            - 非静态成员函数名：subscript
+                - 返回值类型：dast::vector<size_t>
+                - 参数列表：(char_t)
+                - dast::vector<size_t> subscript(char_t value)
+                - 用于获取字符串中字元素为value的全部下标
+                    ``` C++
+                    import string;
+                    import std;
+
+                    int main() {
+                        dast::cstring str = "Hello";
+                        for (auto s : str.subscript('l')) {
+	                    std::cout << s << ' ';
+                        }
+                    }
+                    ```
+                    #### 以上代码输出：2 3
+                    该函数强调的返回描述：无
 
                     
             
@@ -1350,6 +1371,7 @@
 [lower]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#lower
 [upper]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#upper
 [index]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#index
+[subscript]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#subscript
 [clear_residue]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#clear_residue
 [leave_residue]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#leave_residue
 [const_string]: https://github.com/RockingHeart/ConWeave-Lib/blob/main/Describes/String/ClassInterface-String.md#const_string

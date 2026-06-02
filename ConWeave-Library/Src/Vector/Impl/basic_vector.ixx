@@ -206,8 +206,10 @@ public:
 public:
 
     constexpr ~basic_vector() noexcept {
-        if (core_t::is_cache_mode()) {
-            return;
+        if constexpr (core_t::buffer_size) {
+            if (core_t::value.mode == vector_mode::cache) {
+                return;
+            }
         }
 
         box_data_t& data = core_t::value.data;

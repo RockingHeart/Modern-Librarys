@@ -1,4 +1,4 @@
-﻿export module utility : strutil;
+export module utility : strutil;
 
 import :type_restion;
 import :match;
@@ -48,7 +48,7 @@ struct compile {
 	}
 
 	template <size_t strlen, size_t tarlen>
-	constexpr static match_t<size_t> strmatch (const char_t* str,
+	constexpr static match_result<size_t> strmatch (const char_t* str,
 		                                       const char_t* target)
 		noexcept
 	{
@@ -80,24 +80,28 @@ private:
 	constexpr static size_t length(const CharacterType* str) noexcept;
 
 	template <rest::character CharacterType = char_t>
-	constexpr static CharacterType* copy (
-		CharacterType* dest, const CharacterType* src, size_t size
-	) noexcept;
+	constexpr static CharacterType* copy (CharacterType* dest,
+									const CharacterType* src,
+										  size_t		 size)
+		noexcept;
 
 	template <rest::character CharacterType = char_t>
-	constexpr static CharacterType* move (
-		CharacterType* dest, const CharacterType* src, size_t size
-	) noexcept;
+	constexpr static CharacterType* move (CharacterType* dest,
+									const CharacterType* src,
+										  size_t		 size)
+		noexcept;
 
 	template <rest::character CharacterType = char_t>
-	constexpr static CharacterType* set (
-		CharacterType* dest, CharacterType value, size_t size
-	) noexcept;
+	constexpr static CharacterType* set (CharacterType* dest,
+										 CharacterType	value,
+										 size_t		    size)
+		noexcept;
 
 	template <rest::character CharacterType = char_t>
-	constexpr static bool compare (
-		const CharacterType* left, const CharacterType* src, size_t size
-	) noexcept;
+	constexpr static bool compare (const CharacterType* left,
+								   const CharacterType* src,
+										 size_t			size)
+		noexcept;
 
 public:
 
@@ -139,9 +143,11 @@ public:
 	}
 
 	template <rest::character CharacterType = char_t>
-	constexpr static CharacterType* strmove (
-		CharacterType* dest, const CharacterType* src, size_t size
-	) noexcept {
+	constexpr static CharacterType* strmove (CharacterType* dest,
+									   const CharacterType* src,
+											 size_t			size)
+		noexcept
+	{
 		return move<CharacterType>(dest, src, size);
 	}
 
@@ -181,18 +187,22 @@ public:
 		return compare<CharacterType>(left, src, size);
 	}
 
-	constexpr static size_t strmatch (
-		const char* str, char target, size_t len
-	) noexcept {
+	constexpr static size_t strmatch (const char*  str,
+											char   target,
+											size_t len)
+		noexcept
+	{
 		const char* result = std::bit_cast<const char*> (
 			memchr(str, target, len)
 		);
 		return static_cast<size_t>(result - str);
 	}
 
-	constexpr static size_t strmatch (
-		const wchar_t* str, wchar_t target, size_t len
-	) noexcept {
+	constexpr static size_t strmatch (const wchar_t* str,
+											wchar_t  target,
+											size_t	 len)
+		noexcept
+	{
 		const wchar_t* result = wmemchr(str, target, len);
 		return static_cast<size_t>(result - str);
 	}
@@ -205,8 +215,8 @@ public:
 	}
 
 	template <rest::character CharacterType = char_t>
-	constexpr static match_t<size_t> strmatch (const CharacterType* str,
-		                                       const CharacterType* target)
+	constexpr static match_result<size_t> strmatch (const CharacterType* str,
+													const CharacterType* target)
 		noexcept
 	{
 		size_t strlen = strlenof(str);
@@ -248,60 +258,75 @@ private:
 	};
 
 	template <>
-	constexpr static char* copy<char> (
-		char* dest, const char* src, size_t size
-	) noexcept {
+	constexpr static char* copy<char> (char*  dest,
+								 const char*  src,
+									   size_t size)
+		noexcept
+	{
 		void(::memcpy(dest, src, size));
 		return dest;
 	}
 
 	template <>
-	constexpr static wchar_t* copy<wchar_t> (
-		wchar_t* dest, const wchar_t* src, size_t size
-	) noexcept {
+	constexpr static wchar_t* copy<wchar_t> (wchar_t* dest,
+									   const wchar_t* src,
+											 size_t   size)
+		noexcept
+	{
 		return ::wmemcpy(dest, src, size);
 	}
 
 	template <>
-	constexpr static char* move<char> (
-		char* dest, const char* src, size_t size
-	) noexcept {
+	constexpr static char* move<char> (char*  dest,
+								 const char*  src,
+									   size_t size)
+		noexcept
+	{
 		void(::memmove(dest, src, size));
 		return dest;
 	}
 
 	template <>
-	constexpr static wchar_t* move<wchar_t> (
-		wchar_t* dest, const wchar_t* src, size_t size
-	) noexcept {
+	constexpr static wchar_t* move<wchar_t> (wchar_t* dest,
+									   const wchar_t* src,
+											 size_t   size)
+		noexcept
+	{
 		return ::wmemmove(dest, src, size);
 	}
 
 	template <>
-	constexpr static char* set<char> (
-		char* dest, char value, size_t size
-	) noexcept {
+	constexpr static char* set<char> (char*  dest,
+									  char   value,
+									  size_t size)
+		noexcept
+	{
 		void(::memset(dest, value, size));
 		return dest;
 	}
 
 	template <>
-	constexpr static wchar_t* set<wchar_t> (
-		wchar_t* dest, wchar_t value, size_t size
-	) noexcept {
+	constexpr static wchar_t* set<wchar_t> (wchar_t* dest,
+											wchar_t  value,
+											size_t   size)
+		noexcept
+	{
 		return ::wmemset(dest, value, size);
 	}
 
 	template <>
-	constexpr static bool compare<char> (
-		const char* left, const char* src, size_t size
-	) noexcept {
+	constexpr static bool compare<char> (const char*  left,
+										 const char*  src,
+											   size_t size)
+		noexcept
+	{
 		return !::memcmp(left, src, size);
 	}
 
 	template <>
-	constexpr static bool compare<wchar_t> (
-		const wchar_t* left, const wchar_t* src, size_t size
+	constexpr static bool compare<wchar_t> (const wchar_t* left,
+											const wchar_t* src,
+												  size_t   size
 	) noexcept {
 		return !::wmemcmp(left, src, size);
 	}
